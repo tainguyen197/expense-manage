@@ -9,6 +9,23 @@ export const addExpense = (expense: any) => {
   console.log("Saved expense", expense);
 };
 
+export const deleteExpense = (expense: any) => {
+  const expenseHistory = loadDataFromLocalStorage("expense-history");
+  const updatedExpenseHistory = expenseHistory.filter(
+    (entry: any) =>
+      entry.amount !== expense.amount || entry.item !== expense.item
+  );
+
+  const deleted = expenseHistory.length !== updatedExpenseHistory.length;
+
+  deleted && saveDataToLocalStorage("expense-history", updatedExpenseHistory);
+
+  return {
+    success: deleted,
+    ...expense,
+  };
+};
+
 export const calculateSpent = ({
   range,
   start_date,

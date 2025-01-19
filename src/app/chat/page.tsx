@@ -10,12 +10,12 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Send, MessageSquareDashed } from "lucide-react";
+import { Send, MessageSquareDashed, ChartNoAxesCombined } from "lucide-react";
 import React from "react";
 import { testFunctionWithDelay, getExpenseParams } from "../api/openai";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { loadDataFromLocalStorage } from "@/utils/localStorage";
-import { Message as TMessage } from "../types/message";
+import { Message as TMessage } from "../../types/message";
 import { groupMessagesByDate } from "@/utils/groupMessagesByDate";
 import moment from "moment";
 
@@ -81,16 +81,6 @@ const ChatPage = () => {
       const lastMessage = messages?.[lastDate][messages?.[lastDate].length - 1];
 
       if (lastMessage?.role === "user") {
-        //   testFunctionWithDelay({ content: lastMessage.content }).then(
-        //     (response) => {
-        //       setMessages((messages) => [
-        //         ...messages,
-        //         { content: response, type: "assistant" },
-        //       ]);
-        //     }
-        //   );
-        // }
-
         // get expense parameters
         getExpenseParams(lastMessage.content).then((response) => {
           setMessages((messages) => ({
@@ -105,23 +95,26 @@ const ChatPage = () => {
     }
   }, [messages]);
 
-  console.log("messages12", Object.keys(messages ?? {}));
-
   return (
     <Card className="shadow-none border-none h-screen">
       <CardHeader className="shadow-gray-100 shadow-lg py-3 fixed top-0 w-screen bg-white z-10">
-        <CardTitle className="flex gap-2 items-center">
-          <Avatar>
-            <AvatarImage src="https://scontent-hkg4-1.xx.fbcdn.net/v/t1.6435-1/180279172_1450336808642016_7562851521701070277_n.jpg?stp=c0.281.736.736a_dst-jpg_s480x480_tt6&_nc_cat=108&ccb=1-7&_nc_sid=e99d92&_nc_ohc=VQfdvvR2ycYQ7kNvgEZv9ND&_nc_zt=24&_nc_ht=scontent-hkg4-1.xx&_nc_gid=AGDHp6bVM6djLjnpxn1kSfu&oh=00_AYBdWVgSJA9HzzB311EML8pZePlPlHGaHa1bGaJxc0Yhmg&oe=67AF3F41" />
-            <AvatarFallback>KR</AvatarFallback>
-          </Avatar>
-          <div>
-            <p className="text-sm font-bold leading-none">
-              Nguyễn Trung Tài (Kira)
-            </p>
-            <p className="text-sm text-muted-foreground">
-              expert_here@example.com
-            </p>
+        <CardTitle className="flex justify-between">
+          <div className="flex gap-2 items-center">
+            <Avatar>
+              <AvatarImage src="https://scontent-hkg4-1.xx.fbcdn.net/v/t1.6435-1/180279172_1450336808642016_7562851521701070277_n.jpg?stp=c0.281.736.736a_dst-jpg_s480x480_tt6&_nc_cat=108&ccb=1-7&_nc_sid=e99d92&_nc_ohc=VQfdvvR2ycYQ7kNvgEZv9ND&_nc_zt=24&_nc_ht=scontent-hkg4-1.xx&_nc_gid=AGDHp6bVM6djLjnpxn1kSfu&oh=00_AYBdWVgSJA9HzzB311EML8pZePlPlHGaHa1bGaJxc0Yhmg&oe=67AF3F41" />
+              <AvatarFallback>KR</AvatarFallback>
+            </Avatar>
+            <div>
+              <p className="text-sm font-bold leading-none">
+                Nguyễn Trung Tài (Kira)
+              </p>
+              <p className="text-sm text-muted-foreground">
+                expert_here@example.com
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center justify-center">
+            <ChartNoAxesCombined size={24} color="#41bc5b" />
           </div>
         </CardTitle>
       </CardHeader>
@@ -195,7 +188,7 @@ const Message = ({
   return (
     <div
       className={`flex flex-col gap-2 rounded-lg px-3 py-2 text-sm transform transition-transform duration-200 hover:scale-105 ${
-        isSender ? "ml-auto bg-[#4175bc] text-primary-foreground" : "bg-muted"
+        isSender ? "ml-auto bg-[#41bc5b] text-primary-foreground" : "bg-muted"
       } transition-opacity duration-400 animate-fadeIn
       w-fit max-w-[60%]`}
     >

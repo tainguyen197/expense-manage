@@ -1,4 +1,4 @@
-import { Message } from "@/app/types/message";
+import { Message } from "@/types/message";
 
 export const groupMessagesByDate = (messages: Message[]) => {
   return messages.reduce((acc, message) => {

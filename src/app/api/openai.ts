@@ -6,7 +6,7 @@ import {
   loadDataFromLocalStorage,
   saveDataToLocalStorage,
 } from "@/utils/localStorage";
-import { addExpense, calculateSpent } from "./expense-manage";
+import { addExpense, calculateSpent, deleteExpense } from "./expense-manage";
 import { defaultErrorMessage, initInitSystemMessage, tools } from "./data";
 
 const openai = new OpenAI({
@@ -84,11 +84,15 @@ const handleToolCall = (
       });
       toolResponse = {
         tool_call_id: toolCall.id,
-        content: JSON.stringify({ success: true, message: "Đã thêm chi phí" }),
+        content: JSON.stringify({ success: true, message: "added" }),
       };
       break;
     case "delete_expense":
-      console.log("delete_expense", toolCallArguments);
+      const itemDeleted = deleteExpense(toolCallArguments);
+      toolResponse = {
+        tool_call_id: toolCall.id,
+        content: JSON.stringify(itemDeleted),
+      };
       break;
     case "calculate_spent":
       const spentData = calculateSpent({
@@ -118,6 +122,7 @@ export const getExpenseParams = async (message: string) => {
 
   // if no tool call, return normal response
   if (!toolCall) {
+    console.log("no tool call");
     const normalResponse = get(completion, "choices[0].message.content");
 
     saveDataToLocalStorage("chat-history", [

@@ -36,7 +36,7 @@ export const tools: ChatCompletionTool[] = [
     function: {
       name: "delete_expense",
       description:
-        "Delete an expense to the user's account. Just delete when user provide fully item and amount. When user provide only item, show a list of expenses with that item to confirm deletion.",
+        "Delete an expense to the user's account. Just delete when user provide fully item and amount. When user provide only item, confirm deletion.",
       parameters: {
         type: "object",
         properties: {
