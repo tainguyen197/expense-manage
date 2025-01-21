@@ -9,18 +9,55 @@ export default {
   ],
   theme: {
     extend: {
+      container: {
+        center: true,
+        padding: {
+          DEFAULT: "0",
+          sm: "2rem",
+          lg: "4rem",
+          xl: "5rem",
+        },
+      },
       animation: {
         fadeIn: "fadeIn 0.5s ease-in forwards", // Change duration as needed
+        "spin-slow": "spin 3s linear infinite",
+        "ping-slow": "ping-slow 2s linear infinite",
       },
       keyframes: {
         fadeIn: {
           "0%": { opacity: "0" },
           "100%": { opacity: "1" },
         },
+        "ping-slow": {
+          "0%": { transform: "scale(1)", opacity: "1" },
+          "50%": { transform: "scale(1.2)", opacity: "0.4" },
+          "100%": { transform: "scale(1)", opacity: "0" },
+        },
+      },
+      backgroundColor: {
+        "blue-main": "hsl(var(--blue-main))",
+        card: "hsl(var(--card))",
+        popover: "hsl(var(--popover))",
+        primary: "hsl(var(--primary))",
+        secondary: "hsl(var(--secondary))",
+        muted: "hsl(var(--muted))",
+        accent: "hsl(var(--accent))",
+        destructive: "hsl(var(--destructive))",
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        chart: {
+          "1": "hsl(var(--chart-1))",
+          "2": "hsl(var(--chart-2))",
+          "3": "hsl(var(--chart-3))",
+          "4": "hsl(var(--chart-4))",
+          "5": "hsl(var(--chart-5))",
+        },
       },
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        "blue-main": "hsl(var(--blue-main))",
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
@@ -64,6 +101,9 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      borderColor: {
+        DEFAULT: "hsl(var(--border))",
       },
     },
   },

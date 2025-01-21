@@ -18,6 +18,7 @@ import { loadDataFromLocalStorage } from "@/utils/localStorage";
 import { Message as TMessage } from "../../types/message";
 import { groupMessagesByDate } from "@/utils/groupMessagesByDate";
 import moment from "moment";
+import Link from "next/link";
 
 type MessageState = Record<string, TMessage[]>; // group of messages
 
@@ -113,8 +114,14 @@ const ChatPage = () => {
               </p>
             </div>
           </div>
-          <div className="flex items-center justify-center">
-            <ChartNoAxesCombined size={24} color="#41bc5b" />
+          <div className="flex items-center justify-center relative">
+            <Link href="/statics/history">
+              <ChartNoAxesCombined
+                size={24}
+                color="#41bc5b"
+                className="relative cursor-pointer"
+              />
+            </Link>
           </div>
         </CardTitle>
       </CardHeader>
