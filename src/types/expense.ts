@@ -3,4 +3,5 @@ export type Expense = {
   amount: number;
   timestamp: number;
   category: string;
+  icon?: string;
 };

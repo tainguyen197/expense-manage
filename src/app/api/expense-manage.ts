@@ -3,6 +3,7 @@ import {
   loadDataFromLocalStorage,
   saveDataToLocalStorage,
 } from "@/utils/localStorage";
+import { getCategoryList } from "./category";
 
 export const getExpenseHistory = () => {
   return loadDataFromLocalStorage("expense-history") || [];
@@ -25,7 +26,14 @@ export const getExpenseHistoryByDate = (date: string) => {
   });
 };
 
-export const addExpense = (expense: any) => {
+export const addExpense = (expense: Expense) => {
+  // convert the category name to id
+  const categoryList = getCategoryList();
+  const category = categoryList.find((c) => c.name === expense.category);
+  if (category) {
+    expense.category = category.id;
+  }
+
   const expenseHistory = loadDataFromLocalStorage<Expense[]>("expense-history");
   saveDataToLocalStorage("expense-history", [
     ...(expenseHistory || []),

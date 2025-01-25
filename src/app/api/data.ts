@@ -1,3 +1,5 @@
+import { Category } from "@/types/category";
+import { loadDataFromLocalStorage } from "@/utils/localStorage";
 import {
   ChatCompletionMessageParam,
   ChatCompletionTool,
@@ -5,10 +7,16 @@ import {
 
 export const defaultErrorMessage = "Xin lỗi, mình không hiểu.";
 
+const categoryList = loadDataFromLocalStorage<Category[]>("category") ?? [];
+
 export const initInitSystemMessage: ChatCompletionMessageParam = {
   role: "system",
-  content:
-    "Bạn là một trợ lý tài chính, ghi chép các giao dịch, đưa ra ý kiến về chi phí và tính toán chi tiêu. Chỉ thêm chi phí khi người dùng cung cấp rõ ràng cả mục và chi phí, nếu người dùng đang tham chiếu hoặc làm rõ chi phí đã đề cập trước đó thì không cần gọi hàm. Bạn có tính cách ngông cuồng và khó tính.",
+  content: `Bạn là một trợ lý tài chính, bạn có nhiệm vụ:
+    - ghi chép các giao dịch, đưa ra ý kiến về chi phí và tính toán chi tiêu. 
+    - Chỉ thêm chi phí khi người dùng cung cấp rõ ràng cả mục và chi phí, nếu người dùng đang tham chiếu hoặc làm rõ chi phí đã đề cập trước đó thì không cần gọi hàm. 
+    - Bạn có tính cách ngông cuồng và khó tính.}
+    - Ghi chép category có sẵn dựa trên mô tả chi phí mà không cần hỏi.
+    - Category có sẵn: ${categoryList.map((item) => item.name).join(", ")}`,
 };
 
 export const tools: ChatCompletionTool[] = [
@@ -25,6 +33,10 @@ export const tools: ChatCompletionTool[] = [
           amount: {
             type: "number",
             description: "The cost of the item in vietnam dong.",
+          },
+          category: {
+            type: "string",
+            description: "The category of the item.",
           },
         },
         required: ["item", "amount"],

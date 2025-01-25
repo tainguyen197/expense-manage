@@ -50,7 +50,7 @@ export const testFunctionWithDelay = async ({
 };
 
 const openaiCalling = async (message: string) => {
-  const chatHistory: ChatMessage[] = loadDataFromLocalStorage("chat-history");
+  const chatHistory = loadDataFromLocalStorage<ChatMessage[]>("chat-history");
   const chatHistoryMessages = chatHistory?.map((message) =>
     omit(message, "timestamp")
   ) as ChatCompletionMessageParam[];
@@ -84,7 +84,11 @@ const handleToolCall = (
       });
       toolResponse = {
         tool_call_id: toolCall.id,
-        content: JSON.stringify({ success: true, message: "added" }),
+        content: JSON.stringify({
+          success: true,
+          message: "added",
+          category: toolCallArguments.category,
+        }),
       };
       break;
     case "delete_expense":
@@ -117,6 +121,7 @@ export const getExpenseParams = async (message: string) => {
   const userTime = new Date().getTime();
   const chatHistory =
     loadDataFromLocalStorage<ChatMessage[]>("chat-history") || [];
+  console.log("integrated response", initInitSystemMessage);
 
   const completion = await openaiCalling(message);
   const toolCall = get(completion, "choices[0].message.tool_calls[0]");
@@ -200,6 +205,10 @@ const init = () => {
 
   if (!loadDataFromLocalStorage("expense-history")) {
     saveDataToLocalStorage("expense-history", []);
+  }
+
+  if (!loadDataFromLocalStorage("category")) {
+    saveDataToLocalStorage("category", []);
   }
 };
 

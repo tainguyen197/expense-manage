@@ -118,8 +118,7 @@ const ChatPage = () => {
             <Link href="/statics/history">
               <ChartNoAxesCombined
                 size={24}
-                color="#41bc5b"
-                className="relative cursor-pointer"
+                className="relative cursor-pointer text-blue-main"
               />
             </Link>
           </div>
@@ -197,7 +196,7 @@ const Message = ({
       className={`flex flex-col gap-2 rounded-lg px-3 py-2 text-sm transform transition-transform duration-200 hover:scale-105 ${
         isSender ? "ml-auto bg-[#41bc5b] text-primary-foreground" : "bg-muted"
       } transition-opacity duration-400 animate-fadeIn
-      w-fit max-w-[60%]`}
+      w-fit max-w-[70%]`}
     >
       {content}
     </div>

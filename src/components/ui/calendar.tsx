@@ -38,13 +38,17 @@ const Calender = ({
         <Button
           size={"icon"}
           key={day.toISOString()}
-          className={`rounded-md border-none shadow-none text-black bg-white  hover:text-white hover:bg-slate-600
+          className={`rounded-md border-none shadow-none text-black bg-white  hover:text-white hover:bg-blue-main
              ${
                selectedDate?.toDateString() === day.toDateString()
                  ? "bg-blue-main text-primary-foreground"
                  : ""
              }
-              ${index === 0 && "bg-[#527cff63]"}`}
+              ${index === 0 && "bg-[#527cff63]"}
+              ${
+                day.toDateString() === new Date().toDateString() &&
+                "border-[#527cff63] border-solid border"
+              }`}
           onClick={() => setSelectedDate(day)}
         >
           {day.getDate()}

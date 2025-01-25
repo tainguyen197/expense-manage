@@ -21,7 +21,7 @@ export function StaticsTab({ expenseList }: { expenseList: Expense[] }) {
         {expenseList.length === 0 ? (
           <div className="flex flex-col items-center justify-center pt-10 transition-all animate-fadeIn">
             <ReceiptText color="#6b7280" size={48} />
-            <p className="text-gray-500 mt-4">No expenses found</p>
+            <p className="text-gray-500 mt-2 text-sm">No expenses found</p>
           </div>
         ) : (
           <div className="flex flex-col gap-1 transition-all animate-fadeIn">
