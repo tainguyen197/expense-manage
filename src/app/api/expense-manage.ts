@@ -1,16 +1,48 @@
+import { Expense } from "@/types/expense";
 import {
   loadDataFromLocalStorage,
   saveDataToLocalStorage,
 } from "@/utils/localStorage";
 
+export const getExpenseHistory = () => {
+  return loadDataFromLocalStorage("expense-history") || [];
+};
+
+// get expense history for a specific date
+export const getExpenseHistoryByDate = (date: string) => {
+  const data = loadDataFromLocalStorage<Expense[]>("expense-history");
+  if (!data) return [];
+
+  return data.filter((entry: Expense) => {
+    const entryDate = new Date(entry.timestamp);
+
+    const startOfDate = new Date(
+      entryDate.getFullYear(),
+      entryDate.getMonth(),
+      entryDate.getDate()
+    ).getTime();
+    return startOfDate.toString() === date;
+  });
+};
+
 export const addExpense = (expense: any) => {
-  const expenseHistory = loadDataFromLocalStorage("expense-history");
-  saveDataToLocalStorage("expense-history", [...expenseHistory, expense]);
+  const expenseHistory = loadDataFromLocalStorage<Expense[]>("expense-history");
+  saveDataToLocalStorage("expense-history", [
+    ...(expenseHistory || []),
+    expense,
+  ]);
   console.log("Saved expense", expense);
 };
 
 export const deleteExpense = (expense: any) => {
-  const expenseHistory = loadDataFromLocalStorage("expense-history");
+  const expenseHistory = loadDataFromLocalStorage<Expense[]>("expense-history");
+
+  if (!expenseHistory) {
+    return {
+      success: false,
+      message: "No expense history found",
+    };
+  }
   const updatedExpenseHistory = expenseHistory.filter(
     (entry: any) =>
       entry.amount !== expense.amount || entry.item !== expense.item
@@ -82,7 +114,17 @@ export const calculateSpent = ({
       throw new Error("Invalid range specified");
   }
 
-  const data = loadDataFromLocalStorage("expense-history");
+  const data = loadDataFromLocalStorage<Expense[]>("expense-history");
+
+  if (!data) {
+    return {
+      range,
+      start_date: new Date(startTime).toISOString(),
+      end_date: new Date(endTime).toISOString(),
+      total: 0,
+      details: [],
+    };
+  }
 
   // Filter the data based on the range
   const filteredData = data.filter(

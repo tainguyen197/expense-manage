@@ -1,19 +1,13 @@
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { House } from "lucide-react";
+import { ReceiptText } from "lucide-react";
 import { Chart } from "./Chart";
+import React from "react";
+import { loadDataFromLocalStorage } from "@/utils/localStorage";
+import { Expense } from "@/types/expense";
+import Item from "../history/components/Item";
 
-export function TabsDemo() {
+export function StaticsTab({ expenseList }: { expenseList: Expense[] }) {
   return (
     <Tabs
       defaultValue="account"
@@ -24,25 +18,18 @@ export function TabsDemo() {
         <TabsTrigger value="password">Categories</TabsTrigger>
       </TabsList>
       <TabsContent value="account">
-        <div className="flex flex-col gap-1">
-          {[1, 2, 3].map(() => (
-            <div className="flex items-center justify-between p-2">
-              <div className="flex items-center">
-                <Button size="icon" className="bg-gray-100 shadow-none">
-                  <House size={36} color="black" strokeWidth={3} />
-                </Button>
-                <div className="ml-4">
-                  <p className="font-semibold text-sm">Food</p>
-                  <p className="text-gray-500 text-xs">20 Feb 2024</p>
-                </div>
-              </div>
-              <div className="text-right">
-                <p className="font-semibold text-sm">$20</p>
-                <p className="text-gray-500 text-xs">Google pay</p>
-              </div>
-            </div>
-          ))}
-        </div>
+        {expenseList.length === 0 ? (
+          <div className="flex flex-col items-center justify-center pt-10 transition-all animate-fadeIn">
+            <ReceiptText color="#6b7280" size={48} />
+            <p className="text-gray-500 mt-4">No expenses found</p>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-1 transition-all animate-fadeIn">
+            {expenseList.map((item) => (
+              <Item item={item} key={item.timestamp} />
+            ))}
+          </div>
+        )}
       </TabsContent>
       <TabsContent value="password">
         <Chart />

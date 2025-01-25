@@ -115,7 +115,8 @@ const handleToolCall = (
 
 export const getExpenseParams = async (message: string) => {
   const userTime = new Date().getTime();
-  const chatHistory: ChatMessage[] = loadDataFromLocalStorage("chat-history");
+  const chatHistory =
+    loadDataFromLocalStorage<ChatMessage[]>("chat-history") || [];
 
   const completion = await openaiCalling(message);
   const toolCall = get(completion, "choices[0].message.tool_calls[0]");
@@ -126,7 +127,7 @@ export const getExpenseParams = async (message: string) => {
     const normalResponse = get(completion, "choices[0].message.content");
 
     saveDataToLocalStorage("chat-history", [
-      ...chatHistory,
+      ...(chatHistory || []),
       {
         role: "user",
         content: message,

@@ -4,7 +4,15 @@ import "./CustomDayPicker.css"; // Add custom styles
 import { Button } from "./button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const Calender = () => {
+type CalenderProps = {
+  selectedDate?: Date;
+  onSelectedDate?: (date: Date) => void;
+};
+
+const Calender = ({
+  selectedDate: selectedDateProp,
+  onSelectedDate,
+}: CalenderProps) => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     new Date()
   );
@@ -16,7 +24,7 @@ const Calender = () => {
   endOfWeek.setDate(startOfWeek.getDate() + 6); // End on Saturday
 
   // Show only the current week
-  const weekDays = [];
+  const weekDays: Date[] = [];
   for (let i = 0; i < 7; i++) {
     const day = new Date(startOfWeek);
     day.setDate(startOfWeek.getDate() + i);
@@ -39,10 +47,6 @@ const Calender = () => {
               ${index === 0 && "bg-[#527cff63]"}`}
           onClick={() => setSelectedDate(day)}
         >
-          {/* <span className="relative flex h-3 w-3">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
-          </span> */}
           {day.getDate()}
         </Button>
       ))}
@@ -64,6 +68,14 @@ const Calender = () => {
       ))}
     </div>
   );
+
+  React.useEffect(() => {
+    if (selectedDateProp) setSelectedDate(selectedDateProp);
+  }, [selectedDateProp]);
+
+  React.useEffect(() => {
+    if (onSelectedDate) onSelectedDate(selectedDate!);
+  }, [selectedDate]);
 
   return (
     <div className="w-fit">
