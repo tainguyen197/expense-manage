@@ -26,6 +26,22 @@ export const getExpenseHistoryByDate = (date: string) => {
   });
 };
 
+// get expense history for a specific month and year
+export const getExpenseHistoryByMonthAndYear = (
+  month: number,
+  year: number
+) => {
+  const data = loadDataFromLocalStorage<Expense[]>("expense-history");
+  if (!data) return [];
+
+  return data.filter((entry: Expense) => {
+    const entryDate = new Date(entry.timestamp);
+    return (
+      entryDate.getMonth() + 1 === month && entryDate.getFullYear() === year
+    );
+  });
+};
+
 export const addExpense = (expense: Expense) => {
   // convert the category name to id
   const categoryList = getCategoryList();

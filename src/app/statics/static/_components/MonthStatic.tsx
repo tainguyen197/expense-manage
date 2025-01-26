@@ -20,6 +20,8 @@ import {
 import { useRouter, useSearchParams } from "next/navigation";
 import { routesConfig } from "@/config/routes";
 import React from "react";
+import { getExpenseHistoryByMonthAndYear } from "@/app/api/expense-manage";
+import { formatCurrency } from "@/utils/curency";
 
 const monthName = [
   {
@@ -78,6 +80,21 @@ const MonthStatic = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  const currentMonth = searchParams.get("month");
+  const currentMonthName = monthName.find(
+    (month) => month.value === currentMonth
+  );
+  const currentYear = searchParams.get("year");
+
+  const expenseMonth = getExpenseHistoryByMonthAndYear(
+    Number(currentMonth),
+    Number(currentYear)
+  );
+
+  const totalOutcome = expenseMonth.reduce((acc, expense) => {
+    return acc + expense.amount;
+  }, 0);
+
   const handleValueChange = (params: Record<string, string>) => {
     const currentParams = new URLSearchParams(searchParams.toString());
     Object.entries(params).forEach(([key, value]) => {
@@ -95,12 +112,6 @@ const MonthStatic = () => {
       handleValueChange({ year, month });
     }
   }, [searchParams]);
-
-  const currentMonth = searchParams.get("month");
-  const currentMonthName = monthName.find(
-    (month) => month.value === currentMonth
-  );
-  const currentYear = searchParams.get("year");
 
   return (
     <Card>
@@ -120,7 +131,7 @@ const MonthStatic = () => {
               defaultValue={currentMonthName?.value}
               onValueChange={(value) => handleValueChange({ month: value })}
             >
-              <SelectTrigger className="border-none">
+              <SelectTrigger className="border-none shadow-none">
                 <SelectValue placeholder="Select a month" />
               </SelectTrigger>
               <SelectContent>
@@ -138,7 +149,7 @@ const MonthStatic = () => {
               defaultValue={currentYear ?? undefined}
               onValueChange={(value) => handleValueChange({ year: value })}
             >
-              <SelectTrigger className="border-none">
+              <SelectTrigger className="border-none shadow-none">
                 <SelectValue placeholder="Select a year" />
               </SelectTrigger>
               <SelectContent>
@@ -164,7 +175,13 @@ const MonthStatic = () => {
           </div>
           <div className="flex justify-between">
             <p className="text-md text-gray-500">Total outcome</p>
-            <p className="text-xl font-bold ">₹ 1,00,000</p>
+            {totalOutcome ? (
+              <p className="text-xl font-bold transition-all animate-fadeIn">
+                {formatCurrency(totalOutcome)}
+              </p>
+            ) : (
+              "--"
+            )}
           </div>
         </div>
         {/* <CardDescription className="mt-6">
