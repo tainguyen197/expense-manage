@@ -8,11 +8,16 @@ import { getExpenseHistoryByDate } from "@/app/api/expense-manage";
 import { Smile } from "lucide-react";
 import { formatCurrency } from "@/utils/curency";
 import { useUpdateSearchParams } from "@/hooks/useUpdateSearchParams";
+import { Expense, Income } from "@/types/expense";
+import { getIncomeHistoryByDate } from "@/app/api/income-manage";
+
+type Item = Expense | Income;
 
 export default function HistoryPage() {
   const searchParams = useSearchParams();
   const updateSearchParams = useUpdateSearchParams();
   const [date, setDate] = React.useState<Date | undefined>(undefined);
+  const [tab, setTab] = React.useState<string>("outcome");
 
   const handleSelectedDate = (date: Date) => {
     const startOfToday = new Date(
@@ -34,13 +39,33 @@ export default function HistoryPage() {
       const date = new Date(Number(dateParam));
       setDate(date);
     }
+
+    const tabParam = searchParams.get("tab");
+    if (tabParam) {
+      setTab(tabParam);
+    }
   }, [searchParams]);
 
-  // calculate total expense
-  const expenseList = getExpenseHistoryByDate(searchParams.get("date") || "");
-  const totalExpense = expenseList.reduce((acc, expense) => {
-    return acc + expense.amount;
-  }, 0);
+  let totalToday = 0;
+
+  switch (tab) {
+    case "income":
+      const incomeList = getIncomeHistoryByDate(searchParams.get("date") || "");
+      totalToday = incomeList.reduce((acc, income) => {
+        return acc + income.amount;
+      }, 0);
+      break;
+    case "outcome":
+      const expenseList = getExpenseHistoryByDate(
+        searchParams.get("date") || ""
+      );
+      totalToday = expenseList.reduce((acc, expense) => {
+        return acc + expense.amount;
+      }, 0);
+
+    default:
+      break;
+  }
 
   return (
     <div className="flex flex-col items-center mx-auto container pt-2 gap-10">
@@ -50,23 +75,16 @@ export default function HistoryPage() {
         </div>
       </div>
 
-      {/* <div className="flex justify-center mt-10 h-20 w-20 relative">
-        <div className="absolute z-0 opacity-75 inline-flex w-full h-full bg-gray-300 rounded-full animate-ping-slow "></div>
-        <div className="w-20 h-20 bg-blue-main rounded-full inline-flex relative" />
-        <p className="absolute text-white text-md w-full h-full flex justify-center items-center font-bold">
-          <Smile size={64} />
-        </p>
-      </div> */}
       <div className="font-semibold text-balance flex flex-col items-center gap-2">
         <span className="text-3xl font-bold text-blue-main">
-          {formatCurrency(totalExpense)}
+          {formatCurrency(totalToday)}
         </span>
         <span className="text-sm text-gray-500">
-          It is your total expense today
+          ✨ It is your total expense today
         </span>
       </div>
       <div className="flex justify-center w-full">
-        <StaticsTab onTabChange={handleTabChange} />
+        <StaticsTab onTabChange={handleTabChange} defaultTab={tab} />
       </div>
     </div>
   );

@@ -6,7 +6,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <div id="statics-layout" className="bg-gray-100">
       <Header />
       {children}
-      <Navbar />
+      {/* <Navbar /> */}
     </div>
   );
 }
