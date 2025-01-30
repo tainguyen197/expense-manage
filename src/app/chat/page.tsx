@@ -19,6 +19,7 @@ import { Message as TMessage } from "../../types/message";
 import { groupMessagesByDate } from "@/utils/groupMessagesByDate";
 import moment from "moment";
 import Link from "next/link";
+import Message from "./_components/Message";
 
 type MessageState = Record<string, TMessage[]>; // group of messages
 
@@ -56,7 +57,8 @@ const ChatPage = () => {
 
   React.useEffect(() => {
     // initial message
-    const chatHistory: TMessage[] = loadDataFromLocalStorage("chat-history");
+    const chatHistory =
+      loadDataFromLocalStorage<TMessage[]>("chat-history") ?? [];
 
     // group of messages
     const groupMessage = groupMessagesByDate(chatHistory);
@@ -81,14 +83,15 @@ const ChatPage = () => {
       const lastDate = listDate[listDate.length - 1];
       const lastMessage = messages?.[lastDate][messages?.[lastDate].length - 1];
 
-      if (lastMessage?.role === "user") {
+      if (lastMessage?.content && lastMessage?.role === "user") {
         // get expense parameters
         getExpenseParams(lastMessage.content).then((response) => {
+          console.log("response", response);
           setMessages((messages) => ({
             ...messages,
             [lastDate]: [
               ...(messages?.[lastDate] ?? []),
-              { content: response ?? "", role: "assistant" },
+              { content: response.content, role: "assistant", kind: "default" },
             ],
           }));
         });
@@ -147,7 +150,8 @@ const ChatPage = () => {
                       <Message
                         isSender={content.role === "user"}
                         key={index}
-                        {...content}
+                        kind={content.kind}
+                        content={content.content}
                       />
                     ))}
                   </div>
@@ -172,8 +176,9 @@ const ChatPage = () => {
         <form className="flex items-center w-full px-0 pt-0">
           <Input
             name="content"
+            className="text-sm"
             id="content"
-            placeholder="Nhập chi phí gì đó thử đi..."
+            placeholder="50k trà sữa ..."
           />
           <Button className="ml-2" type="submit" formAction={handleSubmit}>
             <Send size={16} />
@@ -184,22 +189,4 @@ const ChatPage = () => {
   );
 };
 
-const Message = ({
-  content,
-  isSender = false,
-}: {
-  content: string;
-  isSender?: boolean;
-}) => {
-  return (
-    <div
-      className={`flex flex-col gap-2 rounded-lg px-3 py-2 text-sm transform transition-transform duration-200 hover:scale-105 ${
-        isSender ? "ml-auto bg-[#41bc5b] text-primary-foreground" : "bg-muted"
-      } transition-opacity duration-400 animate-fadeIn
-      w-fit max-w-[70%]`}
-    >
-      {content}
-    </div>
-  );
-};
 export default ChatPage;

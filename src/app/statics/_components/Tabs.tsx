@@ -3,6 +3,7 @@ import { CupSoda, WalletMinimal } from "lucide-react";
 import React from "react";
 import IncomeList from "../history/components/Income";
 import OutcomeList from "../history/components/Outcome";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 type StaticsTabProps = {
   defaultTab?: string;
@@ -34,10 +35,14 @@ export function StaticsTab({
         </TabsTrigger>
       </TabsList>
       <TabsContent value="outcome">
-        <OutcomeList />
+        <ScrollArea>
+          <OutcomeList />
+        </ScrollArea>
       </TabsContent>
       <TabsContent value="income">
-        <IncomeList />
+        <ScrollArea>
+          <IncomeList />
+        </ScrollArea>
       </TabsContent>
     </Tabs>
   );

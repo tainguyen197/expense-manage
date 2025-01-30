@@ -7,8 +7,9 @@ import {
   saveDataToLocalStorage,
 } from "@/utils/localStorage";
 import { addExpense, calculateSpent, deleteExpense } from "./expense-manage";
-import { defaultErrorMessage, initInitSystemMessage, tools } from "./data";
+import { defaultErrorMessage, initInitSystemMessage, tools } from "./prompt";
 import { addIncome, calculateIncome, deleteIncome } from "./income-manage";
+import { Message, MessageKind } from "@/types/message";
 
 const openai = new OpenAI({
   apiKey: process.env.NEXT_PUBLIC_API_KEY,
@@ -56,8 +57,6 @@ const openaiCalling = async (message: string) => {
     omit(message, "timestamp")
   ) as ChatCompletionMessageParam[];
 
-  console.log("tools", tools);
-
   return await openai.chat.completions.create({
     model: "gpt-4o-mini",
     messages: [
@@ -77,7 +76,11 @@ const handleToolCall = (
   toolCallArguments: any,
   userTime: number
 ) => {
-  let toolResponse: { tool_call_id: string; content: string } | null = null;
+  let toolResponse: {
+    tool_call_id: string;
+    content: string;
+    kind: MessageKind;
+  } | null = null;
 
   switch (toolCall.function.name) {
     case "add_expense":
@@ -91,8 +94,8 @@ const handleToolCall = (
           success: true,
           message: "added",
           category: toolCallArguments.category,
-          type: "expense",
         }),
+        kind: "add_expense",
       };
       break;
     case "delete_expense": {
@@ -100,6 +103,7 @@ const handleToolCall = (
       toolResponse = {
         tool_call_id: toolCall.id,
         content: JSON.stringify(itemDeleted),
+        kind: "delete_expense",
       };
       break;
     }
@@ -114,8 +118,8 @@ const handleToolCall = (
           success: true,
           message: "added",
           category: toolCallArguments.category,
-          type: "income",
         }),
+        kind: "add_income",
       };
       break;
     case "delete_income": {
@@ -123,6 +127,7 @@ const handleToolCall = (
       toolResponse = {
         tool_call_id: toolCall.id,
         content: JSON.stringify(itemDeleted),
+        kind: "delete_income",
       };
       break;
     }
@@ -137,6 +142,7 @@ const handleToolCall = (
       toolResponse = {
         tool_call_id: toolCall.id,
         content: JSON.stringify(incomeData),
+        kind: "calculate_income",
       };
       break;
     case "calculate_spent":
@@ -150,6 +156,7 @@ const handleToolCall = (
       toolResponse = {
         tool_call_id: toolCall.id,
         content: JSON.stringify(spentData),
+        kind: "calculate_expense",
       };
       break;
     default:
@@ -169,12 +176,12 @@ export const getExpenseParams = async (message: string) => {
   const toolCall = get(completion, "choices[0].message.tool_calls[0]");
 
   // if no tool call, return normal response
-  console.log(completion);
+
   if (!toolCall) {
     console.log("no tool call");
     const normalResponse = get(completion, "choices[0].message.content");
 
-    saveDataToLocalStorage("chat-history", [
+    saveDataToLocalStorage<Message[]>("chat-history", [
       ...(chatHistory || []),
       {
         role: "user",
@@ -185,10 +192,16 @@ export const getExpenseParams = async (message: string) => {
         role: "assistant",
         content: normalResponse,
         timestamp: new Date().getTime(),
+        kind: "default",
       },
     ]);
 
-    return normalResponse;
+    return {
+      role: "assistant",
+      content: normalResponse,
+      timestamp: new Date().getTime(),
+      kind: "default",
+    };
   }
 
   const toolResponse = handleToolCall(
@@ -222,7 +235,7 @@ export const getExpenseParams = async (message: string) => {
   const response2 =
     completion2.choices[0].message.content ?? defaultErrorMessage;
 
-  saveDataToLocalStorage("chat-history", [
+  saveDataToLocalStorage<Message[]>("chat-history", [
     ...chatHistory,
     {
       role: "user",
@@ -232,11 +245,17 @@ export const getExpenseParams = async (message: string) => {
     {
       role: "assistant",
       content: response2,
+      kind: toolResponse?.kind,
       timestamp: new Date().getTime(),
     },
   ]);
 
-  return response2;
+  return {
+    role: "assistant",
+    content: response2,
+    kind: toolResponse?.kind,
+    timestamp: new Date().getTime(),
+  };
 };
 
 const init = () => {

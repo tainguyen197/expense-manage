@@ -4,10 +4,19 @@ import { NotepadTextDashed, ReceiptText, WalletMinimal } from "lucide-react";
 import Item from "./Item";
 import { useSearchParams } from "next/navigation";
 import { getIncomeHistoryByDate } from "@/app/api/income-manage";
+import { getIconCategoryByName } from "@/utils/getIconCategoryByName";
 
 const IncomeList = () => {
   const searchParams = useSearchParams();
   const incomeList = getIncomeHistoryByDate(searchParams.get("date") || "");
+
+  const incomeListWithCategory = incomeList.map((item) => {
+    const category = getIconCategoryByName(item.category) ?? "__";
+    return {
+      ...item,
+      category: category,
+    };
+  });
 
   return incomeList.length === 0 ? (
     <div className="flex flex-col items-center justify-center pt-20 transition-all animate-fadeIn">
@@ -16,7 +25,7 @@ const IncomeList = () => {
     </div>
   ) : (
     <div className="flex flex-col gap-1 transition-all animate-fadeIn">
-      {incomeList.map((item) => (
+      {incomeListWithCategory.map((item) => (
         <Item item={item} key={item.timestamp} />
       ))}
     </div>
