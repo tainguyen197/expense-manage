@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { kindToMessage } from "./utils/kindToMessage";
+import { kindToMessage } from "../_utils/kindToMessage";
 import { MessageKind } from "@/types/message";
 
 const Message = ({

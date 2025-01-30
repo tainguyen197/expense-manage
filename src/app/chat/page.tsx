@@ -20,6 +20,7 @@ import { groupMessagesByDate } from "@/utils/groupMessagesByDate";
 import moment from "moment";
 import Link from "next/link";
 import Message from "./_components/Message";
+import Empty from "./_components/Empty";
 
 type MessageState = Record<string, TMessage[]>; // group of messages
 
@@ -185,16 +186,7 @@ const ChatPage = () => {
               ))}
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center h-full mt-28">
-              <MessageSquareDashed
-                size={84}
-                strokeWidth={1}
-                className="m-auto text-muted-foreground"
-              />
-              <span className="text-muted-foreground text-md mt-4">
-                Bắt đầu cuộc trò chuyện
-              </span>
-            </div>
+            <Empty />
           )}
         </CardContent>
       </ScrollArea>
