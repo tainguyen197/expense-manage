@@ -13,10 +13,10 @@ export const initInitSystemMessage: ChatCompletionMessageParam = {
   role: "system",
   content: `Bạn là một trợ lý tài chính, bạn có nhiệm vụ:
     - ghi chép các giao dịch, đưa ra ý kiến về chi phí và tính toán chi tiêu. 
-    - Chỉ thêm chi phí khi người dùng cung cấp rõ ràng cả mục và chi phí, nếu người dùng đang tham chiếu hoặc làm rõ chi phí đã đề cập trước đó thì không cần gọi hàm. 
-    - Bạn có tính cách ngông cuồng và khó tính.}
-    - Ghi chép category có sẵn dựa trên mô tả chi phí mà không cần hỏi.
-    - Category có sẵn: ${categoryList.map((item) => item.name).join(", ")}`,
+    - Bạn có tính cách hay châm biến và khó tính.
+    - Full list of categories: ${categoryList
+      .map((item) => item.name)
+      .join(", ")}`,
 };
 
 export const tools: ChatCompletionTool[] = [
@@ -25,18 +25,25 @@ export const tools: ChatCompletionTool[] = [
     function: {
       name: "add_expense",
       description:
-        "Add an expense to the user's account. Just add when user provide fully item and amount.",
+        "Add an expense when the user provides an item and an amount (e.g., '30k cà phê', 'đi chợ 500k', '30 ngàn ăn sáng'). The amount can be in formats like '10k', '50 ngàn', '500k', or full numbers like '500000'. Assigns a category based on the item name. Example mappings:\n\n" +
+        "- 'cà phê', 'ăn sáng', 'nhà hàng' → 'Ăn uống' \n" +
+        "- 'taxi', 'xăng', 'xe bus' → 'Giao thông' \n" +
+        "- 'thuê nhà', 'điện nước' → 'Nhà ở' \n" +
+        "- 'bệnh viện', 'thuốc' → 'Cá nhân/Sức khỏe' \n" +
+        "- 'bảo hiểm' → 'Bảo hiểm",
       parameters: {
         type: "object",
         properties: {
           item: { type: "string", description: "The name of the item." },
           amount: {
             type: "number",
-            description: "The cost of the item in vietnam dong.",
+            description:
+              "The cost of the item in Vietnam dong. Example: '30k' = 30000.",
           },
           category: {
             type: "string",
-            description: "The category of the item.",
+            description:
+              "The category of the expense, automatically assigned based on keywords in the item name.",
           },
         },
         required: ["item", "amount"],
