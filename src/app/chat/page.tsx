@@ -11,7 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Send, MessageSquareDashed, ChartNoAxesCombined } from "lucide-react";
-import React from "react";
+import React, { useTransition } from "react";
 import { testFunctionWithDelay, getExpenseParams } from "../api/openai";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { loadDataFromLocalStorage } from "@/utils/localStorage";
@@ -25,6 +25,7 @@ type MessageState = Record<string, TMessage[]>; // group of messages
 
 const ChatPage = () => {
   const [messages, setMessages] = React.useState<MessageState>();
+  const [isPending, startTransition] = useTransition();
 
   const handleSubmit = async (formData: FormData) => {
     const userMessage = formData.get("content") as string;
@@ -83,9 +84,11 @@ const ChatPage = () => {
       const lastDate = listDate[listDate.length - 1];
       const lastMessage = messages?.[lastDate][messages?.[lastDate].length - 1];
 
-      if (lastMessage?.content && lastMessage?.role === "user") {
-        // get expense parameters
-        getExpenseParams(lastMessage.content).then((response) => {
+      // get expense parameters
+      startTransition(async () => {
+        if (lastMessage?.content && lastMessage?.role === "user") {
+          const response = await getExpenseParams(lastMessage.content);
+
           console.log("response", response);
           setMessages((messages) => ({
             ...messages,
@@ -98,10 +101,22 @@ const ChatPage = () => {
               },
             ],
           }));
-        });
-      }
+        }
+      });
     }
   }, [messages]);
+
+  React.useEffect(() => {
+    isPending &&
+      setTimeout(
+        () =>
+          document.getElementById("scroll-area")?.scrollIntoView({
+            behavior: "smooth",
+            block: "end",
+          }),
+        1000
+      );
+  }, [isPending]);
 
   return (
     <Card className="shadow-none border-none h-screen">
@@ -158,6 +173,13 @@ const ChatPage = () => {
                         content={content.content}
                       />
                     ))}
+                    {isPending ? (
+                      <span className="text-sm transform-all animate-typing bg-muted-foreground text-muted-foreground p-2 rounded-lg">
+                        ✨ Đang suy nghĩ ...
+                      </span>
+                    ) : (
+                      <></>
+                    )}
                   </div>
                 </div>
               ))}

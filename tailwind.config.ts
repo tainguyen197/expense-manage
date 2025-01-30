@@ -1,3 +1,4 @@
+import { over } from "lodash";
 import type { Config } from "tailwindcss";
 
 export default {
@@ -22,8 +23,30 @@ export default {
         fadeIn: "fadeIn 0.5s ease-in forwards", // Change duration as needed
         "spin-slow": "spin 3s linear infinite",
         "ping-slow": "ping-slow 2s linear infinite",
+        typing: "typing 2s steps(30) infinite normal",
       },
       keyframes: {
+        typing: {
+          "0%": {
+            width: "0%",
+            visibility: "hidden",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+          },
+          "100%": {
+            width: "50%",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+          },
+        },
+        blink: {
+          "50%": {
+            borderColor: "transparent",
+          },
+          "100%": {
+            borderColor: "white",
+          },
+        },
         fadeIn: {
           "0%": { opacity: "0" },
           "100%": { opacity: "1" },
