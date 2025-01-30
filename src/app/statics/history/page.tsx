@@ -43,27 +43,29 @@ export default function HistoryPage() {
   }, 0);
 
   return (
-    <div className="flex flex-col items-center mx-auto container pt-2">
+    <div className="flex flex-col items-center mx-auto container pt-2 gap-10">
       <div className="flex justify-center bg-card rounded-xl shadow-lg">
         <div className="p-4 overflow-hidden">
           <Calendar onSelectedDate={handleSelectedDate} selectedDate={date} />
         </div>
       </div>
 
-      <div className="flex justify-center mt-10 h-20 w-20 relative">
+      {/* <div className="flex justify-center mt-10 h-20 w-20 relative">
         <div className="absolute z-0 opacity-75 inline-flex w-full h-full bg-gray-300 rounded-full animate-ping-slow "></div>
         <div className="w-20 h-20 bg-blue-main rounded-full inline-flex relative" />
         <p className="absolute text-white text-md w-full h-full flex justify-center items-center font-bold">
           <Smile size={64} />
         </p>
-      </div>
-      <div className="text-sm font-semibold text-balance mt-4">
-        <span className="text-md font-bold text-blue-main">
+      </div> */}
+      <div className="font-semibold text-balance flex flex-col items-center gap-2">
+        <span className="text-3xl font-bold text-blue-main">
           {formatCurrency(totalExpense)}
-        </span>{" "}
-        <span className="font-normal">for today</span>
+        </span>
+        <span className="text-sm text-gray-500">
+          It is your total expense today
+        </span>
       </div>
-      <div className="flex justify-center mt-10 w-full">
+      <div className="flex justify-center w-full">
         <StaticsTab onTabChange={handleTabChange} />
       </div>
     </div>
