@@ -91,7 +91,11 @@ const ChatPage = () => {
             ...messages,
             [lastDate]: [
               ...(messages?.[lastDate] ?? []),
-              { content: response.content, role: "assistant", kind: "default" },
+              {
+                content: response.content,
+                role: "assistant",
+                kind: response.kind,
+              },
             ],
           }));
         });
@@ -162,6 +166,7 @@ const ChatPage = () => {
             <div className="flex flex-col items-center justify-center h-full mt-28">
               <MessageSquareDashed
                 size={84}
+                strokeWidth={1}
                 className="m-auto text-muted-foreground"
               />
               <span className="text-muted-foreground text-md mt-4">

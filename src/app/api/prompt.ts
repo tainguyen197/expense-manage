@@ -7,16 +7,26 @@ import {
 
 export const defaultErrorMessage = "Xin lỗi, mình không hiểu.";
 
-const categoryList = loadDataFromLocalStorage<Category[]>("category") ?? [];
+export const defaultCategory = [
+  { id: 1, name: "Nhà ở", icon: "🏠" },
+  { id: 2, name: "Giao thông", icon: "🚗" },
+  { id: 3, name: "Ăn uống", icon: "🍔" },
+  { id: 4, name: "Cá nhân/Sức khỏe", icon: "💊" },
+  { id: 5, name: "Giải trí", icon: "🎮" },
+  { id: 6, name: "Tiết kiệm/Đầu tư", icon: "💰" },
+  { id: 7, name: "Nợ", icon: "💳" },
+  { id: 8, name: "Khác", icon: "🧾" },
+  { id: 9, name: "Bảo hiểm", icon: "🛡️" },
+  { id: 10, name: "Du lịch", icon: "✈️" },
+  { id: 11, name: "Công việc/Kinh doanh", icon: "💼" },
+];
 
 export const initInitSystemMessage: ChatCompletionMessageParam = {
   role: "system",
   content: `Bạn là một trợ lý tài chính, bạn có nhiệm vụ:
-    - ghi chép các giao dịch, đưa ra ý kiến về chi phí và tính toán chi tiêu. 
-    - Bạn có tính cách hay châm biến và khó tính.
-    - Full list of categories: ${categoryList
-      .map((item) => item.name)
-      .join(", ")}`,
+  - ghi chép các giao dịch, đưa ra ý kiến về chi phí và tính toán chi tiêu. 
+  - Bạn có tính cách hay châm biến và khó tính.
+  - Danh sách đầy đủ: ${defaultCategory.map((item) => item.name).join(", ")}`,
 };
 
 export const tools: ChatCompletionTool[] = [
@@ -25,12 +35,15 @@ export const tools: ChatCompletionTool[] = [
     function: {
       name: "add_expense",
       description:
-        "Add an expense when the user provides an item and an amount (e.g., '30k cà phê', 'đi chợ 500k', '30 ngàn ăn sáng'). The amount can be in formats like '10k', '50 ngàn', '500k', or full numbers like '500000'. Assigns a category based on the item name. Example mappings:\n\n" +
-        "- 'cà phê', 'ăn sáng', 'nhà hàng' → 'Ăn uống' \n" +
-        "- 'taxi', 'xăng', 'xe bus' → 'Giao thông' \n" +
-        "- 'thuê nhà', 'điện nước' → 'Nhà ở' \n" +
-        "- 'bệnh viện', 'thuốc' → 'Cá nhân/Sức khỏe' \n" +
-        "- 'bảo hiểm' → 'Bảo hiểm",
+        "Add an expense when the user provides an item and an amount (e.g., '30k cà phê', 'đi chợ 500k', '30 ngàn ăn sáng').\n" +
+        "The amount can be in formats like '10k', '50 ngàn', '500k', or full numbers like '500000'.\n" +
+        "Never add an expense without an amount and item name in previous user chat.\n" +
+        "Extract the numeric amount and the item name. Always assign a category based on known mappings.\n" +
+        "If an item isn't in the mapping, assign 'Khác'.\n\n" +
+        "Examples:\n" +
+        "- '50k ăn sáng' → item: 'ăn sáng', amount: 50000, category: 'Ăn uống'\n" +
+        "- '200k xăng' → item: 'xăng', amount: 200000, category: 'Giao thông'\n" +
+        "- '10k nước' → item: 'nước', amount: 10000, category: 'Khác'\n",
       parameters: {
         type: "object",
         properties: {

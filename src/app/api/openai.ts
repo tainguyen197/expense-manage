@@ -7,7 +7,12 @@ import {
   saveDataToLocalStorage,
 } from "@/utils/localStorage";
 import { addExpense, calculateSpent, deleteExpense } from "./expense-manage";
-import { defaultErrorMessage, initInitSystemMessage, tools } from "./prompt";
+import {
+  defaultCategory,
+  defaultErrorMessage,
+  initInitSystemMessage,
+  tools,
+} from "./prompt";
 import { addIncome, calculateIncome, deleteIncome } from "./income-manage";
 import { Message, MessageKind } from "@/types/message";
 
@@ -200,7 +205,7 @@ export const getExpenseParams = async (message: string) => {
       role: "assistant",
       content: normalResponse,
       timestamp: new Date().getTime(),
-      kind: "default",
+      kind: "default" as MessageKind,
     };
   }
 
@@ -226,6 +231,14 @@ export const getExpenseParams = async (message: string) => {
     },
   ].filter(Boolean) as ChatCompletionMessageParam[];
 
+  if (!toolResponse)
+    return {
+      role: "assistant",
+      content: "Úi, mình không hiểu ý bạn lắm, bạn có thể nói rõ hơn không?",
+      timestamp: new Date().getTime(),
+      kind: "default" as MessageKind,
+    };
+
   const completion2 = await openai.chat.completions.create({
     tools,
     model: "gpt-4o-mini",
@@ -245,7 +258,7 @@ export const getExpenseParams = async (message: string) => {
     {
       role: "assistant",
       content: response2,
-      kind: toolResponse?.kind,
+      kind: toolResponse.kind,
       timestamp: new Date().getTime(),
     },
   ]);
@@ -270,7 +283,7 @@ const init = () => {
   }
 
   if (!loadDataFromLocalStorage("category")) {
-    saveDataToLocalStorage("category", []);
+    saveDataToLocalStorage("category", defaultCategory);
   }
 
   if (!loadDataFromLocalStorage("income-history")) {
