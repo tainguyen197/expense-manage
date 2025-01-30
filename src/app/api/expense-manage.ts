@@ -43,6 +43,23 @@ export const getExpenseHistoryByMonthAndYear = (
 };
 
 export const addExpense = (expense: Expense) => {
+  // prevent adding expense with duplicate item and amount in the same day
+  const expenseHistory = loadDataFromLocalStorage<Expense[]>("expense-history");
+  const duplicate = expenseHistory?.find(
+    (entry) =>
+      entry.item === expense.item &&
+      entry.amount === expense.amount &&
+      new Date(entry.timestamp).toDateString() ===
+        new Date(expense.timestamp).toDateString()
+  );
+
+  if (duplicate) {
+    return {
+      success: false,
+      message: "Duplicate expense found",
+    };
+  }
+
   // convert the category name to id
   const categoryList = getCategoryList();
   const category = categoryList.find((c) => c.name === expense.category);
@@ -50,12 +67,16 @@ export const addExpense = (expense: Expense) => {
     expense.category = category.id;
   }
 
-  const expenseHistory = loadDataFromLocalStorage<Expense[]>("expense-history");
   saveDataToLocalStorage("expense-history", [
     ...(expenseHistory || []),
     expense,
   ]);
   console.log("Saved expense", expense);
+
+  return {
+    success: true,
+    ...expense,
+  };
 };
 
 export const deleteExpense = (expense: any) => {

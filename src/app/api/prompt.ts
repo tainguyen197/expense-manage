@@ -37,9 +37,9 @@ export const tools: ChatCompletionTool[] = [
       description:
         "Add an expense when the user provides an item and an amount (e.g., '30k cà phê', 'đi chợ 500k', '30 ngàn ăn sáng').\n" +
         "The amount can be in formats like '10k', '50 ngàn', '500k', or full numbers like '500000'.\n" +
-        "Never add an expense without an amount and item name in previous user chat.\n" +
+        "Never add an expense unless the item name and amount appear in the same user input.\n" +
         "Extract the numeric amount and the item name. Always assign a category based on known mappings.\n" +
-        "If an item isn't in the mapping, assign 'Khác'.\n\n" +
+        "If an item isn't in the mapping, assign 'Khác'.\n" +
         "Examples:\n" +
         "- '50k ăn sáng' → item: 'ăn sáng', amount: 50000, category: 'Ăn uống'\n" +
         "- '200k xăng' → item: 'xăng', amount: 200000, category: 'Giao thông'\n" +

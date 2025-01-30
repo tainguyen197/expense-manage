@@ -89,18 +89,18 @@ const handleToolCall = (
 
   switch (toolCall.function.name) {
     case "add_expense":
-      addExpense({
+      const { success, message } = addExpense({
         ...toolCallArguments,
         timestamp: userTime,
       });
       toolResponse = {
         tool_call_id: toolCall.id,
         content: JSON.stringify({
-          success: true,
-          message: "added",
+          success,
+          message: success ? "added" : message,
           category: toolCallArguments.category,
         }),
-        kind: "add_expense",
+        kind: success ? "add_expense" : "default",
       };
       break;
     case "delete_expense": {
@@ -181,7 +181,6 @@ export const getExpenseParams = async (message: string) => {
   const toolCall = get(completion, "choices[0].message.tool_calls[0]");
 
   // if no tool call, return normal response
-
   if (!toolCall) {
     console.log("no tool call");
     const normalResponse = get(completion, "choices[0].message.content");
