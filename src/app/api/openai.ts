@@ -8,6 +8,7 @@ import {
 } from "@/utils/localStorage";
 import { addExpense, calculateSpent, deleteExpense } from "./expense-manage";
 import { defaultErrorMessage, initInitSystemMessage, tools } from "./data";
+import { addIncome, calculateIncome, deleteIncome } from "./income-manage";
 
 const openai = new OpenAI({
   apiKey: process.env.NEXT_PUBLIC_API_KEY,
@@ -55,6 +56,8 @@ const openaiCalling = async (message: string) => {
     omit(message, "timestamp")
   ) as ChatCompletionMessageParam[];
 
+  console.log("tools", tools);
+
   return await openai.chat.completions.create({
     model: "gpt-4o-mini",
     messages: [
@@ -88,17 +91,56 @@ const handleToolCall = (
           success: true,
           message: "added",
           category: toolCallArguments.category,
+          type: "expense",
         }),
       };
       break;
-    case "delete_expense":
+    case "delete_expense": {
       const itemDeleted = deleteExpense(toolCallArguments);
       toolResponse = {
         tool_call_id: toolCall.id,
         content: JSON.stringify(itemDeleted),
       };
       break;
+    }
+    case "add_income":
+      addIncome({
+        ...toolCallArguments,
+        timestamp: userTime,
+      });
+      toolResponse = {
+        tool_call_id: toolCall.id,
+        content: JSON.stringify({
+          success: true,
+          message: "added",
+          category: toolCallArguments.category,
+          type: "income",
+        }),
+      };
+      break;
+    case "delete_income": {
+      const itemDeleted = deleteIncome(toolCallArguments);
+      toolResponse = {
+        tool_call_id: toolCall.id,
+        content: JSON.stringify(itemDeleted),
+      };
+      break;
+    }
+    case "calculate_income":
+      console.log("calculating income");
+      const incomeData = calculateIncome({
+        range: toolCallArguments.range,
+        start_date: toolCallArguments.start_date,
+        end_date: toolCallArguments.end_date,
+      });
+
+      toolResponse = {
+        tool_call_id: toolCall.id,
+        content: JSON.stringify(incomeData),
+      };
+      break;
     case "calculate_spent":
+      console.log("calculating spent");
       const spentData = calculateSpent({
         range: toolCallArguments.range,
         start_date: toolCallArguments.start_date,
@@ -121,12 +163,13 @@ export const getExpenseParams = async (message: string) => {
   const userTime = new Date().getTime();
   const chatHistory =
     loadDataFromLocalStorage<ChatMessage[]>("chat-history") || [];
-  console.log("integrated response", initInitSystemMessage);
 
   const completion = await openaiCalling(message);
+
   const toolCall = get(completion, "choices[0].message.tool_calls[0]");
 
   // if no tool call, return normal response
+  console.log(completion);
   if (!toolCall) {
     console.log("no tool call");
     const normalResponse = get(completion, "choices[0].message.content");
@@ -209,6 +252,10 @@ const init = () => {
 
   if (!loadDataFromLocalStorage("category")) {
     saveDataToLocalStorage("category", []);
+  }
+
+  if (!loadDataFromLocalStorage("income-history")) {
+    saveDataToLocalStorage("income-history", []);
   }
 };
 

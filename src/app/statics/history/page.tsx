@@ -3,18 +3,16 @@
 import React from "react";
 import Calendar from "@/components/ui/calendar";
 import { StaticsTab } from "../_components/Tabs";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { getExpenseHistoryByDate } from "@/app/api/expense-manage";
 import { Smile } from "lucide-react";
 import { formatCurrency } from "@/utils/curency";
-import { loadDataFromLocalStorage } from "@/utils/localStorage";
-import { Category } from "@/types/category";
+import { useUpdateSearchParams } from "@/hooks/useUpdateSearchParams";
 
 export default function HistoryPage() {
-  const router = useRouter();
   const searchParams = useSearchParams();
+  const updateSearchParams = useUpdateSearchParams();
   const [date, setDate] = React.useState<Date | undefined>(undefined);
-  const category = loadDataFromLocalStorage<Category[]>("category") || [];
 
   const handleSelectedDate = (date: Date) => {
     const startOfToday = new Date(
@@ -22,11 +20,12 @@ export default function HistoryPage() {
       date.getMonth(),
       date.getDate()
     );
-    const timestampStartOfToday = startOfToday.getTime(); // Timestamp in milliseconds
+    const timestampStartOfToday = startOfToday.getTime().toString(); // Timestamp in milliseconds
+    updateSearchParams({ date: timestampStartOfToday });
+  };
 
-    router.push(`/statics/history?date=${timestampStartOfToday}`, {
-      scroll: false,
-    });
+  const handleTabChange = (value: string) => {
+    updateSearchParams({ tab: value });
   };
 
   React.useEffect(() => {
@@ -42,15 +41,6 @@ export default function HistoryPage() {
   const totalExpense = expenseList.reduce((acc, expense) => {
     return acc + expense.amount;
   }, 0);
-
-  const expenseListWithCategory = expenseList.map((expense) => {
-    const categoryItem = category.find((c) => c.id === expense.category);
-    return {
-      ...expense,
-      category: categoryItem?.name ?? "--",
-      icon: categoryItem?.icon ?? "",
-    };
-  });
 
   return (
     <div className="flex flex-col items-center mx-auto container pt-2">
@@ -74,7 +64,7 @@ export default function HistoryPage() {
         <span className="font-normal">for today</span>
       </div>
       <div className="flex justify-center mt-10 w-full">
-        <StaticsTab expenseList={expenseListWithCategory} />
+        <StaticsTab onTabChange={handleTabChange} />
       </div>
     </div>
   );

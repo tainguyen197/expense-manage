@@ -5,3 +5,5 @@ export type Expense = {
   category: string;
   icon?: string;
 };
+
+export type Income = Expense;

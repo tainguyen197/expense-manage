@@ -72,6 +72,93 @@ export const tools: ChatCompletionTool[] = [
   {
     type: "function",
     function: {
+      name: "add_income",
+      description:
+        "Record an income when the user provides an amount and a source (e.g., 'Lương tháng 10 20 triệu', 'tiền thưởng 5 triệu', '50 triệu đầu tư'). The amount can be in formats like '10k', '500k', '5 triệu', or full numbers like '5000000'. Automatically assigns a category based on the income source. Example mappings:\n\n" +
+        "- 'lương', 'lương tháng', 'tiền công' → 'Lương' 💼\n" +
+        "- 'tiền thưởng', 'bonus' → 'Thưởng' 🎁\n" +
+        "- 'đầu tư', 'cổ tức', 'chứng khoán' → 'Đầu tư' 📈\n" +
+        "- 'bán hàng', 'kinh doanh', 'thu nhập thêm' → 'Kinh doanh' 🏪\n" +
+        "- Anything unrecognized → 'Khác' 🧾",
+      parameters: {
+        type: "object",
+        properties: {
+          item: {
+            type: "string",
+            description: "The source of the income (e.g., salary, bonus).",
+          },
+          amount: {
+            type: "number",
+            description:
+              "The amount of income in Vietnam dong. Example: '5 triệu' = 5000000.",
+          },
+          category: {
+            type: "string",
+            description:
+              "The category of the income, automatically assigned based on keywords in the source name.",
+          },
+        },
+        required: ["item", "amount"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "delete_income",
+      description:
+        "Delete an income from the user's account. Just delete when user provide fully source and amount. When user provide only source, confirm deletion.",
+      parameters: {
+        type: "object",
+        properties: {
+          source: {
+            type: "string",
+            description: "The source of the income (e.g., salary, bonus).",
+          },
+          amount: {
+            type: "number",
+            description:
+              "The amount of income in Vietnam dong. Example: '5 triệu' = 5000000.",
+          },
+        },
+        required: ["source", "amount"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "calculate_income",
+      description:
+        "Calculate the total amount the user has earned based on a specified time range.",
+      parameters: {
+        type: "object",
+        properties: {
+          range: {
+            type: "string",
+            description:
+              "The time range to calculate. Options: 'today', 'last_day', 'this_month', 'last_month', or 'custom'.",
+          },
+          start_date: {
+            type: "string",
+            format: "date-time",
+            description:
+              "The start date for a custom range, in ISO 8601 format (e.g., '2023-01-01T00:00:00Z'). Required if range is 'custom'.",
+          },
+          end_date: {
+            type: "string",
+            format: "date-time",
+            description:
+              "The end date for a custom range, in ISO 8601 format (e.g., '2023-01-31T23:59:59Z'). Required if range is 'custom'.",
+          },
+        },
+        required: ["range"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
       name: "calculate_spent",
       description:
         "Calculate the total amount the user has spent based on a specified time range.",
