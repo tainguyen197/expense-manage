@@ -3,6 +3,7 @@ import {
   loadDataFromLocalStorage,
   saveDataToLocalStorage,
 } from "@/utils/localStorage";
+import { getCategoryList } from "./category";
 
 export const getIncomeHistory = () => {
   return loadDataFromLocalStorage("income-history") || [];
@@ -39,9 +40,37 @@ export const getIncomeHistoryByMonthAndYear = (month: number, year: number) => {
 };
 
 export const addIncome = (income: Income) => {
+  // prevent adding income with duplicate item and amount in the same day
   const incomeHistory = loadDataFromLocalStorage<Income[]>("income-history");
+  const duplicate = incomeHistory?.find(
+    (entry) =>
+      entry.item === income.item &&
+      entry.amount === income.amount &&
+      new Date(entry.timestamp).toDateString() ===
+        new Date(income.timestamp).toDateString()
+  );
+
+  if (duplicate) {
+    return {
+      success: false,
+      message: "Duplicate income found",
+    };
+  }
+
+  // convert the category name to id
+  const categoryList = getCategoryList();
+  const category = categoryList.find((c) => c.name === income.category);
+  if (category) {
+    income.category = category.id;
+  }
+
   saveDataToLocalStorage("income-history", [...(incomeHistory || []), income]);
-  console.log("Saved income", income);
+  console.log("Added income", income);
+
+  return {
+    success: true,
+    message: "added",
+  };
 };
 
 export const deleteIncome = (item: any) => {

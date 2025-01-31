@@ -87,11 +87,17 @@ export const tools: ChatCompletionTool[] = [
     function: {
       name: "add_income",
       description:
-        "Record an income when the user provides an amount and a source (e.g., 'Lương tháng 10 20 triệu', 'tiền thưởng 5 triệu', '50 triệu đầu tư'). The amount can be in formats like '10k', '500k', '5 triệu', or full numbers like '5000000'. Automatically assigns a category based on the income source. Example mappings:\n\n" +
-        "- 'lương', 'lương tháng', 'tiền công' → 'Lương' 💼\n" +
+        "Record an income when the user provides an amount and a source (e.g., 'Lương tháng 10 20 triệu', 'tiền thưởng 5 triệu', '50 triệu đầu tư').\n" +
+        "The amount can be in formats like '10k', '50 ngàn', '500k', or full numbers like '500000'.\n" +
+        "Never add an expense unless the item name and amount appear in the same user input.\n" +
+        "Extract the numeric amount and the item name. Always assign a category based on known mappings.\n" +
+        "If an item isn't in the mapping, assign 'Khác'.\n" +
+        "Example mappings:\n" +
+        "- 'quỹ', 'lương', 'lương tháng', 'tiền công' → 'Lương' 💼\n" +
         "- 'tiền thưởng', 'bonus' → 'Thưởng' 🎁\n" +
         "- 'đầu tư', 'cổ tức', 'chứng khoán' → 'Đầu tư' 📈\n" +
         "- 'bán hàng', 'kinh doanh', 'thu nhập thêm' → 'Kinh doanh' 🏪\n" +
+        "- 'quỹ', 'tiền lãi', 'tiết kiệm' → 'Tiết kiệm/Đầu tư' 💰\n" +
         "- Anything unrecognized → 'Khác' 🧾",
       parameters: {
         type: "object",
@@ -108,7 +114,7 @@ export const tools: ChatCompletionTool[] = [
           category: {
             type: "string",
             description:
-              "The category of the income, automatically assigned based on keywords in the source name.",
+              "The category of the income, always assigned based on keywords in the item name.",
           },
         },
         required: ["item", "amount"],

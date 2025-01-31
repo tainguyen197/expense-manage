@@ -112,21 +112,22 @@ const handleToolCall = (
       };
       break;
     }
-    case "add_income":
-      addIncome({
+    case "add_income": {
+      const { success, message } = addIncome({
         ...toolCallArguments,
         timestamp: userTime,
       });
       toolResponse = {
         tool_call_id: toolCall.id,
         content: JSON.stringify({
-          success: true,
-          message: "added",
+          success: success,
+          message: success ? "added" : message,
           category: toolCallArguments.category,
         }),
         kind: "add_income",
       };
       break;
+    }
     case "delete_income": {
       const itemDeleted = deleteIncome(toolCallArguments);
       toolResponse = {
