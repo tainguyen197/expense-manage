@@ -158,7 +158,7 @@ const handleToolCall = (
     case "calculate_income":
       console.log("calculating income");
       const incomeData = calculateIncome({
-        range: toolCallArguments.range,
+        // range: toolCallArguments.range,
         start_date: toolCallArguments.start_date,
         end_date: toolCallArguments.end_date,
       });

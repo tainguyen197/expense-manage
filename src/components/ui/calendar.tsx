@@ -2,14 +2,24 @@ import React, { useState } from "react";
 import "react-day-picker/dist/style.css";
 import "./CustomDayPicker.css"; // Add custom styles
 import { Button } from "./button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  CupSoda,
+  WalletMinimal,
+} from "lucide-react";
+import { calculateIncome } from "@/app/api/income-manage";
+import { calculateSpent } from "@/app/api/expense-manage";
+import { formatVND } from "@/utils/curency";
 
 type CalenderProps = {
   selectedDate?: Date;
   onSelectedDate?: (date: Date) => void;
+  disabledFuture?: boolean;
 };
 
 const Calender = ({
+  disabledFuture,
   selectedDate: selectedDateProp,
   onSelectedDate,
 }: CalenderProps) => {
@@ -34,26 +44,49 @@ const Calender = ({
   // Custom renderer for the grid
   const renderWeek = () => (
     <div className="week-row">
-      {weekDays.map((day, index) => (
-        <Button
-          size={"icon"}
-          key={day.toISOString()}
-          className={`rounded-md border-none shadow-none text-black bg-white  hover:text-white hover:bg-blue-main
+      {weekDays.map((day, index) => {
+        const income = calculateIncome({
+          start_date: day,
+          end_date: day,
+        });
+
+        const outcome = calculateSpent({
+          range: "custom",
+          start_date: day,
+          end_date: day,
+        });
+
+        return (
+          <div key={day.toISOString()}>
+            <Button
+              size={"icon"}
+              key={day.toISOString()}
+              className={`rounded-md border-none shadow-none text-black bg-white  hover:text-white hover:bg-blue-main
              ${
                selectedDate?.toDateString() === day.toDateString()
                  ? "bg-blue-main text-primary-foreground"
                  : ""
              }
-              ${index === 0 && "bg-[#527cff63]"}
               ${
                 day.toDateString() === new Date().toDateString() &&
                 "border-[#527cff63] border-solid border"
               }`}
-          onClick={() => setSelectedDate(day)}
-        >
-          {day.getDate()}
-        </Button>
-      ))}
+              disabled={disabledFuture && day > new Date()}
+              onClick={() => setSelectedDate(day)}
+            >
+              {day.getDate()}
+            </Button>
+            <div className="flex flex-col gap-1 pt-2">
+              <div className="text-[0.625rem] flex justify-center items-end gap-1 text-blue-main">
+                <span className="leading-none">{formatVND(outcome.total)}</span>
+              </div>
+              <div className="text-[0.625rem] flex justify-center items-end gap-1 text-[#ff6e09]">
+                <span className="leading-none">{formatVND(income)}</span>
+              </div>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 
@@ -105,6 +138,7 @@ const Calender = ({
         <Button
           size={"icon"}
           className="rounded-md border-none shadow-none text-black bg-white hover:bg-gray-100 "
+          disabled={disabledFuture && endOfWeek > new Date()}
           onClick={() =>
             setSelectedDate(
               new Date(selectedDate!.setDate(selectedDate!.getDate() + 7))

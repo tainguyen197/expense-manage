@@ -5,13 +5,11 @@ import Calendar from "@/components/ui/calendar";
 import { StaticsTab } from "../_components/Tabs";
 import { useSearchParams } from "next/navigation";
 import { getExpenseHistoryByDate } from "@/app/api/expense-manage";
-import { Smile } from "lucide-react";
 import { formatCurrency } from "@/utils/curency";
 import { useUpdateSearchParams } from "@/hooks/useUpdateSearchParams";
 import { Expense, Income } from "@/types/expense";
 import { getIncomeHistoryByDate } from "@/app/api/income-manage";
-
-type Item = Expense | Income;
+import { cn } from "@/lib/utils";
 
 export default function HistoryPage() {
   const searchParams = useSearchParams();
@@ -71,12 +69,22 @@ export default function HistoryPage() {
     <div className="flex flex-col items-center mx-auto container pt-2 gap-10">
       <div className="flex justify-center bg-card rounded-xl shadow-lg">
         <div className="p-4 overflow-hidden">
-          <Calendar onSelectedDate={handleSelectedDate} selectedDate={date} />
+          <Calendar
+            disabledFuture
+            onSelectedDate={handleSelectedDate}
+            selectedDate={date}
+          />
         </div>
       </div>
 
       <div className="font-semibold text-balance flex flex-col items-center gap-2">
-        <span className="text-3xl font-bold text-blue-main">
+        <span
+          className={cn(
+            "text-3xl font-bold text-blue-main",
+            tab === "income" && "text-[#ff6e09]",
+            tab === "outcome" && "text-blue-main"
+          )}
+        >
           {formatCurrency(totalToday)}
         </span>
         <span className="text-sm text-gray-500">
@@ -84,7 +92,7 @@ export default function HistoryPage() {
         </span>
       </div>
       <div className="flex justify-center w-full">
-        <StaticsTab onTabChange={handleTabChange} defaultTab={tab} />
+        <StaticsTab onTabChange={handleTabChange} value={tab} />
       </div>
     </div>
   );

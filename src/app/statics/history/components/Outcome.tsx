@@ -17,8 +17,6 @@ const OutcomeList = () => {
     };
   });
 
-  console.log("expenseList", expenseList);
-
   return expenseList.length === 0 ? (
     <Empty />
   ) : (

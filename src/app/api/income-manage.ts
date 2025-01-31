@@ -86,17 +86,18 @@ export const deleteIncome = (item: any) => {
   console.log("Deleted income", item);
 };
 
-export const calculateIncome = (args: any) => {
+export const calculateIncome = (args: { start_date: Date; end_date: Date }) => {
   const incomeHistory = loadDataFromLocalStorage<Income[]>("income-history");
   if (!incomeHistory) return 0;
 
-  const start = new Date(args.start_date).getTime();
-  const end = new Date(args.end_date).getTime();
+  // Get the start and end of the day
+  const startTime = new Date(args.start_date).setHours(0, 0, 0, 0);
+  const endTime = new Date(args.end_date).setHours(23, 59, 59, 999);
 
   return incomeHistory
     .filter((income) => {
       const incomeDate = new Date(income.timestamp).getTime();
-      return incomeDate >= start && incomeDate <= end;
+      return incomeDate >= startTime && incomeDate <= endTime;
     })
     .reduce((acc, income) => acc + income.amount, 0);
 };

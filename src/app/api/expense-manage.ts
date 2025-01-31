@@ -109,8 +109,8 @@ export const calculateSpent = ({
   end_date,
 }: {
   range: "today" | "last_day" | "this_month" | "last_month" | "custom";
-  start_date?: any;
-  end_date?: any;
+  start_date?: Date;
+  end_date?: Date;
 }) => {
   const now = new Date();
   const startOfToday = new Date(now.setHours(0, 0, 0, 0)).getTime();
@@ -152,8 +152,9 @@ export const calculateSpent = ({
           "For 'custom' range, both 'start_date' and 'end_date' must be provided."
         );
       }
-      startTime = new Date(start_date).getTime();
-      endTime = new Date(end_date).getTime();
+      // Get the start and end of the day
+      startTime = new Date(start_date).setHours(0, 0, 0, 0);
+      endTime = new Date(end_date).setHours(23, 59, 59, 999);
       break;
     default:
       throw new Error("Invalid range specified");

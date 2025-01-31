@@ -6,18 +6,15 @@ import OutcomeList from "../history/components/Outcome";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 type StaticsTabProps = {
-  defaultTab?: string;
+  value: string;
   onTabChange?: (value: string) => void;
 };
 
-export function StaticsTab({
-  defaultTab = "outcome",
-  onTabChange,
-}: StaticsTabProps) {
+export function StaticsTab({ value, onTabChange }: StaticsTabProps) {
   return (
     <Tabs
       onValueChange={onTabChange}
-      defaultValue={defaultTab}
+      value={value}
       className=" bg-card p-2 rounded-tl-2xl rounded-tr-2xl w-full"
     >
       <TabsList className="grid w-full grid-cols-2">
@@ -27,7 +24,10 @@ export function StaticsTab({
             <h3>Outcome</h3>
           </div>
         </TabsTrigger>
-        <TabsTrigger value="income">
+        <TabsTrigger
+          value="income"
+          className="data-[state=active]:text-[#ff6e09] data-[state=active]:border-b-[#ff6e09]"
+        >
           <div className="flex gap-2">
             <WalletMinimal size={20} />
             <h3>Income</h3>
