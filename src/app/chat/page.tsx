@@ -10,9 +10,9 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Send, MessageSquareDashed, ChartNoAxesCombined } from "lucide-react";
+import { Send, CalendarDays } from "lucide-react";
 import React, { useTransition } from "react";
-import { testFunctionWithDelay, getExpenseParams } from "../api/openai";
+import { getExpenseParams } from "../api/openai";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { loadDataFromLocalStorage } from "@/utils/localStorage";
 import { Message as TMessage } from "../../types/message";
@@ -25,7 +25,7 @@ import Empty from "./_components/Empty";
 type MessageState = Record<string, TMessage[]>; // group of messages
 
 const ChatPage = () => {
-  const [messages, setMessages] = React.useState<MessageState>();
+  const [messages, setMessages] = React.useState<MessageState>({});
   const [isPending, startTransition] = useTransition();
 
   const handleSubmit = async (formData: FormData) => {
@@ -33,28 +33,17 @@ const ChatPage = () => {
 
     if (!userMessage) return;
 
-    // check if messages timestamp is the same day
-    const today = new Date().toLocaleDateString();
+    const today = new Date(new Date().toLocaleDateString()).getTime();
     const listDate = Object.keys(messages || {});
     const lastDate = listDate[listDate.length - 1];
 
-    // if last message is not today, create new group
-    if (moment(lastDate).isSame(today)) {
-      setMessages((messages) => ({
-        ...messages,
-        [lastDate]: [
-          ...(messages?.[lastDate] ?? []),
-          { content: userMessage, role: "user" },
-        ],
-      }));
-    } else {
-      const date = new Date(Date.now()).toLocaleDateString();
-
-      setMessages((messages) => ({
-        ...messages,
-        [date]: [{ content: userMessage, role: "user" }],
-      }));
-    }
+    setMessages((messages) => ({
+      ...messages,
+      [today]: [
+        ...(messages?.[lastDate] ?? []),
+        { content: userMessage, role: "user" },
+      ],
+    }));
   };
 
   React.useEffect(() => {
@@ -93,7 +82,7 @@ const ChatPage = () => {
           console.log("response", response);
           setMessages((messages) => ({
             ...messages,
-            [lastDate]: [
+            [Number(lastDate)]: [
               ...(messages?.[lastDate] ?? []),
               {
                 content: response.content,
@@ -108,15 +97,16 @@ const ChatPage = () => {
   }, [messages]);
 
   React.useEffect(() => {
-    isPending &&
-      setTimeout(
-        () =>
-          document.getElementById("scroll-area")?.scrollIntoView({
-            behavior: "smooth",
-            block: "end",
-          }),
-        1000
-      );
+    if (isPending) {
+      const timeoutId = setTimeout(() => {
+        document.getElementById("scroll-area")?.scrollIntoView({
+          behavior: "smooth",
+          block: "end",
+        });
+      }, 1000);
+
+      return () => clearTimeout(timeoutId);
+    }
   }, [isPending]);
 
   return (
@@ -129,9 +119,7 @@ const ChatPage = () => {
               <AvatarFallback>KR</AvatarFallback>
             </Avatar>
             <div>
-              <p className="text-sm font-bold leading-none">
-                Nguyễn Trung Tài (Kira)
-              </p>
+              <p className="text-sm font-bold leading-none">Kira</p>
               <p className="text-sm text-muted-foreground">
                 expert_here@example.com
               </p>
@@ -139,29 +127,27 @@ const ChatPage = () => {
           </div>
           <div className="flex items-center justify-center relative">
             <Link href="/statics/history">
-              <ChartNoAxesCombined
+              <CalendarDays
                 size={24}
-                className="relative cursor-pointer text-blue-main"
+                className="relative cursor-pointer text-[#f13ebb] hover:text-[#c30c8c]"
               />
             </Link>
           </div>
         </CardTitle>
       </CardHeader>
       <ScrollArea suppressHydrationWarning id="scroll-area" className="py-16">
-        <CardContent className="py-0 pt-4 block">
+        <CardContent className="p-3 py-0 pt-4 block">
           {Object.keys(messages ?? {}).length ? (
             <div className="flex flex-col gap-4">
               {Object.keys(messages ?? {}).map((date, index) => (
                 <div key={index}>
                   <div className="text-center text-muted-foreground font-light text-sm py-2">
                     <span suppressHydrationWarning>
-                      {moment(date).locale("vi").calendar(null, {
-                        sameDay: "[Hôm nay]",
-                        nextDay: "[Ngày mai]",
-                        nextWeek: "dddd",
+                      {moment(Number(date)).calendar(null, {
+                        sameDay: "[Hôm nay]", // Removes the time part
                         lastDay: "[Hôm qua]",
-                        lastWeek: "[Tuần trước] dddd",
-                        sameElse: "DD/MM/YYYY",
+                        lastWeek: "dddd",
+                        sameElse: "MM/DD/YYYY", // Customize for older dates
                       })}
                     </span>
                   </div>
@@ -172,18 +158,19 @@ const ChatPage = () => {
                         key={index}
                         kind={content.kind}
                         content={content.content}
+                        params={content.params}
                       />
                     ))}
-                    {isPending ? (
-                      <span className="text-sm transform-all animate-typing bg-muted-foreground text-muted-foreground p-2 rounded-lg">
-                        ✨ Đang suy nghĩ ...
-                      </span>
-                    ) : (
-                      <></>
-                    )}
                   </div>
                 </div>
               ))}
+              {isPending ? (
+                <span className="text-sm transform-all animate-typing bg-muted-foreground text-muted-foreground p-2 rounded-lg">
+                  ✨ Đang suy nghĩ ...
+                </span>
+              ) : (
+                <></>
+              )}
             </div>
           ) : (
             <Empty />
@@ -191,7 +178,7 @@ const ChatPage = () => {
         </CardContent>
       </ScrollArea>
 
-      <CardFooter className="shadow-gray-100 shadow-lg py-3 fixed bottom-0 w-screen bg-white z-10">
+      <CardFooter className="shadow-gray-100 shadow-lg p-3 fixed bottom-0 w-screen bg-white z-10">
         <form className="flex items-center w-full px-0 pt-0">
           <Input
             name="content"
@@ -199,7 +186,11 @@ const ChatPage = () => {
             id="content"
             placeholder="50k trà sữa ..."
           />
-          <Button className="ml-2" type="submit" formAction={handleSubmit}>
+          <Button
+            className="ml-2 bg-[#f13ebb] hover:bg-[#c30c8c] focus-visible:"
+            type="submit"
+            formAction={handleSubmit}
+          >
             <Send size={16} />
           </Button>
         </form>

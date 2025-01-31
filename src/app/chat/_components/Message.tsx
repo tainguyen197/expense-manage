@@ -1,22 +1,25 @@
 import { Badge } from "@/components/ui/badge";
 import { kindToMessage } from "../_utils/kindToMessage";
 import { MessageKind } from "@/types/message";
+import get from "lodash/get";
 
 const Message = ({
   content,
   isSender = false,
   kind,
+  params,
 }: {
   content: string | null;
   isSender?: boolean;
   kind?: MessageKind;
+  params?: any;
 }) => {
   const kindObj = kind ? kindToMessage(kind) : null;
 
   return (
     <div
       className={`rounded-lg px-3 py-2 text-sm transform transition-transform duration-200 hover:scale-105 ${
-        isSender ? "ml-auto bg-[#41bc5b] text-primary-foreground" : "bg-muted"
+        isSender ? "ml-auto bg-[#f13ebb] text-primary-foreground" : "bg-muted"
       } transition-opacity duration-400 animate-fadeIn
       w-fit max-w-[70%]`}
     >

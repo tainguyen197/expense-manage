@@ -15,6 +15,7 @@ import {
 } from "./prompt";
 import { addIncome, calculateIncome, deleteIncome } from "./income-manage";
 import { Message, MessageKind } from "@/types/message";
+import { getMessagesByDate } from "@/utils/groupMessagesByDate";
 
 const openai = new OpenAI({
   apiKey: process.env.NEXT_PUBLIC_API_KEY,
@@ -24,7 +25,7 @@ const openai = new OpenAI({
 type ChatMessage = {
   role: "system" | "user" | "assistant" | "tool";
   content: string;
-  timestamp?: number;
+  timestamp: number;
 };
 
 const testFunction = async ({ message }: { message: string }) => {
@@ -57,16 +58,22 @@ export const testFunctionWithDelay = async ({
 };
 
 const openaiCalling = async (message: string) => {
-  const chatHistory = loadDataFromLocalStorage<ChatMessage[]>("chat-history");
-  const chatHistoryMessages = chatHistory?.map((message) =>
-    omit(message, "timestamp")
+  const chatHistory =
+    loadDataFromLocalStorage<ChatMessage[]>("chat-history") || [];
+
+  //filter chat history by today
+  const today = new Date().toDateString();
+  const todayMessages = getMessagesByDate(
+    chatHistory,
+    new Date(today).getTime().toString()
   ) as ChatCompletionMessageParam[];
 
+  console.log("todayMessages", todayMessages);
   return await openai.chat.completions.create({
     model: "gpt-4o-mini",
     messages: [
       initInitSystemMessage,
-      ...chatHistoryMessages,
+      ...todayMessages,
       {
         role: "user",
         content: message,
@@ -85,6 +92,7 @@ const handleToolCall = (
     tool_call_id: string;
     content: string;
     kind: MessageKind;
+    params?: any;
   } | null = null;
 
   switch (toolCall.function.name) {
@@ -101,6 +109,11 @@ const handleToolCall = (
           category: toolCallArguments.category,
         }),
         kind: success ? "add_expense" : "default",
+        params: {
+          category: toolCallArguments.category,
+          amount: toolCallArguments.amount,
+          item: toolCallArguments.item,
+        },
       };
       break;
     case "delete_expense": {
@@ -125,6 +138,11 @@ const handleToolCall = (
           category: toolCallArguments.category,
         }),
         kind: "add_income",
+        params: {
+          category: toolCallArguments.category,
+          amount: toolCallArguments.amount,
+          item: toolCallArguments.item,
+        },
       };
       break;
     }
@@ -183,8 +201,15 @@ export const getExpenseParams = async (message: string) => {
 
   // if no tool call, return normal response
   if (!toolCall) {
-    console.log("no tool call");
+    console.log("no tool calls");
     const normalResponse = get(completion, "choices[0].message.content");
+
+    const newMessage: Message = {
+      role: "assistant",
+      content: normalResponse,
+      timestamp: new Date().getTime(),
+      kind: "default",
+    };
 
     saveDataToLocalStorage<Message[]>("chat-history", [
       ...(chatHistory || []),
@@ -193,20 +218,10 @@ export const getExpenseParams = async (message: string) => {
         content: message,
         timestamp: userTime,
       },
-      {
-        role: "assistant",
-        content: normalResponse,
-        timestamp: new Date().getTime(),
-        kind: "default",
-      },
+      newMessage,
     ]);
 
-    return {
-      role: "assistant",
-      content: normalResponse,
-      timestamp: new Date().getTime(),
-      kind: "default" as MessageKind,
-    };
+    return newMessage;
   }
 
   const toolResponse = handleToolCall(
@@ -248,6 +263,14 @@ export const getExpenseParams = async (message: string) => {
   const response2 =
     completion2.choices[0].message.content ?? defaultErrorMessage;
 
+  const newMessage: Message = {
+    role: "assistant",
+    content: response2,
+    timestamp: new Date().getTime(),
+    kind: toolResponse.kind,
+    params: toolResponse.params,
+  };
+
   saveDataToLocalStorage<Message[]>("chat-history", [
     ...chatHistory,
     {
@@ -255,20 +278,10 @@ export const getExpenseParams = async (message: string) => {
       content: message,
       timestamp: userTime,
     },
-    {
-      role: "assistant",
-      content: response2,
-      kind: toolResponse.kind,
-      timestamp: new Date().getTime(),
-    },
+    newMessage,
   ]);
 
-  return {
-    role: "assistant",
-    content: response2,
-    kind: toolResponse?.kind,
-    timestamp: new Date().getTime(),
-  };
+  return newMessage;
 };
 
 const init = () => {
