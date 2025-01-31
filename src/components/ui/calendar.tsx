@@ -76,14 +76,18 @@ const Calender = ({
             >
               {day.getDate()}
             </Button>
-            <div className="flex flex-col gap-1 pt-2">
-              <div className="text-[0.625rem] flex justify-center items-end gap-1 text-blue-main">
-                <span className="leading-none">{formatVND(outcome.total)}</span>
+            {!(disabledFuture && day > new Date()) && (
+              <div className="flex flex-col gap-1 pt-2">
+                <div className="text-[0.625rem] flex justify-center items-end gap-1 text-blue-main">
+                  <span className="leading-none">
+                    {formatVND(outcome.total)}
+                  </span>
+                </div>
+                <div className="text-[0.625rem] flex justify-center items-end gap-1 text-[#ff6e09]">
+                  <span className="leading-none">{formatVND(income)}</span>
+                </div>
               </div>
-              <div className="text-[0.625rem] flex justify-center items-end gap-1 text-[#ff6e09]">
-                <span className="leading-none">{formatVND(income)}</span>
-              </div>
-            </div>
+            )}
           </div>
         );
       })}
