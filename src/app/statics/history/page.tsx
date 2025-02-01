@@ -7,7 +7,6 @@ import { useSearchParams } from "next/navigation";
 import { getExpenseHistoryByDate } from "@/app/api/expense-manage";
 import { formatCurrency } from "@/utils/curency";
 import { useUpdateSearchParams } from "@/hooks/useUpdateSearchParams";
-import { Expense, Income } from "@/types/expense";
 import { getIncomeHistoryByDate } from "@/app/api/income-manage";
 import { cn } from "@/lib/utils";
 

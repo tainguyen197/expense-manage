@@ -92,6 +92,26 @@ export const deleteIncome = (item: ExpenseWithoutCategory) => {
   return true;
 };
 
+export const updateIncome = (item: ExpenseWithoutCategory) => {
+  const incomeHistory = loadDataFromLocalStorage<Income[]>("income-history");
+  if (!incomeHistory) return false;
+
+  const updatedExpenseHistory = incomeHistory.map((entry: any) => {
+    const updated = entry.timestamp === item.timestamp;
+    console.log("found", updated);
+    return updated ? { ...entry, ...item } : entry;
+  });
+
+  try {
+    saveDataToLocalStorage("income-history", updatedExpenseHistory);
+  } catch (error) {
+    return false;
+  }
+
+  console.log("Updated income", item);
+  return true;
+};
+
 export const calculateIncome = (args: { start_date: Date; end_date: Date }) => {
   const incomeHistory = loadDataFromLocalStorage<Income[]>("income-history");
   if (!incomeHistory) return 0;

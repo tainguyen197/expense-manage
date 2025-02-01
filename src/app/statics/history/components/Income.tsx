@@ -1,7 +1,11 @@
 import { ExpenseWithoutCategory, Income } from "@/types/expense";
 import Item from "./Item";
 import { useSearchParams } from "next/navigation";
-import { deleteIncome, getIncomeHistoryByDate } from "@/app/api/income-manage";
+import {
+  deleteIncome,
+  getIncomeHistoryByDate,
+  updateIncome,
+} from "@/app/api/income-manage";
 import { getIconCategoryByName } from "@/utils/getIconCategoryByName";
 import Empty from "./Empty";
 import { useToast } from "@/hooks/use-toast";
@@ -29,7 +33,13 @@ const IncomeList = () => {
   };
 
   const handleEdit = (item: ExpenseWithoutCategory) => {
-    console.log("edit", item);
+    const isUpdate = updateIncome(item);
+
+    toast({
+      duration: 1000,
+      variant: isUpdate ? "success" : "error",
+      description: isUpdate ? "Out updated" : "Failed to update out",
+    });
   };
 
   return incomeList.length === 0 ? (
