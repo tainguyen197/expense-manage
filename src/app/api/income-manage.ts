@@ -1,4 +1,4 @@
-import { Income } from "@/types/expense";
+import { ExpenseWithoutCategory, Income } from "@/types/expense";
 import {
   loadDataFromLocalStorage,
   saveDataToLocalStorage,
@@ -73,17 +73,23 @@ export const addIncome = (income: Income) => {
   };
 };
 
-export const deleteIncome = (item: any) => {
+export const deleteIncome = (item: ExpenseWithoutCategory) => {
   const incomeHistory = loadDataFromLocalStorage<Income[]>("income-history");
-  if (!incomeHistory) return;
+  if (!incomeHistory) return false;
 
-  saveDataToLocalStorage(
-    "income-history",
-    incomeHistory.filter(
-      (income) => income.amount == item.amount && income.item == item.item
-    )
-  );
+  try {
+    saveDataToLocalStorage(
+      "income-history",
+      incomeHistory.filter(
+        (income) => !(income.amount == item.amount && income.item == item.item)
+      )
+    );
+  } catch (error) {
+    return false;
+  }
   console.log("Deleted income", item);
+
+  return true;
 };
 
 export const calculateIncome = (args: { start_date: Date; end_date: Date }) => {

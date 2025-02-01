@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Nunito } from "next/font/google";
 import "./globals.css";
 import { config } from "dotenv";
+import { Toaster } from "@/components/ui/toaster";
 config();
 
 const geistSans = Geist({
@@ -35,6 +36,7 @@ export default function RootLayout({
     <html lang="vi">
       <body className={`${nunito.className} bg-background antialiased`}>
         {children}
+        <Toaster />
       </body>
     </html>
   );

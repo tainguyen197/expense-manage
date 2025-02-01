@@ -90,7 +90,7 @@ export const deleteExpense = (expense: any) => {
   }
   const updatedExpenseHistory = expenseHistory.filter(
     (entry: any) =>
-      entry.amount !== expense.amount || entry.item !== expense.item
+      !(entry.amount === expense.amount && entry.item === expense.item)
   );
 
   const deleted = expenseHistory.length !== updatedExpenseHistory.length;

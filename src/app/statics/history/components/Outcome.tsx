@@ -22,7 +22,7 @@ const OutcomeList = () => {
   ) : (
     <div className="flex flex-col gap-1 transition-all animate-fadeIn">
       {expenseListWithCategory.map((item) => (
-        <Item item={item} key={item.timestamp} />
+        <Item {...item} key={item.timestamp} />
       ))}
     </div>
   );

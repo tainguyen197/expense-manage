@@ -6,7 +6,7 @@ export function formatCurrency(amount: number) {
 }
 
 export function formatVND(amount: number) {
-  if (amount <= 0) return "__";
+  if (amount <= 0) return "";
 
   if (amount >= 1_000_000) {
     return (

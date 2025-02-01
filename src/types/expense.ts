@@ -7,3 +7,7 @@ export type Expense = {
 };
 
 export type Income = Expense;
+
+export type ExpenseWithoutCategory =
+  | Omit<Expense, "category">
+  | Omit<Income, "category">;
