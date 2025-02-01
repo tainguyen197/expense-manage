@@ -103,6 +103,25 @@ export const deleteExpense = (expense: any) => {
   };
 };
 
+export const updateExpense = (expense: any) => {
+  console.log("Updating expense", expense);
+  const expenseHistory = loadDataFromLocalStorage<Expense[]>("expense-history");
+
+  if (!expenseHistory) {
+    return false;
+  }
+
+  const updatedExpenseHistory = expenseHistory.map((entry: any) => {
+    const updated = entry.timestamp === expense.timestamp;
+    console.log("found", updated);
+    return updated ? { ...entry, ...expense } : entry;
+  });
+
+  saveDataToLocalStorage("expense-history", updatedExpenseHistory);
+
+  return true;
+};
+
 export const calculateSpent = ({
   range,
   start_date,

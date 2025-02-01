@@ -5,6 +5,7 @@ import { formatCurrency } from "@/utils/curency";
 import { Pencil, Trash2 } from "lucide-react";
 import moment from "moment";
 import { ConfirmDeleteModal } from "./ConfirmDelete";
+import { EditFormDialog } from "./EditForm";
 
 export type ItemProps = ExpenseWithoutCategory & {
   category?: Category;
@@ -17,8 +18,8 @@ const Item = (item: ItemProps) => {
     item.onDelete && item.onDelete(item);
   };
 
-  const handleEdit = () => {
-    item.onEdit && item.onEdit(item);
+  const handleEdit = (values: any) => {
+    item.onEdit && item.onEdit({ ...item, ...values });
   };
 
   return (
@@ -43,7 +44,11 @@ const Item = (item: ItemProps) => {
         <p className="text-gray-500 text-xs">{item.category?.name}</p>
       </div>
       <div className="hidden group-hover:flex group-focus-within:flex gap-4 transition">
-        <Pencil size={16} className="cursor-pointer" onClick={handleEdit} />
+        <EditFormDialog
+          onSave={handleEdit}
+          defaultValue={{ ...item, category: item.category?.id ?? "" }}
+          trigger={<Pencil size={16} className="cursor-pointer" />}
+        />
         <ConfirmDeleteModal
           onConfirm={handleDelete}
           onCancel={() => {}}
