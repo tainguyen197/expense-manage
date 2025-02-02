@@ -1,16 +1,9 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CupSoda, Plus, Send, WalletMinimal } from "lucide-react";
+import { CupSoda, Plus, WalletMinimal } from "lucide-react";
 import React from "react";
 import IncomeList from "../history/components/Income";
 import OutcomeList from "../history/components/Outcome";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import Typewriter from "./Typewriter";
-import { getExpenseParams } from "@/app/api/openai";
-import { useSearchParams } from "next/navigation";
-import { Message } from "@/types/message";
-import { formatCurrency } from "@/utils/curency";
 import AddNew from "../history/components/AddNew";
 
 type StaticsTabProps = {

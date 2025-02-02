@@ -1,6 +1,6 @@
 import { ExpenseWithoutCategory, Income } from "@/types/expense";
 import Item from "./Item";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   deleteIncome,
   getIncomeHistoryByDate,
@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 
 const IncomeList = () => {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const incomeList = getIncomeHistoryByDate(searchParams.get("date") || "");
   const { toast } = useToast();
 
@@ -30,6 +31,7 @@ const IncomeList = () => {
       variant: isDeleted ? "success" : "error",
       description: isDeleted ? "Income deleted" : "Failed to delete income",
     });
+    router.refresh();
   };
 
   const handleEdit = (item: ExpenseWithoutCategory) => {
@@ -40,6 +42,7 @@ const IncomeList = () => {
       variant: isUpdate ? "success" : "error",
       description: isUpdate ? "Out updated" : "Failed to update out",
     });
+    router.refresh();
   };
 
   return incomeList.length === 0 ? (

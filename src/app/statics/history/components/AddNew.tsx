@@ -2,7 +2,7 @@ import { getExpenseParams } from "@/app/api/openai";
 import { Input } from "@/components/ui/input";
 import { Message } from "@/types/message";
 import { formatCurrency } from "@/utils/curency";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import React from "react";
 import Typewriter from "../../_components/Typewriter";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,7 @@ const AddNew = ({
   type: "add_expense" | "add_income";
 }) => {
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   const [isAddNew, setIsAddNew] = React.useState<boolean>(false);
   const [result, setResult] = React.useState<string>("");
@@ -62,6 +63,7 @@ const AddNew = ({
       }
 
       setResult(content);
+      router.refresh();
     });
   };
 
