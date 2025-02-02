@@ -1,9 +1,17 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CupSoda, WalletMinimal } from "lucide-react";
+import { CupSoda, Plus, Send, WalletMinimal } from "lucide-react";
 import React from "react";
 import IncomeList from "../history/components/Income";
 import OutcomeList from "../history/components/Outcome";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import Typewriter from "./Typewriter";
+import { getExpenseParams } from "@/app/api/openai";
+import { useSearchParams } from "next/navigation";
+import { Message } from "@/types/message";
+import { formatCurrency } from "@/utils/curency";
+import AddNew from "../history/components/AddNew";
 
 type StaticsTabProps = {
   value: string;
@@ -35,14 +43,38 @@ export function StaticsTab({ value, onTabChange }: StaticsTabProps) {
         </TabsTrigger>
       </TabsList>
       <TabsContent value="outcome">
-        <ScrollArea>
+        <div className="">
           <OutcomeList />
-        </ScrollArea>
+          <AddNew
+            type="add_expense"
+            trigger={
+              <div className="fixed bottom-4 right-4">
+                <Button
+                  size={"icon"}
+                  className="bg-blue-main text-white rounded-full p-7 hover:bg-blue-950"
+                >
+                  <Plus size={36} />
+                </Button>
+              </div>
+            }
+          />
+        </div>
       </TabsContent>
       <TabsContent value="income">
-        <ScrollArea>
-          <IncomeList />
-        </ScrollArea>
+        <IncomeList />
+        <AddNew
+          type="add_income"
+          trigger={
+            <div className="fixed bottom-4 right-4">
+              <Button
+                size={"icon"}
+                className="bg-[#ff6e09] text-white rounded-full p-7 hover:bg-[#ba4c00]"
+              >
+                <Plus size={36} />
+              </Button>
+            </div>
+          }
+        />
       </TabsContent>
     </Tabs>
   );

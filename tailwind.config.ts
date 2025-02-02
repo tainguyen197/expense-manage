@@ -24,8 +24,17 @@ export default {
         "spin-slow": "spin 3s linear infinite",
         "ping-slow": "ping-slow 2s linear infinite",
         typing: "typing 2s steps(30) infinite normal",
+        typewriter: "typewriter 2s steps(11) infinite normal",
       },
       keyframes: {
+        typewriter: {
+          from: {
+            width: "0",
+          },
+          to: {
+            width: "12ch" /* Adjust based on text length */,
+          },
+        },
         typing: {
           "0%": {
             width: "0%",

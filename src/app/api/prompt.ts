@@ -19,6 +19,7 @@ export const defaultCategory = [
   { id: 9, name: "Bảo hiểm", icon: "🛡️" },
   { id: 10, name: "Du lịch", icon: "✈️" },
   { id: 11, name: "Công việc/Kinh doanh", icon: "💼" },
+  { id: 12, name: "Lương thưởng", icon: "💵" },
 ];
 
 export const initInitSystemMessage: ChatCompletionMessageParam = {
@@ -36,7 +37,7 @@ export const tools: ChatCompletionTool[] = [
       name: "add_expense",
       description:
         "Add an expense when the user provides an item and an amount (e.g., '30k cà phê', 'đi chợ 500k', '30 ngàn ăn sáng').\n" +
-        "The amount can be in formats like '10k', '50 ngàn', '500k', or full numbers like '500000'.\n" +
+        "The amount can be in formats like '10k', '50 ngàn', '500k', '5 triệu 4' is 5400000, or full numbers like '500000'.\n" +
         "Never add an expense unless the item name and amount appear in the same user input.\n" +
         "Never add an expense unless the mount is not correct format\n" +
         "Extract the numeric amount and the item name. Always assign a category based on known mappings.\n" +
@@ -89,13 +90,12 @@ export const tools: ChatCompletionTool[] = [
       name: "add_income",
       description:
         "Record an income when the user provides an amount and a source (e.g., 'Lương tháng 10 20 triệu', 'tiền thưởng 5 triệu', '50 triệu đầu tư').\n" +
-        "The amount can be in formats like '10k', '50 ngàn', '500k', or full numbers like '500000'.\n" +
+        "The amount can be in formats like '10k', '50 ngàn', '500k', '5 triệu 4' is 5400000, or full numbers like '500000'.\n" +
         "Never add an expense unless the item name and amount appear in the same user input.\n" +
         "Extract the numeric amount and the item name. Always assign a category based on known mappings.\n" +
         "If an item isn't in the mapping, assign 'Khác'.\n" +
         "Example mappings:\n" +
-        "- 'quỹ', 'lương', 'lương tháng', 'tiền công' → 'Lương' 💼\n" +
-        "- 'tiền thưởng', 'bonus' → 'Thưởng' 🎁\n" +
+        "- 'quỹ', 'lương', 'lương tháng', 'tiền công', 'tiền thưởng', 'bonus' → 'Lương thưởng' 💵\n" +
         "- 'đầu tư', 'cổ tức', 'chứng khoán' → 'Đầu tư' 📈\n" +
         "- 'bán hàng', 'kinh doanh', 'thu nhập thêm' → 'Kinh doanh' 🏪\n" +
         "- 'quỹ', 'tiền lãi', 'tiết kiệm' → 'Tiết kiệm/Đầu tư' 💰\n" +

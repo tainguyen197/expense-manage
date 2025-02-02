@@ -6,7 +6,7 @@ const Empty = () => {
       <Image
         src={"/images/no_record_compressed.png"}
         alt="no_chat"
-        width={300}
+        width={200}
         height={100}
       />
       <span className="text-muted-foreground text-sm">

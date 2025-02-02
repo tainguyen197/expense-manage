@@ -1,7 +1,7 @@
 import OpenAI from "openai";
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 import get from "lodash/get";
-import { omit } from "lodash";
+import { add, omit } from "lodash";
 import {
   loadDataFromLocalStorage,
   saveDataToLocalStorage,
@@ -16,6 +16,7 @@ import {
 import { addIncome, calculateIncome, deleteIncome } from "./income-manage";
 import { Message, MessageKind } from "@/types/message";
 import { getMessagesByDate } from "@/utils/groupMessagesByDate";
+import { addMessage } from "./message";
 
 const openai = new OpenAI({
   apiKey: process.env.NEXT_PUBLIC_API_KEY,
@@ -190,18 +191,16 @@ const handleToolCall = (
   return toolResponse;
 };
 
-export const getExpenseParams = async (message: string) => {
-  const userTime = new Date().getTime();
-  const chatHistory =
-    loadDataFromLocalStorage<ChatMessage[]>("chat-history") || [];
-
+export const getExpenseParams = async (
+  message: string,
+  { timestamp = new Date().getTime(), persistStorage = true }
+) => {
+  const userTime = timestamp;
   const completion = await openaiCalling(message);
-
   const toolCall = get(completion, "choices[0].message.tool_calls[0]");
 
   // if no tool call, return normal response
   if (!toolCall) {
-    console.log("no tool calls");
     const normalResponse = get(completion, "choices[0].message.content");
 
     const newMessage: Message = {
@@ -211,15 +210,13 @@ export const getExpenseParams = async (message: string) => {
       kind: "default",
     };
 
-    saveDataToLocalStorage<Message[]>("chat-history", [
-      ...(chatHistory || []),
-      {
+    persistStorage &&
+      addMessage({
         role: "user",
         content: message,
         timestamp: userTime,
-      },
-      newMessage,
-    ]);
+      });
+    persistStorage && addMessage(newMessage);
 
     return newMessage;
   }
@@ -250,8 +247,9 @@ export const getExpenseParams = async (message: string) => {
     return {
       role: "assistant",
       content: "Úi, mình không hiểu ý bạn lắm, bạn có thể nói rõ hơn không?",
-      timestamp: new Date().getTime(),
+      timestamp: timestamp,
       kind: "default" as MessageKind,
+      params: {},
     };
 
   const completion2 = await openai.chat.completions.create({
@@ -266,20 +264,13 @@ export const getExpenseParams = async (message: string) => {
   const newMessage: Message = {
     role: "assistant",
     content: response2,
-    timestamp: new Date().getTime(),
+    timestamp,
     kind: toolResponse.kind,
     params: toolResponse.params,
   };
 
-  saveDataToLocalStorage<Message[]>("chat-history", [
-    ...chatHistory,
-    {
-      role: "user",
-      content: message,
-      timestamp: userTime,
-    },
-    newMessage,
-  ]);
+  persistStorage && addMessage({ role: "user", content: message, timestamp });
+  persistStorage && addMessage(newMessage);
 
   return newMessage;
 };

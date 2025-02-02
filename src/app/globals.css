@@ -71,3 +71,8 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+.animate-typewriter {
+  white-space: nowrap;
+  overflow: hidden;
+}

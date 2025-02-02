@@ -77,9 +77,8 @@ const ChatPage = () => {
       // get expense parameters
       startTransition(async () => {
         if (lastMessage?.content && lastMessage?.role === "user") {
-          const response = await getExpenseParams(lastMessage.content);
+          const response = await getExpenseParams(lastMessage.content, {});
 
-          console.log("response", response);
           setMessages((messages) => ({
             ...messages,
             [Number(lastDate)]: [
