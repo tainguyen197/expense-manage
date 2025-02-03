@@ -25,7 +25,7 @@ const AddNew = ({
   const messagePlaceholder = React.useMemo(() => {
     switch (type) {
       case "add_expense":
-        return ["50k trà sữa ...", "100k tiền lì xì ..., 5 triệu tiền phòng"];
+        return ["50k trà sữa ...", "100k tiền lì xì ...", "5 triệu tiền phòng"];
       case "add_income":
         return ["100k lương ...", "500k thưởng ...", "1 triệu tiền thưởng"];
     }

@@ -12,10 +12,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Send, CalendarDays } from "lucide-react";
 import React, { useTransition } from "react";
-import { getExpenseParams } from "../api/openai";
+import { getExpenseParams } from "../../api/openai";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { loadDataFromLocalStorage } from "@/utils/localStorage";
-import { Message as TMessage } from "../../types/message";
+import { Message as TMessage } from "../../../types/message";
 import { groupMessagesByDate } from "@/utils/groupMessagesByDate";
 import moment from "moment";
 import Link from "next/link";
@@ -124,17 +124,13 @@ const ChatPage = () => {
               </p>
             </div>
           </div>
-          <div className="flex items-center justify-center relative">
-            <Link href="/statics/history">
-              <CalendarDays
-                size={24}
-                className="relative cursor-pointer text-[#f13ebb] hover:text-[#c30c8c]"
-              />
-            </Link>
-          </div>
         </CardTitle>
       </CardHeader>
-      <ScrollArea suppressHydrationWarning id="scroll-area" className="py-16">
+      <ScrollArea
+        suppressHydrationWarning
+        id="scroll-area"
+        className="pt-16 pb-32"
+      >
         <CardContent className="p-3 py-0 pt-4 block">
           {Object.keys(messages ?? {}).length ? (
             <div className="flex flex-col gap-4">
@@ -177,7 +173,7 @@ const ChatPage = () => {
         </CardContent>
       </ScrollArea>
 
-      <CardFooter className="shadow-gray-100 shadow-lg p-3 fixed bottom-0 w-screen bg-white z-10">
+      <CardFooter className="p-3 w-screen bg-white z-10 fixed bottom-16">
         <form className="flex items-center w-full px-0 pt-0">
           <Input
             name="content"
