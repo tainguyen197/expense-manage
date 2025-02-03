@@ -65,7 +65,7 @@ export default function HistoryPage() {
   }
 
   return (
-    <div className="flex flex-col items-center mx-auto container pt-2 gap-10">
+    <div className="flex flex-col items-center mx-auto container pt-2 gap-10 h-full">
       <div className="flex justify-center bg-card rounded-xl shadow-lg">
         <div className="p-4 overflow-hidden">
           <Calendar
@@ -90,7 +90,7 @@ export default function HistoryPage() {
           ✨ It is your total expense today
         </span>
       </div>
-      <div className="flex justify-center w-full">
+      <div className="flex justify-center w-full h-full">
         <StaticsTab onTabChange={handleTabChange} value={tab} />
       </div>
     </div>
