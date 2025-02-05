@@ -135,7 +135,7 @@ const ChatPage = () => {
             <div className="flex flex-col gap-4">
               {Object.keys(messages ?? {}).map((date, index) => (
                 <div key={index}>
-                  <div className="text-center text-muted-foreground font-light text-sm py-2">
+                  <div className="text-center text-sm py-2 text-primary/90 font-semibold">
                     <span suppressHydrationWarning>
                       {moment(Number(date)).calendar(null, {
                         sameDay: "[Hôm nay]", // Removes the time part
