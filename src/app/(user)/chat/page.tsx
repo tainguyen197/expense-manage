@@ -63,7 +63,6 @@ const ChatPage = () => {
   React.useEffect(() => {
     // query ref scroll area
     document.getElementById("scroll-area")?.scrollIntoView({
-      behavior: "smooth",
       block: "end",
     });
 

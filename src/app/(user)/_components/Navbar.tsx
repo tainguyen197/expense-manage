@@ -36,9 +36,9 @@ const Navbar = () => {
         </TabsTrigger>
         <TabsTrigger
           className="flex-col border-none item-center justify-center h-full relative rounded-none shadow-none data-[state=active]:shadow-none data-[state=active]:border-none"
-          value="abc"
+          value="/statics"
         >
-          <Link href="/chat" className="absolute w-full h-full" />
+          <Link href="/statics" className="absolute w-full h-full" />
           <ChartPie size={20} />
           <h3 className="text-xs leading-none mt-1">Statics</h3>
         </TabsTrigger>
