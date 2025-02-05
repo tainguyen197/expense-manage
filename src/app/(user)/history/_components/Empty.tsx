@@ -9,7 +9,7 @@ const Empty = () => {
         width={200}
         height={100}
       />
-      <span className="text-muted-foreground text-sm">
+      <span className="text-muted/70 text-sm">
         Ops! You don't have any history yet
       </span>
     </div>

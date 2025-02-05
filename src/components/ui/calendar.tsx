@@ -61,15 +61,15 @@ const Calender = ({
             <Button
               size={"icon"}
               key={day.toISOString()}
-              className={`rounded-md border-none shadow-none text-black bg-white  hover:text-white hover:bg-blue-main
+              className={`rounded-md border-none shadow-none text-muted bg-background hover:text-background
              ${
                selectedDate?.toDateString() === day.toDateString()
-                 ? "bg-blue-main text-primary-foreground"
+                 ? "bg-primary text-primary-foreground"
                  : ""
              }
               ${
                 day.toDateString() === new Date().toDateString() &&
-                "border-[#527cff63] border-solid border"
+                "border-primary border-solid border"
               }`}
               disabled={disabledFuture && day > new Date()}
               onClick={() => setSelectedDate(day)}
@@ -78,12 +78,12 @@ const Calender = ({
             </Button>
             {!(disabledFuture && day > new Date()) && (
               <div className="flex flex-col gap-1 pt-2">
-                <div className="text-[0.625rem] flex justify-center items-end gap-1 text-blue-main">
+                <div className="text-[0.625rem] font-semibold flex justify-center items-end gap-1 text-muted">
                   <span className="leading-none">
                     {formatVND(outcome.total)}
                   </span>
                 </div>
-                <div className="text-[0.625rem] flex justify-center items-end gap-1 text-[#ff6e09]">
+                <div className="text-[0.625rem] font-semibold flex justify-center items-end gap-1 text-muted/70">
                   <span className="leading-none">{formatVND(income)}</span>
                 </div>
               </div>
@@ -102,7 +102,7 @@ const Calender = ({
           size={"icon"}
           key={day}
           disabled
-          className="rounded-md font-semibold border-none shadow-none text-black bg-white "
+          className="rounded-md font-semibold border-none shadow-none text-muted bg-background"
         >
           {day}
         </Button>
@@ -123,7 +123,7 @@ const Calender = ({
       <div className="flex items-center justify-between text-sm">
         <Button
           size={"icon"}
-          className="rounded-md border-none shadow-none text-black bg-white hover:bg-gray-100 "
+          className="rounded-md border-none shadow-none text-accent bg-background"
           onClick={() =>
             setSelectedDate(
               new Date(selectedDate!.setDate(selectedDate!.getDate() - 7))
@@ -133,7 +133,7 @@ const Calender = ({
           <ChevronLeft size={24} />
         </Button>
 
-        <span className="font-bold">
+        <span className="font-bold text-accent">
           {startOfWeek.toLocaleDateString("en-US", {
             month: "long",
             year: "numeric",
@@ -141,7 +141,7 @@ const Calender = ({
         </span>
         <Button
           size={"icon"}
-          className="rounded-md border-none shadow-none text-black bg-white hover:bg-gray-100 "
+          className="rounded-md border-none shadow-none text-accent bg-background"
           disabled={disabledFuture && endOfWeek > new Date()}
           onClick={() =>
             setSelectedDate(

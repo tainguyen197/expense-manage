@@ -90,7 +90,7 @@ const EditForm = ({
           </Select>
           <Button
             type="submit"
-            className="w-full mt-2 bg-blue-main text-white font-semibold"
+            className="w-full mt-2 text-white font-semibold"
           >
             Save
           </Button>

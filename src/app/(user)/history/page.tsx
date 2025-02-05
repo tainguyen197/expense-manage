@@ -66,7 +66,7 @@ export default function HistoryPage() {
 
   return (
     <div className="flex flex-col items-center mx-auto container pt-2 gap-10 h-full">
-      <div className="flex justify-center bg-card rounded-xl shadow-lg">
+      <div className="flex justify-center bg-background rounded-xl shadow-lg">
         <div className="p-4 overflow-hidden">
           <Calendar
             disabledFuture
@@ -77,13 +77,7 @@ export default function HistoryPage() {
       </div>
 
       <div className="font-semibold text-balance flex flex-col items-center gap-2">
-        <span
-          className={cn(
-            "text-3xl font-bold text-blue-main",
-            tab === "income" && "text-[#ff6e09]",
-            tab === "outcome" && "text-blue-main"
-          )}
-        >
+        <span className={cn("text-3xl font-bold text-accent")}>
           {formatCurrency(totalToday)}
         </span>
         <span className="text-sm text-gray-500">

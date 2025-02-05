@@ -16,18 +16,18 @@ export function StaticsTab({ value, onTabChange }: StaticsTabProps) {
     <Tabs
       onValueChange={onTabChange}
       value={value}
-      className=" bg-card p-2 rounded-tl-2xl rounded-tr-2xl w-full"
+      className="p-2 bg-background rounded-tl-2xl rounded-tr-2xl w-full"
     >
       <TabsList className="grid w-full grid-cols-2">
         <TabsTrigger value="outcome">
-          <div className="flex gap-1">
+          <div className="flex gap-1 text-primary data-[state=active]:border-b-border">
             <CupSoda size={20} />
             <h3>Outcome</h3>
           </div>
         </TabsTrigger>
         <TabsTrigger
           value="income"
-          className="data-[state=active]:text-[#ff6e09] data-[state=active]:border-b-[#ff6e09]"
+          className="flex gap-1 text-primary data-[state=active]:border-b-border"
         >
           <div className="flex gap-2">
             <WalletMinimal size={20} />
@@ -44,7 +44,7 @@ export function StaticsTab({ value, onTabChange }: StaticsTabProps) {
               <div className="fixed bottom-20 right-4">
                 <Button
                   size={"icon"}
-                  className="bg-blue-main text-white rounded-full p-7 hover:bg-blue-950"
+                  className="bg-accent text-white rounded-full p-7"
                 >
                   <Plus size={36} />
                 </Button>
@@ -61,7 +61,7 @@ export function StaticsTab({ value, onTabChange }: StaticsTabProps) {
             <div className="fixed bottom-20 right-4">
               <Button
                 size={"icon"}
-                className="bg-[#ff6e09] text-white rounded-full p-7 hover:bg-[#ba4c00]"
+                className="bg-accent text-white rounded-full p-7"
               >
                 <Plus size={36} />
               </Button>

@@ -33,21 +33,23 @@ const Item = (item: ItemProps) => {
           {item.category?.icon ?? ""}
         </Button>
         <div className="ml-4">
-          <p className="font-semibold text-sm">{item.item}</p>
+          <p className="font-semibold text-sm text-muted">{item.item}</p>
           <p className="text-gray-500 text-xs">
             {moment(item.timestamp).format("LL, LT")}
           </p>
         </div>
       </div>
       <div className="text-right group-hover:hidden group-focus-within:hidden">
-        <p className="font-semibold text-sm">{formatCurrency(item.amount)}</p>
+        <p className="font-semibold text-sm text-muted">
+          {formatCurrency(item.amount)}
+        </p>
         <p className="text-gray-500 text-xs">{item.category?.name}</p>
       </div>
       <div className="hidden group-hover:flex group-focus-within:flex gap-4 transition">
         <EditFormDialog
           onSave={handleEdit}
           defaultValue={{ ...item, category: item.category?.id ?? "" }}
-          trigger={<Pencil size={16} className="cursor-pointer" />}
+          trigger={<Pencil size={16} className="cursor-pointer text-muted" />}
         />
         <ConfirmDeleteModal
           onConfirm={handleDelete}
