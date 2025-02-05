@@ -73,6 +73,8 @@ export default {
         primary: "hsl(var(--primary))",
         secondary: "hsl(var(--secondary))",
         muted: "hsl(var(--muted))",
+        "muted-foreground": "hsl(var(--muted-foreground))",
+        "cta-button-background": "hsl(var(--cta-button-background))",
         accent: "hsl(var(--accent))",
         destructive: "hsl(var(--destructive))",
         border: "hsl(var(--border))",

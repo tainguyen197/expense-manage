@@ -10,7 +10,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Send, CalendarDays } from "lucide-react";
+import { SendHorizontal, CalendarDays } from "lucide-react";
 import React, { useTransition } from "react";
 import { getExpenseParams } from "../../api/openai";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -18,7 +18,6 @@ import { loadDataFromLocalStorage } from "@/utils/localStorage";
 import { Message as TMessage } from "../../../types/message";
 import { groupMessagesByDate } from "@/utils/groupMessagesByDate";
 import moment from "moment";
-import Link from "next/link";
 import Message from "./_components/Message";
 import Empty from "./_components/Empty";
 
@@ -109,8 +108,8 @@ const ChatPage = () => {
   }, [isPending]);
 
   return (
-    <Card className="shadow-none border-none h-screen">
-      <CardHeader className="shadow-gray-100 shadow-lg py-3 fixed top-0 w-screen bg-white z-10">
+    <Card className="shadow-none border-none bg-background">
+      <CardHeader className="shadow-gray-100 shadow-lg py-3 fixed top-0 w-screen bg-white z-10 rounded-b-2xl">
         <CardTitle className="flex justify-between">
           <div className="flex gap-2 items-center">
             <Avatar>
@@ -118,10 +117,10 @@ const ChatPage = () => {
               <AvatarFallback>KR</AvatarFallback>
             </Avatar>
             <div>
-              <p className="text-sm font-bold leading-none">Kira</p>
-              <p className="text-sm text-muted-foreground">
-                expert_here@example.com
+              <p className="text-sm font-bold leading-none text-muted/90">
+                Kira
               </p>
+              <p className="text-sm text-muted/50">expert_here@example.com</p>
             </div>
           </div>
         </CardTitle>
@@ -160,7 +159,7 @@ const ChatPage = () => {
                 </div>
               ))}
               {isPending ? (
-                <span className="text-sm transform-all animate-typing bg-muted-foreground text-muted-foreground p-2 rounded-lg">
+                <span className="text-sm transform-all animate-typing text-accent p-2 rounded-lg">
                   ✨ Đang suy nghĩ ...
                 </span>
               ) : (
@@ -173,20 +172,20 @@ const ChatPage = () => {
         </CardContent>
       </ScrollArea>
 
-      <CardFooter className="p-3 w-screen bg-white z-10 fixed bottom-16">
-        <form className="flex items-center w-full px-0 pt-0">
+      <CardFooter className="p-3 w-screen bg-white z-10 fixed bottom-16 gap-1 rounded-t-2xl">
+        <form className="flex items-center w-full px-0 pt-0 gap-3">
           <Input
             name="content"
-            className="text-sm"
+            className="text-xs rounded-full text-accent"
             id="content"
             placeholder="50k trà sữa ..."
           />
           <Button
-            className="ml-2 bg-[#f13ebb] hover:bg-[#c30c8c] focus-visible:"
+            className="px-4 [&_svg]:size-6 text-primary-foreground bg-cta-button-background"
             type="submit"
             formAction={handleSubmit}
           >
-            <Send size={16} />
+            <SendHorizontal size={32} strokeWidth={1.5} />
           </Button>
         </form>
       </CardFooter>

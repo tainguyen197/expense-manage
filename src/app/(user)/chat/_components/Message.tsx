@@ -18,8 +18,10 @@ const Message = ({
 
   return (
     <div
-      className={`rounded-lg px-3 py-2 text-sm transform transition-transform duration-200 hover:scale-105 ${
-        isSender ? "ml-auto bg-[#f13ebb] text-primary-foreground" : "bg-muted"
+      className={`rounded-xl px-3 py-2 text-sm transform transition-transform duration-200 hover:scale-105 ${
+        isSender
+          ? "ml-auto bg-primary text-primary-foreground"
+          : "bg-muted-foreground text-muted"
       } transition-opacity duration-400 animate-fadeIn
       w-fit max-w-[70%]`}
     >

@@ -17,9 +17,9 @@ const Navbar = () => {
 
   return (
     <Tabs defaultValue="/chat" className="h-16" value={pathname}>
-      <TabsList className="fixed bottom-0 w-full h-16 py-2 bg-white shadow-sm ">
+      <TabsList className="fixed bottom-0 w-full h-16 py-2 bg-white shadow-sm shadow-gray-100">
         <TabsTrigger
-          className="flex-col border-none item-center justify-center h-full relative rounded-none shadow-none data-[state=active]:shadow-none data-[state=active]:border-none  data-[state=active]:text-[#f13ebb]"
+          className="flex-col border-none item-center justify-center h-full relative rounded-none shadow-none data-[state=active]:shadow-none data-[state=active]:border-none"
           value="/chat"
         >
           <Link href="/chat" className="absolute w-full h-full" />
