@@ -1,0 +1,231 @@
+"use client";
+
+import { TrendingUp } from "lucide-react";
+import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+const chartData = [
+  {
+    day: "1",
+    income: 0,
+    outcome: 2122,
+  },
+  {
+    day: "2",
+    income: 1000,
+    outcome: 1212,
+  },
+  {
+    day: "3",
+    income: 0,
+    outcome: 3200,
+  },
+  {
+    day: "4",
+    income: 0,
+    outcome: 2222,
+  },
+  {
+    day: "5",
+    income: 0,
+    outcome: 3331,
+  },
+  {
+    day: "6",
+    income: 0,
+    outcome: 1122,
+  },
+  {
+    day: "7",
+    income: 0,
+    outcome: 2232,
+  },
+  {
+    day: "8",
+    income: 0,
+    outcome: 3200,
+  },
+  {
+    day: "9",
+    income: 0,
+    outcome: 3832,
+  },
+  {
+    day: "10",
+    income: 0,
+    outcome: 9333,
+  },
+  {
+    day: "11",
+    income: 0,
+    outcome: 1111,
+  },
+  {
+    day: "12",
+    income: 0,
+    outcome: 2122,
+  },
+  {
+    day: "13",
+    income: 0,
+    outcome: 3200,
+  },
+  {
+    day: "14",
+    income: 0,
+    outcome: 3433,
+  },
+  {
+    day: "15",
+    income: 0,
+    outcome: 1199,
+  },
+  {
+    day: "16",
+    income: 0,
+    outcome: 1211,
+  },
+  {
+    day: "17",
+    income: 1000,
+    outcome: 5312,
+  },
+  {
+    day: "18",
+    income: 1000,
+    outcome: 1643,
+  },
+  {
+    day: "19",
+    income: 0,
+    outcome: 2578,
+  },
+  {
+    day: "20",
+    income: 0,
+    outcome: 2533,
+  },
+  {
+    day: "21",
+    income: 0,
+    outcome: 2786,
+  },
+  {
+    day: "22",
+    income: 0,
+    outcome: 1888,
+  },
+  {
+    day: "23",
+    income: 1000,
+    outcome: 2111,
+  },
+  {
+    day: "24",
+    income: 0,
+    outcome: 1689,
+  },
+  {
+    day: "25",
+    income: 0,
+    outcome: 3200,
+  },
+  {
+    day: "26",
+    income: 0,
+    outcome: 5111,
+  },
+  {
+    day: "27",
+    income: 1000,
+    outcome: 1221,
+  },
+  {
+    day: "28",
+    income: 0,
+    outcome: 2011,
+  },
+  {
+    day: "29",
+    income: 0,
+    outcome: 3911,
+  },
+  {
+    day: "30",
+    income: 0,
+    outcome: 1223,
+  },
+];
+
+const chartConfig = {
+  income: {
+    label: "Income",
+    color: "hsl(var(--accent))",
+  },
+  outcome: {
+    label: "Outcome",
+    color: "hsl(var(--accent))",
+  },
+} satisfies ChartConfig;
+
+export function Chart_1() {
+  return (
+    <Card>
+      <CardContent className="p-0">
+        <ChartContainer config={chartConfig}>
+          <LineChart
+            accessibilityLayer
+            data={chartData}
+            margin={{
+              left: 12,
+              right: 12,
+            }}
+          >
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="usd"
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              tickFormatter={(value) => value.slice(0, 3)}
+            />
+            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+
+            <Line
+              dataKey="outcome"
+              type="monotone"
+              stroke="var(--color-outcome)"
+              strokeWidth={2}
+              dot={false}
+            />
+          </LineChart>
+        </ChartContainer>
+      </CardContent>
+      <CardFooter>
+        <div className="flex w-full items-start gap-2 text-sm">
+          <div className="grid gap-2">
+            <div className="flex items-center gap-2 font-medium leading-none">
+              Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+            </div>
+            <div className="flex items-center gap-2 leading-none text-muted-foreground">
+              Showing total visitors for the last 6 months
+            </div>
+          </div>
+        </div>
+      </CardFooter>
+    </Card>
+  );
+}

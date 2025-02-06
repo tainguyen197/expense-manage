@@ -1,8 +1,7 @@
 "use client";
 
-import * as React from "react";
 import { TrendingUp } from "lucide-react";
-import { Label, Pie, PieChart } from "recharts";
+import { Label, PolarRadiusAxis, RadialBar, RadialBarChart } from "recharts";
 
 import {
   Card,
@@ -19,91 +18,112 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 const chartData = [
-  { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
-  { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-  { browser: "firefox", visitors: 287, fill: "var(--color-firefox)" },
-  { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
-  { browser: "other", visitors: 190, fill: "var(--color-other)" },
+  { month: "january", desktop: 1260, mobile: 570, pc: 570, ps5: 570 },
 ];
 
 const chartConfig = {
-  visitors: {
-    label: "Visitors",
-  },
-  chrome: {
-    label: "Chrome",
+  desktop: {
+    label: "Desktop",
     color: "hsl(var(--chart-1))",
   },
-  safari: {
-    label: "Safari",
+  mobile: {
+    label: "Mobile",
     color: "hsl(var(--chart-2))",
   },
-  firefox: {
-    label: "Firefox",
+  pc: {
+    label: "Mobile",
     color: "hsl(var(--chart-3))",
   },
-  edge: {
-    label: "Edge",
+  ps5: {
+    label: "Mobile",
     color: "hsl(var(--chart-4))",
-  },
-  other: {
-    label: "Other",
-    color: "hsl(var(--chart-5))",
   },
 } satisfies ChartConfig;
 
 export function Chart() {
-  const totalVisitors = React.useMemo(() => {
-    return chartData.reduce((acc, curr) => acc + curr.visitors, 0);
-  }, []);
+  const totalVisitors = chartData[0].desktop + chartData[0].mobile;
 
   return (
-    <div>
-      <ChartContainer
-        config={chartConfig}
-        className="mx-auto aspect-square max-h-[250px]"
-      >
-        <PieChart>
-          <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-          <Pie
-            data={chartData}
-            dataKey="visitors"
-            nameKey="browser"
-            innerRadius={60}
-            strokeWidth={3}
-          >
-            <Label
-              content={({ viewBox }) => {
-                if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                  return (
-                    <text
-                      x={viewBox.cx}
-                      y={viewBox.cy}
-                      textAnchor="middle"
-                      dominantBaseline="middle"
-                    >
-                      <tspan
-                        x={viewBox.cx}
-                        y={viewBox.cy}
-                        className="fill-foreground text-3xl font-bold"
-                      >
-                        {totalVisitors.toLocaleString()}
-                      </tspan>
-                      <tspan
-                        x={viewBox.cx}
-                        y={(viewBox.cy || 0) + 24}
-                        className="fill-muted-foreground"
-                      >
-                        Visitors
-                      </tspan>
-                    </text>
-                  );
-                }
-              }}
+    <Card className="flex flex-col">
+      <CardHeader className="items-center pb-0">
+        <CardTitle>Radial Chart - Stacked</CardTitle>
+        <CardDescription>January - June 2024</CardDescription>
+      </CardHeader>
+      <CardContent className="flex flex-1 items-center pb-0">
+        <ChartContainer
+          config={chartConfig}
+          className="mx-auto aspect-square w-full max-w-[250px]"
+        >
+          <RadialBarChart data={chartData} innerRadius={80} outerRadius={130}>
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent hideLabel />}
             />
-          </Pie>
-        </PieChart>
-      </ChartContainer>
-    </div>
+            <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
+              <Label
+                content={({ viewBox }) => {
+                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                    return (
+                      <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle">
+                        <tspan
+                          x={viewBox.cx}
+                          y={(viewBox.cy || 0) - 16}
+                          className="fill-foreground text-2xl font-bold"
+                        >
+                          {totalVisitors.toLocaleString()}
+                        </tspan>
+                        <tspan
+                          x={viewBox.cx}
+                          y={(viewBox.cy || 0) + 4}
+                          className="fill-muted-foreground"
+                        >
+                          Visitors
+                        </tspan>
+                      </text>
+                    );
+                  }
+                }}
+              />
+            </PolarRadiusAxis>
+            <RadialBar
+              dataKey="desktop"
+              stackId="a"
+              cornerRadius={50}
+              fill="var(--color-desktop)"
+              className="stroke-transparent stroke-2"
+            />
+            <RadialBar
+              dataKey="mobile"
+              fill="var(--color-mobile)"
+              stackId="a"
+              cornerRadius={50}
+              className="stroke-transparent stroke-2"
+            />
+            <RadialBar
+              dataKey="pc"
+              fill="var(--color-pc)"
+              stackId="a"
+              cornerRadius={50}
+              className="stroke-transparent stroke-2"
+            />
+            <RadialBar
+              dataKey="ps5"
+              fill="var(--color-ps5)"
+              stackId="a"
+              cornerRadius={50}
+              className="stroke-transparent stroke-2"
+            />
+          </RadialBarChart>
+        </ChartContainer>
+      </CardContent>
+      <CardFooter className="flex-col gap-2 text-sm">
+        <div className="flex items-center gap-2 font-medium leading-none">
+          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+        </div>
+        <div className="leading-none text-muted-foreground">
+          Showing total visitors for the last 6 months
+        </div>
+      </CardFooter>
+    </Card>
   );
 }

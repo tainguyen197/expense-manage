@@ -5,6 +5,6 @@ export const routesConfig = {
   notFound: "/404",
   statics: {
     __pathname: "/statics",
-    static: "/statics/static",
+    static: "/statics",
   },
 };

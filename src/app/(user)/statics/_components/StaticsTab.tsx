@@ -15,7 +15,7 @@ export function StaticsTab() {
       defaultValue={defaultTab}
       className=" bg-card p-2 rounded-tl-2xl rounded-tr-2xl w-full"
       onValueChange={(value) => {
-        router.push(`/statics/static?tab=${value}`);
+        router.push(`/statics?tab=${value}`);
       }}
     >
       <TabsList className="grid w-full grid-cols-2">

@@ -13,6 +13,8 @@ import { useSearchParams } from "next/navigation";
 import { Expense } from "@/types/expense";
 import { loadDataFromLocalStorage } from "@/utils/localStorage";
 import { Category } from "@/types/category";
+import { Chart } from "./Chart";
+import { Chart_1 } from "./Chart_1";
 
 // function list expenseMonth by category
 const expenseMonthByCategory = (expenseList: Expense[]) => {
@@ -62,7 +64,11 @@ const CategoryStatic = () => {
 
   return (
     <Card>
-      <CardContent className="flex flex-col gap-4 mt-4 transition-all animate-fadeIn">
+      <CardHeader>
+        <Chart_1 />
+        <Chart />
+      </CardHeader>
+      <CardContent className="flex flex-col gap-2 mt-4 p-2 transition-all animate-fadeIn">
         {data.map((item) => (
           <CategoryItem
             icon={item.icon}

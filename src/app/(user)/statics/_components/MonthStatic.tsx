@@ -118,9 +118,9 @@ const MonthStatic = () => {
       <CardHeader>
         <Popover>
           <PopoverTrigger asChild>
-            <CardTitle className="flex items-end text-md gap-2">
+            <CardTitle className="flex items-end text-md gap-2 text-accent">
               <CalendarDays />{" "}
-              <span className="text-lg font-bold leading-4">
+              <span className="text-sm font-bold leading-4">
                 {currentMonthName?.name} {currentYear}
               </span>
               <ChevronDown size={16} />
@@ -168,25 +168,23 @@ const MonthStatic = () => {
       </CardHeader>
       <CardContent>
         <Progress className="h-4" value={33} />
-        <div className="flex flex-col mt-6 gap-1">
-          <div className="flex justify-between">
-            <p className="text-md text-gray-500">Total income</p>
-            <p className="text-xl font-bold ">₹ 1,00,000</p>
+        {/* TODO: add 2 block for each income and outcome */}
+        <div className="flex justify-between mt-6 gap-1">
+          <div className="block">
+            <p className="text-lg font-bold text-muted/70">1,000,000 d</p>
+            <h3 className="text-sm text-gray-500">Outcome</h3>
           </div>
-          <div className="flex justify-between">
-            <p className="text-md text-gray-500">Total outcome</p>
+          <div className="block">
             {totalOutcome ? (
-              <p className="text-xl font-bold transition-all animate-fadeIn">
+              <p className="text-lg font-bold transition-all animate-fadeIn text-muted/70">
                 {formatCurrency(totalOutcome)}
               </p>
             ) : (
               "--"
             )}
+            <h3 className="text-sm text-gray-500 text-right">Income</h3>
           </div>
         </div>
-        {/* <CardDescription className="mt-6">
-          <p className="text-md text-gray-500">You are doing great!</p>
-        </CardDescription> */}
       </CardContent>
     </Card>
   );

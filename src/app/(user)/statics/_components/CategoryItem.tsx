@@ -17,11 +17,13 @@ const CategoryItem = (item: CategoryItemProps) => {
           {item.icon ?? ""}
         </Button>
         <div className="ml-4">
-          <p className="font-semibold text-lg">{item.category}</p>
+          <p className="font-semibold text-sm text-muted">{item.category}</p>
         </div>
       </div>
       <div className="text-right">
-        <p className="font-bold text-lg">{formatCurrency(item.total)}</p>
+        <p className="text-md font-semibold text-muted/90">
+          {formatCurrency(item.total)}
+        </p>
       </div>
     </div>
   );
