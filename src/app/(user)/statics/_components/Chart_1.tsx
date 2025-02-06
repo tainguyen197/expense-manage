@@ -17,7 +17,9 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-const chartData = [
+import { Expense, Income } from "@/types/expense";
+import { GroupedData } from "@/app/api/expense-manage";
+const chartData1 = [
   {
     day: "1",
     income: 0,
@@ -171,17 +173,12 @@ const chartData = [
 ];
 
 const chartConfig = {
-  income: {
-    label: "Income",
-    color: "hsl(var(--accent))",
-  },
-  outcome: {
-    label: "Outcome",
+  amount: {
     color: "hsl(var(--accent))",
   },
 } satisfies ChartConfig;
 
-export function Chart_1() {
+export function Chart_1({ chartData }: { chartData: GroupedData[] }) {
   return (
     <Card>
       <CardContent className="p-0">
@@ -196,34 +193,37 @@ export function Chart_1() {
           >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="usd"
+              className="text-muted"
+              dataKey="timestamp"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
+              tickFormatter={(value) => value}
             />
-            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+            <ChartTooltip
+              cursor={false}
+              content={
+                <ChartTooltipContent
+                  nameKey="timestamp"
+                  labelKey="timestamp"
+                  key={"timestamp"}
+                />
+              }
+            />
 
             <Line
-              dataKey="outcome"
+              dataKey="amount"
               type="monotone"
-              stroke="var(--color-outcome)"
+              stroke="var(--color-amount)"
               strokeWidth={2}
               dot={false}
             />
           </LineChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter>
-        <div className="flex w-full items-start gap-2 text-sm">
-          <div className="grid gap-2">
-            <div className="flex items-center gap-2 font-medium leading-none">
-              Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-            </div>
-            <div className="flex items-center gap-2 leading-none text-muted-foreground">
-              Showing total visitors for the last 6 months
-            </div>
-          </div>
+      <CardFooter className="pt-4">
+        <div className="text-sm text-muted/80 text-center w-full">
+          <span className="text-center">Monthly transactions</span>
         </div>
       </CardFooter>
     </Card>

@@ -22,6 +22,7 @@ import { routesConfig } from "@/config/routes";
 import React from "react";
 import { getExpenseHistoryByMonthAndYear } from "@/app/api/expense-manage";
 import { formatCurrency } from "@/utils/curency";
+import { getIncomeHistoryByMonthAndYear } from "@/app/api/income-manage";
 
 const monthName = [
   {
@@ -95,6 +96,18 @@ const MonthStatic = () => {
     return acc + expense.amount;
   }, 0);
 
+  const incomeMonth = getIncomeHistoryByMonthAndYear(
+    Number(currentMonth),
+    Number(currentYear)
+  );
+
+  const totalIncome = incomeMonth.reduce((acc, income) => {
+    return acc + income.amount;
+  }, 0);
+
+  const progressValue =
+    totalOutcome > totalIncome ? 100 : (totalOutcome / totalIncome) * 100;
+
   const handleValueChange = (params: Record<string, string>) => {
     const currentParams = new URLSearchParams(searchParams.toString());
     Object.entries(params).forEach(([key, value]) => {
@@ -167,17 +180,19 @@ const MonthStatic = () => {
         </Popover>
       </CardHeader>
       <CardContent>
-        <Progress className="h-4" value={33} />
+        <Progress className="h-4" value={progressValue} />
         {/* TODO: add 2 block for each income and outcome */}
         <div className="flex justify-between mt-6 gap-1">
           <div className="block">
-            <p className="text-lg font-bold text-muted/70">1,000,000 d</p>
+            <p className="text-lg font-bold transition-all animate-fadeIn text-muted/70">
+              {formatCurrency(totalOutcome)}
+            </p>
             <h3 className="text-sm text-gray-500">Outcome</h3>
           </div>
           <div className="block">
             {totalOutcome ? (
-              <p className="text-lg font-bold transition-all animate-fadeIn text-muted/70">
-                {formatCurrency(totalOutcome)}
+              <p className="text-lg font-bold text-muted/70">
+                {formatCurrency(totalIncome)}
               </p>
             ) : (
               "--"

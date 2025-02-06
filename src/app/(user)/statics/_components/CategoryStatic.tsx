@@ -8,7 +8,11 @@ import {
 import { CalendarDays } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import CategoryItem from "./CategoryItem";
-import { getExpenseHistoryByMonthAndYear } from "@/app/api/expense-manage";
+import {
+  getExpenseHistoryByDate,
+  getExpenseHistoryByMonthAndYear,
+  groupTransactionsByDate,
+} from "@/app/api/expense-manage";
 import { useSearchParams } from "next/navigation";
 import { Expense } from "@/types/expense";
 import { loadDataFromLocalStorage } from "@/utils/localStorage";
@@ -56,6 +60,10 @@ const CategoryStatic = () => {
     Number(currentYear)
   );
 
+  // get expense history by date
+  const expenseByDate = groupTransactionsByDate(expenseMonth);
+  console.log("expenseByDate", expenseByDate);
+
   const getExpenseHistoryCategory = expenseMonthByCategory(expenseMonth);
   const data = mappingExpenseCategory(
     getExpenseHistoryCategory,
@@ -65,7 +73,7 @@ const CategoryStatic = () => {
   return (
     <Card>
       <CardHeader>
-        <Chart_1 />
+        <Chart_1 chartData={expenseByDate} />
         <Chart />
       </CardHeader>
       <CardContent className="flex flex-col gap-2 mt-4 p-2 transition-all animate-fadeIn">

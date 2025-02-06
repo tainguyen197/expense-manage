@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import React from "react";
 import CategoryStatic from "./CategoryStatic";
 import { useRouter, useSearchParams } from "next/navigation";
+import { CupSoda, WalletMinimal } from "lucide-react";
 
 export function StaticsTab() {
   const router = useRouter();
@@ -19,8 +20,21 @@ export function StaticsTab() {
       }}
     >
       <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="outcome">Outcome</TabsTrigger>
-        <TabsTrigger value="income">Income</TabsTrigger>
+        <TabsTrigger value="outcome">
+          <div className="flex gap-1 text-primary data-[state=active]:border-b-border">
+            <CupSoda size={20} />
+            <h3>Outcome</h3>
+          </div>
+        </TabsTrigger>
+        <TabsTrigger
+          value="income"
+          className="flex gap-1 text-primary data-[state=active]:border-b-border"
+        >
+          <div className="flex gap-2">
+            <WalletMinimal size={20} />
+            <h3>Income</h3>
+          </div>
+        </TabsTrigger>
       </TabsList>
       <TabsContent value="outcome">
         <CategoryStatic />
