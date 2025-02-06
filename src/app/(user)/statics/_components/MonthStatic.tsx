@@ -183,14 +183,14 @@ const MonthStatic = () => {
         <Progress className="h-2" value={progressValue} />
         <div className="flex justify-between mt-6 gap-1">
           <div className="block">
-            <p className="text-lg font-bold transition-all animate-fadeIn text-muted/70">
+            <p className="text-xl font-bold transition-all animate-fadeIn text-muted/70">
               {formatCurrency(totalOutcome)}
             </p>
             <h3 className="text-sm text-gray-500">Outcome</h3>
           </div>
           <div className="block">
             {totalOutcome ? (
-              <p className="text-lg font-bold text-muted/70">
+              <p className="text-xl font-bold text-muted/70">
                 {formatCurrency(totalIncome)}
               </p>
             ) : (

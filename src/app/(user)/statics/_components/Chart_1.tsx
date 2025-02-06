@@ -12,6 +12,7 @@ import { GroupedData } from "@/app/api/expense-manage";
 
 const chartConfig = {
   amount: {
+    label: "Transaction",
     color: "hsl(var(--accent))",
   },
 } satisfies ChartConfig;
@@ -40,15 +41,8 @@ export function Chart_1({ chartData }: { chartData: GroupedData[] }) {
             />
             <ChartTooltip
               cursor={false}
-              content={
-                <ChartTooltipContent
-                  nameKey="timestamp"
-                  labelKey="timestamp"
-                  key={"timestamp"}
-                />
-              }
+              content={<ChartTooltipContent hideLabel />}
             />
-
             <Line
               dataKey="amount"
               type="monotone"

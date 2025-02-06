@@ -76,7 +76,9 @@ const CategoryStatic = () => {
   );
 
   // get expense history by date
-  const expenseByDate = groupTransactionsByDate(expenseMonth);
+  const expenseByDate = groupTransactionsByDate(expenseMonth).sort(
+    (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+  );
 
   const getExpenseHistoryCategory = expenseMonthByCategory(expenseMonth);
 
