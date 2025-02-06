@@ -115,7 +115,9 @@ export const updateExpense = (expense: any) => {
   const updatedExpenseHistory = expenseHistory.map((entry: any) => {
     const updated = entry.timestamp === expense.timestamp;
     console.log("found", updated);
-    return updated ? { ...entry, ...expense } : entry;
+    return updated
+      ? { ...entry, ...expense, category: Number(entry.category) }
+      : entry;
   });
 
   saveDataToLocalStorage("expense-history", updatedExpenseHistory);

@@ -180,8 +180,7 @@ const MonthStatic = () => {
         </Popover>
       </CardHeader>
       <CardContent>
-        <Progress className="h-4" value={progressValue} />
-        {/* TODO: add 2 block for each income and outcome */}
+        <Progress className="h-2" value={progressValue} />
         <div className="flex justify-between mt-6 gap-1">
           <div className="block">
             <p className="text-lg font-bold transition-all animate-fadeIn text-muted/70">

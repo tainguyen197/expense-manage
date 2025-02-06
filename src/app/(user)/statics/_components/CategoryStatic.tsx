@@ -19,7 +19,21 @@ import { loadDataFromLocalStorage } from "@/utils/localStorage";
 import { Category } from "@/types/category";
 import { Chart } from "./Chart";
 import { Chart_1 } from "./Chart_1";
+import { ChartConfig } from "@/components/ui/chart";
 
+const convertArrayToObject = (
+  data: {
+    icon: string;
+    category: string;
+    id: string;
+    total: number;
+  }[]
+): Record<string, number> => {
+  return data.reduce((acc, item) => {
+    acc[item.id.toString()] = item.total;
+    return acc;
+  }, {} as Record<string, number>);
+};
 // function list expenseMonth by category
 const expenseMonthByCategory = (expenseList: Expense[]) => {
   const expenseByCategory = new Map<string, number>();
@@ -41,6 +55,7 @@ const mappingExpenseCategory = (
     return {
       icon: item.icon,
       category: item.name,
+      id: item.id,
       total,
     };
   });
@@ -62,22 +77,38 @@ const CategoryStatic = () => {
 
   // get expense history by date
   const expenseByDate = groupTransactionsByDate(expenseMonth);
-  console.log("expenseByDate", expenseByDate);
 
   const getExpenseHistoryCategory = expenseMonthByCategory(expenseMonth);
-  const data = mappingExpenseCategory(
+
+  const chartConfig: ChartConfig = {};
+
+  const expenseByCategory = mappingExpenseCategory(
     getExpenseHistoryCategory,
     category
-  ).filter((item) => item.total > 0);
+  )
+    .filter((item) => item.total > 0)
+    .sort((a, b) => b.total - a.total);
+
+  expenseByCategory.forEach((item, key) => {
+    chartConfig[item.id] = {
+      color: `hsl(var(--chart-${key + 1}))`,
+      label: item.category,
+    };
+  });
+
+  const chartData = convertArrayToObject(expenseByCategory);
 
   return (
     <Card>
       <CardHeader>
         <Chart_1 chartData={expenseByDate} />
-        <Chart />
+        <Chart chartData={[chartData]} chartConfig={chartConfig} />
       </CardHeader>
       <CardContent className="flex flex-col gap-2 mt-4 p-2 transition-all animate-fadeIn">
-        {data.map((item) => (
+        <CardDescription className="text-muted/70 mb-2">
+          All expenses:
+        </CardDescription>
+        {expenseByCategory.map((item) => (
           <CategoryItem
             icon={item.icon}
             category={item.category}
@@ -85,9 +116,6 @@ const CategoryStatic = () => {
             total={item.total}
           />
         ))}
-        {/* <CardDescription className="mt-6">
-          <p className="text-md text-gray-500">You are doing great!</p>
-        </CardDescription> */}
       </CardContent>
     </Card>
   );

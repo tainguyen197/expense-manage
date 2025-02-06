@@ -97,14 +97,14 @@ body {
   --foreground: 0 61% 86%;
   --card: 0 0% 99%;
   --primary: 345.45deg 56.9% 77.25%;
-  --primary-foreground: 0 0% 98%;
+  --primary-foreground: 32deg 42.86% 93.14%;
   --secondary: 340 75% 55%;
   --secondary-foreground: 0 0% 98%;
   --muted: 0deg 0% 26.1%;
   --muted-foreground: 0 100% 94%;
   --cta-button-background: 0 61% 86%;
   --accent: 345.45deg 56.9% 77.25%;
-  --accent-foreground: 0 0% 98%;
+  --accent-foreground: 45deg 100% 94.51%;
   --border: 345.45deg 56.9% 77.25%;
   --input: 0 61% 86%;
   --ring: 0 61% 86%;
