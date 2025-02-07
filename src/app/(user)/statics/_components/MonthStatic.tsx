@@ -189,13 +189,10 @@ const MonthStatic = () => {
             <h3 className="text-sm text-gray-500">Outcome</h3>
           </div>
           <div className="block">
-            {totalOutcome ? (
-              <p className="text-xl font-bold text-muted/70">
-                {formatCurrency(totalIncome)}
-              </p>
-            ) : (
-              "--"
-            )}
+            <p className="text-xl font-bold text-muted/70 animate-fadeIn">
+              {formatCurrency(totalIncome)}
+            </p>
+
             <h3 className="text-sm text-gray-500 text-right">Income</h3>
           </div>
         </div>

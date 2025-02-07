@@ -38,7 +38,12 @@ export function TopCategoryChart({
             <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
               <Label
                 content={({ viewBox }) => {
-                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                  if (
+                    viewBox &&
+                    "cx" in viewBox &&
+                    viewBox?.cx &&
+                    "cy" in viewBox
+                  ) {
                     return (
                       <text x={viewBox?.cx} y={viewBox.cy} textAnchor="middle">
                         <tspan
