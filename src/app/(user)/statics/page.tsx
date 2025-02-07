@@ -1,6 +1,5 @@
 "use client";
 
-import { Chart_1 } from "./_components/Chart_1";
 import MonthStatic from "./_components/MonthStatic";
 import { StaticsTab } from "./_components/StaticsTab";
 

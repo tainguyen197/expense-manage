@@ -17,7 +17,11 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function Chart_1({ chartData }: { chartData: GroupedData[] }) {
+export function DailyTransactionsChart({
+  chartData,
+}: {
+  chartData: GroupedData[];
+}) {
   return (
     <Card>
       <CardContent className="p-0">

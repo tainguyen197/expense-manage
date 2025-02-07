@@ -99,7 +99,9 @@ export const updateIncome = (item: ExpenseWithoutCategory) => {
   const updatedExpenseHistory = incomeHistory.map((entry: any) => {
     const updated = entry.timestamp === item.timestamp;
     console.log("found", updated);
-    return updated ? { ...entry, ...item } : entry;
+    return updated
+      ? { ...entry, ...item, category: Number(entry.category) }
+      : entry;
   });
 
   try {

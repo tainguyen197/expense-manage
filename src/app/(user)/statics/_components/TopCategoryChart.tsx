@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/chart";
 import { formatCurrency } from "@/utils/curency";
 
-export function Chart({
+export function TopCategoryChart({
   chartData,
   chartConfig,
 }: {
@@ -40,9 +40,9 @@ export function Chart({
                 content={({ viewBox }) => {
                   if (viewBox && "cx" in viewBox && "cy" in viewBox) {
                     return (
-                      <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle">
+                      <text x={viewBox?.cx} y={viewBox.cy} textAnchor="middle">
                         <tspan
-                          x={viewBox.cx}
+                          x={viewBox?.cx}
                           y={(viewBox.cy || 0) + 4}
                           className="fill-muted/70 text-xl font-bold text-muted"
                         >
