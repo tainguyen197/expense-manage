@@ -1,5 +1,3 @@
-import { Category } from "@/types/category";
-import { loadDataFromLocalStorage } from "@/utils/localStorage";
 import {
   ChatCompletionMessageParam,
   ChatCompletionTool,

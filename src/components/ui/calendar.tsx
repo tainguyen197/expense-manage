@@ -1,13 +1,10 @@
+"use client";
+
 import React, { useState } from "react";
 import "react-day-picker/dist/style.css";
 import "./CustomDayPicker.css"; // Add custom styles
 import { Button } from "./button";
-import {
-  ChevronLeft,
-  ChevronRight,
-  CupSoda,
-  WalletMinimal,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { calculateIncome } from "@/app/api/income-manage";
 import { calculateSpent } from "@/app/api/expense-manage";
 import { formatVND } from "@/utils/curency";
@@ -41,27 +38,36 @@ const Calender = ({
     weekDays.push(day);
   }
 
+  React.useEffect(() => {
+    if (selectedDateProp) setSelectedDate(selectedDateProp);
+  }, [selectedDateProp]);
+
+  React.useEffect(() => {
+    if (onSelectedDate) onSelectedDate(selectedDate!);
+  }, [selectedDate]);
+
   // Custom renderer for the grid
-  const renderWeek = () => (
-    <div className="week-row">
-      {weekDays.map((day, index) => {
-        const income = calculateIncome({
-          start_date: day,
-          end_date: day,
-        });
+  const renderWeek = React.useMemo(
+    () => (
+      <div className="week-row">
+        {weekDays.map((day) => {
+          const income = calculateIncome({
+            start_date: day,
+            end_date: day,
+          });
 
-        const outcome = calculateSpent({
-          range: "custom",
-          start_date: day,
-          end_date: day,
-        });
+          const outcome = calculateSpent({
+            range: "custom",
+            start_date: day,
+            end_date: day,
+          });
 
-        return (
-          <div key={day.toISOString()}>
-            <Button
-              size={"icon"}
-              key={day.toISOString()}
-              className={`rounded-md border-none shadow-none text-muted bg-background hover:text-background
+          return (
+            <div key={day.toISOString()}>
+              <Button
+                size={"icon"}
+                key={day.toISOString()}
+                className={`rounded-md border-none shadow-none text-muted bg-background hover:text-background
              ${
                selectedDate?.toDateString() === day.toDateString()
                  ? "bg-primary text-primary-foreground"
@@ -71,27 +77,29 @@ const Calender = ({
                 day.toDateString() === new Date().toDateString() &&
                 "border-primary border-solid border"
               }`}
-              disabled={disabledFuture && day > new Date()}
-              onClick={() => setSelectedDate(day)}
-            >
-              {day.getDate()}
-            </Button>
-            {!(disabledFuture && day > new Date()) && (
-              <div className="flex flex-col gap-1 pt-2">
-                <div className="text-[0.625rem] font-semibold flex justify-center items-end gap-1 text-muted">
-                  <span className="leading-none">
-                    {formatVND(outcome.total)}
-                  </span>
+                disabled={disabledFuture && day > new Date()}
+                onClick={() => setSelectedDate(day)}
+              >
+                {day.getDate()}
+              </Button>
+              {!(disabledFuture && day > new Date()) && (
+                <div className="flex flex-col gap-1 pt-2">
+                  <div className="text-[0.625rem] font-semibold flex justify-center items-end gap-1 text-muted">
+                    <span className="leading-none">
+                      {formatVND(outcome.total)}
+                    </span>
+                  </div>
+                  <div className="text-[0.625rem] font-semibold flex justify-center items-end gap-1 text-muted/70">
+                    <span className="leading-none">{formatVND(income)}</span>
+                  </div>
                 </div>
-                <div className="text-[0.625rem] font-semibold flex justify-center items-end gap-1 text-muted/70">
-                  <span className="leading-none">{formatVND(income)}</span>
-                </div>
-              </div>
-            )}
-          </div>
-        );
-      })}
-    </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    ),
+    [weekDays, selectedDate]
   );
 
   //render name of the week
@@ -109,14 +117,6 @@ const Calender = ({
       ))}
     </div>
   );
-
-  React.useEffect(() => {
-    if (selectedDateProp) setSelectedDate(selectedDateProp);
-  }, [selectedDateProp]);
-
-  React.useEffect(() => {
-    if (onSelectedDate) onSelectedDate(selectedDate!);
-  }, [selectedDate]);
 
   return (
     <div className="w-fit">
@@ -153,7 +153,7 @@ const Calender = ({
         </Button>
       </div>
       {renderWeekName()}
-      {renderWeek()}
+      {renderWeek}
     </div>
   );
 };

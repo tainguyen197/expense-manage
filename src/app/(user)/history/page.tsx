@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import Calendar from "@/components/ui/calendar";
 import { StaticsTab } from "./_components/Tabs";
 import { useSearchParams } from "next/navigation";
@@ -10,7 +10,7 @@ import { useUpdateSearchParams } from "@/hooks/useUpdateSearchParams";
 import { getIncomeHistoryByDate } from "@/app/api/income-manage";
 import { cn } from "@/lib/utils";
 
-export default function HistoryPage() {
+function HistoryPage() {
   const searchParams = useSearchParams();
   const updateSearchParams = useUpdateSearchParams();
   const [date, setDate] = React.useState<Date | undefined>(undefined);
@@ -90,3 +90,13 @@ export default function HistoryPage() {
     </div>
   );
 }
+
+const PageWrapper = () => {
+  return (
+    <Suspense fallback={<div>Loading statics...</div>}>
+      <HistoryPage />
+    </Suspense>
+  );
+};
+
+export default PageWrapper;

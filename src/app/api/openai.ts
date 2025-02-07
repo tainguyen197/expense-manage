@@ -1,7 +1,6 @@
 import OpenAI from "openai";
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 import get from "lodash/get";
-import { add, omit } from "lodash";
 import {
   loadDataFromLocalStorage,
   saveDataToLocalStorage,
