@@ -10,8 +10,8 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { SendHorizontal, CalendarDays } from "lucide-react";
-import React, { useTransition } from "react";
+import { SendHorizontal } from "lucide-react";
+import React, { useEffect, useTransition } from "react";
 import { getExpenseParams } from "../../api/openai";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { loadDataFromLocalStorage } from "@/utils/localStorage";
@@ -175,7 +175,7 @@ const ChatPage = () => {
         <form className="flex items-center w-full px-0 pt-0 gap-3">
           <Input
             name="content"
-            className="text-xs rounded-full text-accent"
+            className="rounded-full text-accent"
             id="content"
             placeholder="50k trà sữa ..."
           />

@@ -113,7 +113,7 @@ const AddNew = ({
                   <div className="group w-full p-[1.5px] bg-gradient-to-r from-blue-500 to-green-500 rounded focus-visible:from-blue-600 focus-visible:to-green-600 focus-within:from-blue-600 focus-within:to-green-600">
                     <Input
                       name="value"
-                      className="bg-white w-full rounded outline-none border-none focus-visible:ring-0 focus-visible:relative focus-visible:z-10 text-gray-500 text-sm"
+                      className="bg-white w-full rounded outline-none border-none focus-visible:ring-0 focus-visible:relative focus-visible:z-10 text-gray-500"
                     />
                     {!isPending && (
                       <span className="absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400 text-sm">
