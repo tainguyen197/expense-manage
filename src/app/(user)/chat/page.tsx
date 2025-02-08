@@ -127,9 +127,9 @@ const ChatPage = () => {
       <ScrollArea
         suppressHydrationWarning
         id="scroll-area"
-        className="pt-16 pb-32"
+        className="mt-16 mb-32 h-[calc(100vh-140px)]"
       >
-        <CardContent className="p-3 py-0 pt-4 block">
+        <CardContent className="p-3 py-0 pt-4 block  h-[calc(100vh-140px)]">
           {Object.keys(messages ?? {}).length ? (
             <div className="flex flex-col gap-4">
               {Object.keys(messages ?? {}).map((date, index) => (

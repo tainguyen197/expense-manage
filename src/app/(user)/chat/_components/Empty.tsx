@@ -2,7 +2,7 @@ import Image from "next/image";
 
 const Empty = () => {
   return (
-    <div className="flex flex-col items-center justify-center h-full mt-28">
+    <div className="flex flex-col items-center justify-center h-full">
       <Image
         src={"/images/no_chat.jpg"}
         alt="no_chat"
