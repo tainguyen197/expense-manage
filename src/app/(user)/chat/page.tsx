@@ -13,7 +13,6 @@ import { Button } from "@/components/ui/button";
 import { SendHorizontal } from "lucide-react";
 import React, { useEffect, useTransition } from "react";
 import { getExpenseParams } from "../../api/openai";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { loadDataFromLocalStorage } from "@/utils/localStorage";
 import { Message as TMessage } from "../../../types/message";
 import { groupMessagesByDate } from "@/utils/groupMessagesByDate";
@@ -32,7 +31,7 @@ const ChatPage = () => {
 
     if (!userMessage) return;
 
-    const today = new Date(new Date().toLocaleDateString()).getTime();
+    const today = new Date(new Date().toDateString()).getTime();
     const listDate = Object.keys(messages || {});
     const lastDate = listDate[listDate.length - 1];
 
@@ -61,13 +60,15 @@ const ChatPage = () => {
   }, []);
 
   React.useEffect(() => {
-    // query ref scroll area
-    document.getElementById("scroll-area")?.scrollIntoView({
+    const scrollArea = document.getElementById("scroll-area");
+    scrollArea?.scrollIntoView({
       block: "end",
     });
 
     // get response from OpenAI with last content
     const listDate = Object.keys(messages || {});
+
+    console.log("listDate", listDate);
     if (listDate.length > 0) {
       const lastDate = listDate[listDate.length - 1];
       const lastMessage = messages?.[lastDate][messages?.[lastDate].length - 1];
@@ -124,12 +125,9 @@ const ChatPage = () => {
           </div>
         </CardTitle>
       </CardHeader>
-      <ScrollArea
-        suppressHydrationWarning
-        id="scroll-area"
-        className="mt-16 mb-32 h-[calc(100vh-140px)]"
-      >
-        <CardContent className="p-3 py-0 pt-4 block  h-[calc(100vh-140px)]">
+
+      <CardContent className="mt-16 mb-40 p-3 py-0 pt-4 h-[calc(100vh-12rem)] overflow-y-auto">
+        <div className="flex flex-col gap-4" id="scroll-area">
           {Object.keys(messages ?? {}).length ? (
             <div className="flex flex-col gap-4">
               {Object.keys(messages ?? {}).map((date, index) => (
@@ -137,8 +135,8 @@ const ChatPage = () => {
                   <div className="text-center text-sm py-2 text-primary/90 font-semibold">
                     <span suppressHydrationWarning>
                       {moment(Number(date)).calendar(null, {
-                        sameDay: "[Hôm nay]", // Removes the time part
-                        lastDay: "[Hôm qua]",
+                        sameDay: "[Today]", // Removes the time part
+                        lastDay: "[Yesterday]",
                         lastWeek: "dddd",
                         sameElse: "MM/DD/YYYY", // Customize for older dates
                       })}
@@ -168,8 +166,8 @@ const ChatPage = () => {
           ) : (
             <Empty />
           )}
-        </CardContent>
-      </ScrollArea>
+        </div>
+      </CardContent>
 
       <CardFooter className="p-3 w-screen bg-white z-10 fixed bottom-16 gap-1 rounded-t-2xl">
         <form className="flex items-center w-full px-0 pt-0 gap-3">

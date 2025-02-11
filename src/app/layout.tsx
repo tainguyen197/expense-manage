@@ -23,7 +23,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="vi">
-      <body className={`${nunito.className} bg-background antialiased pink`}>
+      <body
+        className={`${nunito.className} bg-background antialiased pink overflow-hidden`}
+      >
         {children}
         <Toaster />
       </body>
