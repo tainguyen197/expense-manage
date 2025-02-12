@@ -26,6 +26,13 @@ const ChatPage = () => {
   const [messages, setMessages] = React.useState<MessageState>({});
   const [isPending, startTransition] = useTransition();
 
+  const scrollToBottom = () => {
+    document.getElementById("scroll-area")?.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+    });
+  };
+
   const handleSubmit = async (formData: FormData) => {
     const userMessage = formData.get("content") as string;
 
@@ -54,21 +61,19 @@ const ChatPage = () => {
 
     if (chatHistory) {
       setMessages(groupMessage);
-    }
 
-    console.log("groupMessage", groupMessage);
+      setTimeout(() => {
+        document.getElementById("scroll-area")?.scrollIntoView({
+          block: "end",
+        });
+      }, 100);
+    }
   }, []);
 
   React.useEffect(() => {
-    const scrollArea = document.getElementById("scroll-area");
-    scrollArea?.scrollIntoView({
-      block: "end",
-    });
-
     // get response from OpenAI with last content
     const listDate = Object.keys(messages || {});
 
-    console.log("listDate", listDate);
     if (listDate.length > 0) {
       const lastDate = listDate[listDate.length - 1];
       const lastMessage = messages?.[lastDate][messages?.[lastDate].length - 1];
@@ -77,7 +82,7 @@ const ChatPage = () => {
       startTransition(async () => {
         if (lastMessage?.content && lastMessage?.role === "user") {
           const response = await getExpenseParams(lastMessage.content, {});
-
+          setTimeout(scrollToBottom, 100);
           setMessages((messages) => ({
             ...messages,
             [Number(lastDate)]: [
@@ -96,16 +101,21 @@ const ChatPage = () => {
 
   React.useEffect(() => {
     if (isPending) {
-      const timeoutId = setTimeout(() => {
-        document.getElementById("scroll-area")?.scrollIntoView({
-          behavior: "smooth",
-          block: "end",
-        });
-      }, 1000);
+      const timeoutId = setTimeout(scrollToBottom, 100);
 
       return () => clearTimeout(timeoutId);
     }
   }, [isPending]);
+
+  React.useEffect(() => {
+    const setVh = () => {
+      let vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
+    };
+    setVh();
+    window.addEventListener("resize", setVh);
+    return () => window.removeEventListener("resize", setVh);
+  }, []);
 
   return (
     <Card className="shadow-none border-none bg-background">
@@ -126,7 +136,10 @@ const ChatPage = () => {
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="mt-16 mb-40 p-3 py-0 pt-4 h-[calc(100vh-12rem)] overflow-y-auto">
+      <CardContent
+        className="mt-16 mb-40 p-3 py-0 pt-4  overflow-y-auto"
+        style={{ height: "calc(var(--vh, 1vh) * 100 - 12rem)" }}
+      >
         <div className="flex flex-col gap-4" id="scroll-area">
           {Object.keys(messages ?? {}).length ? (
             <div className="flex flex-col gap-4">
@@ -175,7 +188,8 @@ const ChatPage = () => {
             name="content"
             className="rounded-full text-accent"
             id="content"
-            placeholder="50k trà sữa ..."
+            placeholder={window.innerHeight.toString()}
+            // placeholder="50k trà sữa ..."
           />
           <Button
             className="px-4 [&_svg]:size-6 text-primary-foreground bg-cta-button-background"
