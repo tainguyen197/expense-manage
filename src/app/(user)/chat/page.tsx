@@ -108,13 +108,15 @@ const ChatPage = () => {
   }, [isPending]);
 
   React.useEffect(() => {
-    const setVh = () => {
-      const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty("--vh", `${vh}px`);
-    };
-    setVh();
-    window.addEventListener("resize", setVh);
-    return () => window.removeEventListener("resize", setVh);
+    if (window) {
+      const setVh = () => {
+        const vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty("--vh", `${vh}px`);
+      };
+      setVh();
+      window.addEventListener("resize", setVh);
+      return () => window.removeEventListener("resize", setVh);
+    }
   }, []);
 
   return (
@@ -188,8 +190,7 @@ const ChatPage = () => {
             name="content"
             className="rounded-full text-accent"
             id="content"
-            placeholder={window.innerHeight.toString()}
-            // placeholder="50k trà sữa ..."
+            placeholder="50k trà sữa ..."
           />
           <Button
             className="px-4 [&_svg]:size-6 text-primary-foreground bg-cta-button-background"
