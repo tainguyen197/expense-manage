@@ -7,11 +7,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { SendHorizontal } from "lucide-react";
-import React, { useEffect, useTransition } from "react";
+import React, { useTransition } from "react";
 import { getExpenseParams } from "../../api/openai";
 import { loadDataFromLocalStorage } from "@/utils/localStorage";
 import { Message as TMessage } from "../../../types/message";
@@ -19,6 +18,7 @@ import { groupMessagesByDate } from "@/utils/groupMessagesByDate";
 import moment from "moment";
 import Message from "./_components/Message";
 import Empty from "./_components/Empty";
+import UserAvatar from "./_components/UserAvatar";
 
 type MessageState = Record<string, TMessage[]>; // group of messages
 
@@ -120,24 +120,7 @@ const ChatPage = () => {
   }, []);
 
   return (
-    <Card className="shadow-none border-none bg-background">
-      <CardHeader className="shadow-gray-100 shadow-lg py-3 fixed top-0 w-screen bg-white z-10 rounded-b-2xl">
-        <CardTitle className="flex justify-between">
-          <div className="flex gap-2 items-center">
-            <Avatar>
-              <AvatarImage src="https://scontent-hkg4-1.xx.fbcdn.net/v/t1.6435-1/180279172_1450336808642016_7562851521701070277_n.jpg?stp=c0.281.736.736a_dst-jpg_s480x480_tt6&_nc_cat=108&ccb=1-7&_nc_sid=e99d92&_nc_ohc=VQfdvvR2ycYQ7kNvgEZv9ND&_nc_zt=24&_nc_ht=scontent-hkg4-1.xx&_nc_gid=AGDHp6bVM6djLjnpxn1kSfu&oh=00_AYBdWVgSJA9HzzB311EML8pZePlPlHGaHa1bGaJxc0Yhmg&oe=67AF3F41" />
-              <AvatarFallback>KR</AvatarFallback>
-            </Avatar>
-            <div>
-              <p className="text-sm font-bold leading-none text-muted/90">
-                Kira
-              </p>
-              <p className="text-sm text-muted/50">expert_here@example.com</p>
-            </div>
-          </div>
-        </CardTitle>
-      </CardHeader>
-
+    <Card className="shadow-none border-none bg-background ">
       <CardContent
         className="mt-16 mb-40 p-3 py-0 pt-4  overflow-y-auto"
         style={{ height: "calc(var(--vh, 1vh) * 100 - 12rem)" }}
