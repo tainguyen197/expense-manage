@@ -94,6 +94,7 @@ body {
 
 .pink {
   --background: 0 0% 99%;
+  --background-secondary: 0 100% 97.84%;
   --foreground: 0 61% 86%;
   --card: 0 0% 99%;
   --primary: 345.45deg 56.9% 77.25%;

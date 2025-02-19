@@ -1,9 +1,6 @@
 "use client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  Send,
-  MessageSquareDashed,
-  ChartNoAxesCombined,
   MessageSquareMore,
   CalendarDays,
   ChartPie,
@@ -15,41 +12,43 @@ import { usePathname } from "next/navigation";
 const Navbar = () => {
   const pathname = usePathname();
 
+  const tabList = [
+    {
+      icon: <MessageSquareMore size={30} />,
+      title: "Chat",
+      value: "/chat",
+    },
+    {
+      icon: <CalendarDays size={30} />,
+      title: "History",
+      value: "/history",
+    },
+    {
+      icon: <ChartPie size={30} />,
+      title: "Statics",
+      value: "/statics",
+    },
+    {
+      icon: <Settings size={30} />,
+      title: "Settings",
+      value: "/settings",
+    },
+  ];
+
   return (
     <Tabs defaultValue="/chat" className="h-16" value={pathname}>
-      <TabsList className="fixed bottom-0 w-full h-16 py-2 bg-white shadow-sm shadow-gray-100">
-        <TabsTrigger
-          className="flex-col border-none item-center justify-center h-full relative rounded-none shadow-none data-[state=active]:shadow-none data-[state=active]:border-none"
-          value="/chat"
-        >
-          <Link href="/chat" className="absolute w-full h-full" />
-          <MessageSquareMore size={20} />
-          <h3 className="text-xs leading-none mt-1">Chat</h3>
-        </TabsTrigger>
-        <TabsTrigger
-          className="flex-col border-none item-center justify-center h-full relative rounded-none shadow-none data-[state=active]:shadow-none data-[state=active]:border-none"
-          value="/history"
-        >
-          <Link href="/history" className="absolute w-full h-full" />
-          <CalendarDays size={20} />
-          <h3 className="text-xs leading-none mt-1">History</h3>
-        </TabsTrigger>
-        <TabsTrigger
-          className="flex-col border-none item-center justify-center h-full relative rounded-none shadow-none data-[state=active]:shadow-none data-[state=active]:border-none"
-          value="/statics"
-        >
-          <Link href="/statics" className="absolute w-full h-full" />
-          <ChartPie size={20} />
-          <h3 className="text-xs leading-none mt-1">Statics</h3>
-        </TabsTrigger>
-        <TabsTrigger
-          className="flex-col border-none item-center justify-center h-full relative rounded-none shadow-none data-[state=active]:shadow-none data-[state=active]:border-none"
-          value="nana"
-        >
-          <Link href="/chat" className="absolute w-full h-full" />
-          <Settings size={20} />
-          <h3 className="text-xs leading-none mt-1">Settings</h3>
-        </TabsTrigger>
+      <TabsList className="rounded-tl-xl rounded-tr-xl  border border-solid justify-between fixed bottom-0 w-full h-16 py-2 bg-white shadow-sm shadow-gray-100">
+        {tabList.map((tab) => (
+          <TabsTrigger
+            key={tab.value}
+            className="text-muted/90 flex-col border-none item-center justify-center h-full relative rounded-none shadow-none data-[state=active]:shadow-none data-[state=active]:border-b-0 "
+            value={tab.value}
+          >
+            <Link href={tab.value} className="absolute w-full h-full" />
+            {tab.icon}
+            <h3 className="text-xs leading-none mt-1">{tab.title}</h3>
+          </TabsTrigger>
+        ))}
       </TabsList>
     </Tabs>
   );

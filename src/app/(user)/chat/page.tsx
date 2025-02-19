@@ -131,12 +131,12 @@ const ChatPage = () => {
   // }, []);
 
   return (
-    <Card className="shadow-none border-none bg-background">
+    <Card className="shadow-none border-none bg-gray-10">
       <CardHeader className="shadow-gray-100 shadow-lg py-3 fixed top-0 w-screen bg-white z-10 rounded-b-2xl">
         <CardTitle className="flex justify-between">
           <div className="flex gap-2 items-center">
             <Avatar>
-              <AvatarImage src="https://scontent-hkg4-1.xx.fbcdn.net/v/t1.6435-1/180279172_1450336808642016_7562851521701070277_n.jpg?stp=c0.281.736.736a_dst-jpg_s480x480_tt6&_nc_cat=108&ccb=1-7&_nc_sid=e99d92&_nc_ohc=VQfdvvR2ycYQ7kNvgEZv9ND&_nc_zt=24&_nc_ht=scontent-hkg4-1.xx&_nc_gid=AGDHp6bVM6djLjnpxn1kSfu&oh=00_AYBdWVgSJA9HzzB311EML8pZePlPlHGaHa1bGaJxc0Yhmg&oe=67AF3F41" />
+              <AvatarImage src="https://i.pinimg.com/236x/36/ff/67/36ff67aa91f7a4ba0f6db40b36f31436.jpg" />
               <AvatarFallback>KR</AvatarFallback>
             </Avatar>
             <div>

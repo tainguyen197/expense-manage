@@ -67,7 +67,8 @@ export default {
         },
       },
       backgroundColor: {
-        "blue-main": "hsl(var(--blue-main))",
+        background: "hsl(var(--background))",
+        "background-secondary": "hsl(var(--background-secondary))",
         card: "hsl(var(--card))",
         popover: "hsl(var(--popover))",
         primary: "hsl(var(--primary))",
