@@ -66,7 +66,7 @@ const ChatPage = () => {
         document.getElementById("scroll-area")?.scrollIntoView({
           block: "end",
         });
-      }, 100);
+      }, 200);
     }
   }, []);
 
@@ -101,23 +101,34 @@ const ChatPage = () => {
 
   React.useEffect(() => {
     if (isPending) {
-      const timeoutId = setTimeout(scrollToBottom, 100);
+      const timeoutId = setTimeout(scrollToBottom, 200);
 
       return () => clearTimeout(timeoutId);
     }
   }, [isPending]);
 
-  React.useEffect(() => {
-    if (window) {
-      const setVh = () => {
-        const vh = window.innerHeight * 0.01;
-        document.documentElement.style.setProperty("--vh", `${vh}px`);
-      };
-      setVh();
-      window.addEventListener("resize", setVh);
-      return () => window.removeEventListener("resize", setVh);
-    }
-  }, []);
+  // const setVh = () => {
+  //   console.log("setVh", window?.visualViewport?.height ?? 0 - 192);
+  //   setViewPort((window?.visualViewport?.height ?? 0) - 192);
+  //   const vh = (window?.visualViewport?.height ?? 0) * 0.01;
+  //   document.documentElement.style.setProperty("--vh", `${vh}px`);
+  // };
+
+  // React.useEffect(() => {
+  //   if (window) {
+  //     setVh();
+
+  //     // window.addEventListener("resize", setVh);
+  //     window.visualViewport &&
+  //       window.visualViewport.addEventListener("resize", setVh);
+
+  //     return () => {
+  //       // window.removeEventListener("resize", setVh);
+  //       window.visualViewport &&
+  //         window.visualViewport.addEventListener("resize", setVh);
+  //     };
+  //   }
+  // }, []);
 
   return (
     <Card className="shadow-none border-none bg-background">
@@ -137,50 +148,52 @@ const ChatPage = () => {
           </div>
         </CardTitle>
       </CardHeader>
-
-      <CardContent
-        className="mt-16 mb-40 p-3 py-0 pt-4  overflow-y-auto"
-        style={{ height: "calc(var(--vh, 1vh) * 100 - 12rem)" }}
-      >
-        <div className="flex flex-col gap-4" id="scroll-area">
-          {Object.keys(messages ?? {}).length ? (
-            <div className="flex flex-col gap-4">
-              {Object.keys(messages ?? {}).map((date, index) => (
-                <div key={index}>
-                  <div className="text-center text-sm py-2 text-primary/90 font-semibold">
-                    <span suppressHydrationWarning>
-                      {moment(Number(date)).calendar(null, {
-                        sameDay: "[Today]", // Removes the time part
-                        lastDay: "[Yesterday]",
-                        lastWeek: "dddd",
-                        sameElse: "MM/DD/YYYY", // Customize for older dates
-                      })}
-                    </span>
+      <CardContent className="p-0">
+        <div
+          className="p-3 pt-16 pb-32 overflow-y-auto"
+          style={{ height: "calc(100% - 120px)" }}
+          id="scroll-area"
+        >
+          <div className="flex flex-col gap-4 overflow-auto">
+            {Object.keys(messages ?? {}).length ? (
+              <div className="flex flex-col gap-4">
+                {Object.keys(messages ?? {}).map((date, index) => (
+                  <div key={index}>
+                    <div className="text-center text-sm py-2 text-primary/90 font-semibold">
+                      <span suppressHydrationWarning>
+                        {moment(Number(date)).calendar(null, {
+                          sameDay: "[Today]", // Removes the time part
+                          lastDay: "[Yesterday]",
+                          lastWeek: "dddd",
+                          sameElse: "MM/DD/YYYY", // Customize for older dates
+                        })}
+                      </span>
+                    </div>
+                    <div className="flex flex-col gap-4">
+                      {messages?.[date].map((content, index) => (
+                        <Message
+                          isSender={content.role === "user"}
+                          key={index}
+                          kind={content.kind}
+                          content={content.content}
+                          params={content.params}
+                        />
+                      ))}
+                    </div>
                   </div>
-                  <div className="flex flex-col gap-4">
-                    {messages?.[date].map((content, index) => (
-                      <Message
-                        isSender={content.role === "user"}
-                        key={index}
-                        kind={content.kind}
-                        content={content.content}
-                        params={content.params}
-                      />
-                    ))}
-                  </div>
-                </div>
-              ))}
-              {isPending ? (
-                <span className="text-sm transform-all animate-typing text-accent p-2 rounded-lg">
-                  ✨ Đang suy nghĩ ...
-                </span>
-              ) : (
-                <></>
-              )}
-            </div>
-          ) : (
-            <Empty />
-          )}
+                ))}
+                {isPending ? (
+                  <span className="text-sm transform-all animate-typing text-accent p-2 rounded-lg">
+                    ✨ Đang suy nghĩ ...
+                  </span>
+                ) : (
+                  <></>
+                )}
+              </div>
+            ) : (
+              <Empty />
+            )}
+          </div>
         </div>
       </CardContent>
 
