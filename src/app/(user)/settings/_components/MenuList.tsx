@@ -1,14 +1,21 @@
-import MenuItem from "./MenuItem";
+import MenuItem, { MenuItemProps } from "./MenuItem";
 import { Separator } from "@/components/ui/separator";
 
-const MenuList = () => {
+type MenuListProps = {
+  items: MenuItemProps[];
+  title?: string;
+};
+
+const MenuList = ({ items, title }: MenuListProps) => {
   return (
     <div className="flex flex-col gap-2">
-      <h3 className="text-muted/90 font-semibold text-sm">Settings</h3>
+      {title ? (
+        <h3 className="text-muted/90 font-semibold text-sm">{title}</h3>
+      ) : null}
       <div className="p-1 rounded-xl bg-white overflow-hidden shadow-gray-100 shadow-xl border border-solid">
-        {[1, 2, 3].map((item, index) => (
+        {items.map((item, index) => (
           <>
-            <MenuItem icon="🍔" title="Menu" />{" "}
+            <MenuItem {...item} />{" "}
             {index !== 2 && <Separator className="bg-muted/5 mx-4 w-auto" />}
           </>
         ))}
