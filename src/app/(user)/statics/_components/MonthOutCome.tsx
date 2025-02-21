@@ -33,6 +33,10 @@ const MonthOutCome = () => {
     Number(currentYear)
   );
 
+  const totalOutcome = expenseMonth.reduce((acc, expense) => {
+    return acc + expense.amount;
+  }, 0);
+
   // get expense history by date
   const expenseByDate = groupTransactionsByDate(expenseMonth).sort(
     (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
@@ -53,25 +57,28 @@ const MonthOutCome = () => {
     };
   });
 
-  const chartData = convertArrayToObject(expenseByCategory);
-
   return (
-    <Card>
-      <CardHeader>
+    <Card className="p-0">
+      <CardHeader className="p-2">
         <DailyTransactionsChart chartData={expenseByDate} />
-        <TopCategoryChart chartData={[chartData]} chartConfig={chartConfig} />
+        {/* <TopCategoryChart chartData={[chartData]} chartConfig={chartConfig} /> */}
       </CardHeader>
-      <CardContent className="flex flex-col gap-2 mt-4 p-2 transition-all animate-fadeIn">
+      <CardContent className="flex flex-col gap-2 p-2 transition-all animate-fadeIn">
         <CardDescription className="text-muted/70 mb-2">
           All expenses:
         </CardDescription>
-        {expenseByCategory.map((item) => (
-          <CategoryItem
-            icon={item.icon}
-            category={item.category}
-            key={item.icon}
-            total={item.total}
-          />
+        {expenseByCategory.map((item, index) => (
+          <div className="flex items-center w-full" key={index}>
+            <CategoryItem
+              icon={item.icon}
+              category={item.category}
+              key={item.icon}
+              total={item.total}
+            />
+            <p className="text-sm text-accent ml-2">
+              ({Math.round((item.total / totalOutcome) * 100)})%
+            </p>
+          </div>
         ))}
       </CardContent>
     </Card>

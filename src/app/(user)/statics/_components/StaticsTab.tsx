@@ -15,25 +15,22 @@ export function StaticsTab() {
   return (
     <Tabs
       defaultValue={defaultTab}
-      className=" bg-card p-2 rounded-tl-2xl rounded-tr-2xl w-full"
+      className=" bg-card p-2 pt-0 rounded-tl-2xl rounded-tr-2xl w-full"
       onValueChange={(value) => {
         router.push(`/statics?tab=${value}`);
       }}
     >
       <TabsList className="grid w-full grid-cols-2">
         <TabsTrigger value="outcome">
-          <div className="flex gap-1 text-primary data-[state=active]:border-b-border">
+          <div className="flex  justify-center items-center gap-1 data-[state=active]:border-b-border">
             <CupSoda size={20} />
-            <h3>Outcome</h3>
+            <h3 className="text-xs leading-none mt-1">Outcome</h3>
           </div>
         </TabsTrigger>
-        <TabsTrigger
-          value="income"
-          className="flex gap-1 text-primary data-[state=active]:border-b-border"
-        >
-          <div className="flex gap-2">
+        <TabsTrigger value="income">
+          <div className="flex justify-center items-center gap-1 data-[state=active]:border-b-border">
             <WalletMinimal size={20} />
-            <h3>Income</h3>
+            <h3 className="text-xs leading-none mt-1">Income</h3>
           </div>
         </TabsTrigger>
       </TabsList>

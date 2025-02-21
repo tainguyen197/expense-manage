@@ -41,7 +41,7 @@ const Navbar = () => {
         {tabList.map((tab) => (
           <TabsTrigger
             key={tab.value}
-            className="text-muted/90 flex-col border-none item-center justify-center h-full relative rounded-none shadow-none data-[state=active]:shadow-none data-[state=active]:border-b-0 "
+            className="text-muted/90 flex-col border-none item-center justify-center h-full relative rounded-none shadow-none data-[state=active]:shadow-none data-[state=active]:border-b-0"
             value={tab.value}
           >
             <Link href={tab.value} className="absolute w-full h-full" />

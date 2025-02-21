@@ -11,7 +11,7 @@ type CategoryItemProps = {
 
 const CategoryItem = (item: CategoryItemProps) => {
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between w-full">
       <div className="flex items-center">
         <Button size="icon" className="bg-gray-100 shadow-none text-lg">
           {item.icon ?? ""}

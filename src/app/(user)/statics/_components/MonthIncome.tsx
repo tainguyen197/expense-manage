@@ -9,14 +9,9 @@ import { groupTransactionsByDate } from "@/app/api/expense-manage";
 import { useSearchParams } from "next/navigation";
 import { loadDataFromLocalStorage } from "@/utils/localStorage";
 import { Category } from "@/types/category";
-import { TopCategoryChart } from "./TopCategoryChart";
 import { DailyTransactionsChart } from "./DailyTransactionsChart";
 import { ChartConfig } from "@/components/ui/chart";
-import {
-  convertArrayToObject,
-  mappingCategory,
-  transactionMonthByCategory,
-} from "../_utils";
+import { mappingCategory, transactionMonthByCategory } from "../_utils";
 import { getIncomeHistoryByMonthAndYear } from "@/app/api/income-manage";
 
 const MonthIncome = () => {
@@ -51,13 +46,10 @@ const MonthIncome = () => {
     };
   });
 
-  const chartData = convertArrayToObject(expenseByCategory);
-
   return (
     <Card>
       <CardHeader>
         <DailyTransactionsChart chartData={expenseByDate} />
-        <TopCategoryChart chartData={[chartData]} chartConfig={chartConfig} />
       </CardHeader>
       <CardContent className="flex flex-col gap-2 mt-4 p-2 transition-all animate-fadeIn">
         <CardDescription className="text-muted/70 mb-2">

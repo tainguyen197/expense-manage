@@ -66,7 +66,7 @@ function HistoryPage() {
 
   return (
     <div className="flex flex-col items-center mx-auto container pt-2 gap-10 h-full">
-      <div className="flex justify-center bg-background rounded-xl shadow-lg">
+      <div className="flex justify-center bg-background rounded-xl border border-solid">
         <div className="p-4 overflow-hidden">
           <Calendar
             disabledFuture

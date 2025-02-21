@@ -1,6 +1,6 @@
 "use client";
 
-import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import {
   ChartConfig,
@@ -9,6 +9,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { GroupedData } from "@/app/api/expense-manage";
+import { formatCurrency } from "@/utils/curency";
 
 const chartConfig = {
   amount: {
@@ -23,10 +24,10 @@ export function DailyTransactionsChart({
   chartData: GroupedData[];
 }) {
   return (
-    <Card>
+    <Card className="p-0">
       <CardContent className="p-0">
         <ChartContainer config={chartConfig}>
-          <LineChart
+          <BarChart
             accessibilityLayer
             data={chartData}
             margin={{
@@ -35,11 +36,15 @@ export function DailyTransactionsChart({
             }}
           >
             <CartesianGrid vertical={false} />
+            <YAxis
+              className="text-muted"
+              dataKey={"amount"}
+              tickFormatter={(value) => formatCurrency(value)}
+            />
             <XAxis
               className="text-muted"
               dataKey="timestamp"
               tickLine={false}
-              axisLine={false}
               tickMargin={8}
               tickFormatter={(value) => value}
             />
@@ -47,17 +52,16 @@ export function DailyTransactionsChart({
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Line
+            <Bar
+              radius={2}
               dataKey="amount"
               type="monotone"
-              stroke="var(--color-amount)"
-              strokeWidth={2}
-              dot={false}
-            />
-          </LineChart>
+              fill="var(--color-amount)"
+            ></Bar>
+          </BarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="pt-4">
+      <CardFooter className="p-0 pt-4">
         <div className="text-sm text-muted/80 text-center w-full font-medium">
           <span className="text-center">Monthly transactions</span>
         </div>
