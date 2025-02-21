@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import debounce from "lodash/debounce";
 
 type UpdateOptions = {
   replace?: boolean; // If true, replaces all params. If false, merges them.
@@ -34,5 +35,5 @@ export function useUpdateSearchParams() {
     method(newUrl, { scroll: options?.scroll ?? false });
   };
 
-  return updateSearchParams;
+  return debounce(updateSearchParams, 200);
 }

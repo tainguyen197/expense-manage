@@ -13,8 +13,11 @@ import { cn } from "@/lib/utils";
 function HistoryPage() {
   const searchParams = useSearchParams();
   const updateSearchParams = useUpdateSearchParams();
-  const [date, setDate] = React.useState<Date | undefined>(undefined);
-  const [tab, setTab] = React.useState<string>("outcome");
+
+  const dateUrl = searchParams.get("date")
+    ? new Date(Number(searchParams.get("date")))
+    : new Date();
+  const tabUrl = searchParams.get("tab") ?? "outcome";
 
   const handleSelectedDate = (date: Date) => {
     const startOfToday = new Date(
@@ -30,22 +33,9 @@ function HistoryPage() {
     updateSearchParams({ tab: value });
   };
 
-  React.useEffect(() => {
-    const dateParam = searchParams.get("date");
-    if (dateParam) {
-      const date = new Date(Number(dateParam));
-      setDate(date);
-    }
-
-    const tabParam = searchParams.get("tab");
-    if (tabParam) {
-      setTab(tabParam);
-    }
-  }, [searchParams]);
-
   let totalToday = 0;
 
-  switch (tab) {
+  switch (tabUrl) {
     case "income":
       const incomeList = getIncomeHistoryByDate(searchParams.get("date") || "");
       totalToday = incomeList.reduce((acc, income) => {
@@ -64,14 +54,30 @@ function HistoryPage() {
       break;
   }
 
+  React.useEffect(() => {
+    const date = searchParams.get("date");
+    if (!date) {
+      const startOfToday = new Date(
+        new Date().getFullYear(),
+        new Date().getMonth(),
+        new Date().getDate()
+      )
+        .getTime()
+        .toString();
+
+      updateSearchParams({ date: startOfToday });
+    }
+  }),
+    [];
+
   return (
-    <div className="flex flex-col items-center mx-auto container pt-2 gap-10 h-full">
+    <div className="flex flex-col items-center mx-auto container pt-4 gap-10 h-full">
       <div className="flex justify-center bg-background rounded-xl border border-solid">
         <div className="p-4 overflow-hidden">
           <Calendar
             disabledFuture
             onSelectedDate={handleSelectedDate}
-            selectedDate={date}
+            selectedDate={dateUrl}
           />
         </div>
       </div>
@@ -85,7 +91,7 @@ function HistoryPage() {
         </span>
       </div>
       <div className="flex justify-center w-full h-full">
-        <StaticsTab onTabChange={handleTabChange} value={tab} />
+        <StaticsTab onTabChange={handleTabChange} value={tabUrl} />
       </div>
     </div>
   );

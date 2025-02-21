@@ -8,9 +8,10 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { calculateIncome } from "@/app/api/income-manage";
 import { calculateSpent } from "@/app/api/expense-manage";
 import { formatVND } from "@/utils/curency";
+import { set } from "lodash";
 
 type CalenderProps = {
-  selectedDate?: Date;
+  selectedDate: Date;
   onSelectedDate?: (date: Date) => void;
   disabledFuture?: boolean;
 };
@@ -21,11 +22,14 @@ const Calender = ({
   onSelectedDate,
 }: CalenderProps) => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
-    new Date()
+    selectedDateProp
+  );
+  const [displayDate, setDisplayDate] = useState<Date | undefined>(
+    selectedDateProp
   );
 
   // Get the current week (start and end)
-  const startOfWeek = new Date(selectedDate!);
+  const startOfWeek = new Date(displayDate!);
   startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay()); // Start on Sunday
   const endOfWeek = new Date(startOfWeek);
   endOfWeek.setDate(startOfWeek.getDate() + 6); // End on Saturday
@@ -39,12 +43,14 @@ const Calender = ({
   }
 
   React.useEffect(() => {
-    if (selectedDateProp) setSelectedDate(selectedDateProp);
+    if (selectedDateProp) {
+      setSelectedDate(selectedDateProp);
+    }
   }, [selectedDateProp]);
 
-  React.useEffect(() => {
-    if (onSelectedDate) onSelectedDate(selectedDate!);
-  }, [selectedDate]);
+  const handleSelectedDate = (date: Date) => {
+    onSelectedDate && onSelectedDate?.(date);
+  };
 
   // Custom renderer for the grid
   const renderWeek = React.useMemo(
@@ -78,7 +84,10 @@ const Calender = ({
                 "border-primary border-solid border"
               }`}
                 disabled={disabledFuture && day > new Date()}
-                onClick={() => setSelectedDate(day)}
+                onClick={() => {
+                  handleSelectedDate(day);
+                  setSelectedDate(day);
+                }}
               >
                 {day.getDate()}
               </Button>
@@ -125,8 +134,8 @@ const Calender = ({
           size={"icon"}
           className="rounded-md border-none shadow-none text-accent bg-background"
           onClick={() =>
-            setSelectedDate(
-              new Date(selectedDate!.setDate(selectedDate!.getDate() - 7))
+            setDisplayDate(
+              new Date(displayDate!.setDate(displayDate!.getDate() - 7))
             )
           }
         >
@@ -144,8 +153,8 @@ const Calender = ({
           className="rounded-md border-none shadow-none text-accent bg-background"
           disabled={disabledFuture && endOfWeek > new Date()}
           onClick={() =>
-            setSelectedDate(
-              new Date(selectedDate!.setDate(selectedDate!.getDate() + 7))
+            setDisplayDate(
+              new Date(displayDate!.setDate(displayDate!.getDate() + 7))
             )
           }
         >
