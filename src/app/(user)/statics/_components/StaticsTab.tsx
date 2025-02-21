@@ -6,10 +6,12 @@ import MonthOutCome from "./MonthOutCome";
 import { useRouter, useSearchParams } from "next/navigation";
 import { CupSoda, WalletMinimal } from "lucide-react";
 import MonthIncome from "./MonthIncome";
+import { useUpdateSearchParams } from "@/hooks/useUpdateSearchParams";
 
 export function StaticsTab() {
   const router = useRouter();
   const params = useSearchParams();
+  const updateSearchParams = useUpdateSearchParams();
   const defaultTab = params.get("tab") || "outcome";
 
   return (
@@ -17,7 +19,7 @@ export function StaticsTab() {
       defaultValue={defaultTab}
       className=" bg-card p-2 pt-0 rounded-tl-2xl rounded-tr-2xl w-full"
       onValueChange={(value) => {
-        router.push(`/statics?tab=${value}`);
+        updateSearchParams({ tab: value });
       }}
     >
       <TabsList className="grid w-full grid-cols-2">

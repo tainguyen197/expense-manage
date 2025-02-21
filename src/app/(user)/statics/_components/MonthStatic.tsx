@@ -23,6 +23,7 @@ import React from "react";
 import { getExpenseHistoryByMonthAndYear } from "@/app/api/expense-manage";
 import { formatCurrency } from "@/utils/curency";
 import { getIncomeHistoryByMonthAndYear } from "@/app/api/income-manage";
+import { useUpdateSearchParams } from "@/hooks/useUpdateSearchParams";
 
 const monthName = [
   {
@@ -81,6 +82,8 @@ const MonthStatic = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  const updateSearchParams = useUpdateSearchParams();
+
   const currentMonth = searchParams.get("month");
   const currentMonthName = monthName.find(
     (month) => month.value === currentMonth
@@ -109,19 +112,16 @@ const MonthStatic = () => {
     totalOutcome > totalIncome ? 100 : (totalOutcome / totalIncome) * 100;
 
   const handleValueChange = (params: Record<string, string>) => {
-    const currentParams = new URLSearchParams(searchParams.toString());
-    Object.entries(params).forEach(([key, value]) => {
-      currentParams.set(key, value);
-    });
-    router.push(`${routesConfig.statics.static}?${currentParams.toString()}`);
+    updateSearchParams(params);
   };
 
   React.useEffect(() => {
     // set default month and year by current date if not exist
-    if (!searchParams.get("month") || !searchParams.get("year")) {
+    if (!searchParams.get("month") && !searchParams.get("year")) {
       const date = new Date();
       const month = (date.getMonth() + 1).toString().padStart(2, "0");
       const year = date.getFullYear().toString();
+
       handleValueChange({ year, month });
     }
   }, [searchParams]);
