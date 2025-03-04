@@ -5,7 +5,7 @@ import {
   loadDataFromLocalStorage,
   saveDataToLocalStorage,
 } from "@/utils/localStorage";
-import { addExpense, calculateSpent, deleteExpense } from "./expense-manage";
+import { calculateSpent, deleteExpense } from "./expense-manage";
 import {
   defaultCategory,
   defaultErrorMessage,
@@ -16,6 +16,7 @@ import { addIncome, calculateIncome, deleteIncome } from "./income-manage";
 import { Message, MessageKind } from "@/types/message";
 import { getMessagesByDate } from "@/utils/groupMessagesByDate";
 import { addMessage } from "./message";
+import { createExpense } from "@/actions/expense";
 
 const openai = new OpenAI({
   apiKey: process.env.NEXT_PUBLIC_API_KEY,
@@ -68,7 +69,6 @@ const openaiCalling = async (message: string) => {
     new Date(today).getTime().toString()
   ) as ChatCompletionMessageParam[];
 
-  console.log("todayMessages", todayMessages);
   return await openai.chat.completions.create({
     model: "gpt-4o-mini",
     messages: [
@@ -83,7 +83,7 @@ const openaiCalling = async (message: string) => {
   });
 };
 
-const handleToolCall = (
+const handleToolCall = async (
   toolCall: any,
   toolCallArguments: any,
   userTime: number
@@ -97,18 +97,19 @@ const handleToolCall = (
 
   switch (toolCall.function.name) {
     case "add_expense":
-      const { success, message } = addExpense({
+      const result = await createExpense({
         ...toolCallArguments,
-        timestamp: userTime,
+        timestamp: new Date(userTime),
       });
+
       toolResponse = {
         tool_call_id: toolCall.id,
         content: JSON.stringify({
-          success,
-          message: success ? "added" : message,
+          success: result.success,
+          message: result.success ? "added" : result.message,
           category: toolCallArguments.category,
         }),
-        kind: success ? "add_expense" : "default",
+        kind: result.success ? "add_expense" : "default",
         params: {
           category: toolCallArguments.category,
           amount: toolCallArguments.amount,
@@ -220,7 +221,7 @@ export const getExpenseParams = async (
     return newMessage;
   }
 
-  const toolResponse = handleToolCall(
+  const toolResponse = await handleToolCall(
     toolCall,
     JSON.parse(toolCall.function.arguments),
     userTime

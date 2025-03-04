@@ -17,10 +17,14 @@ import { loadDataFromLocalStorage } from "@/utils/localStorage";
 import { Message as TMessage } from "../../../types/message";
 import { groupMessagesByDate } from "@/utils/groupMessagesByDate";
 import moment from "moment";
-import Message from "./_components/Message";
+// import Message from "./_components/Message";
 import Empty from "./_components/Empty";
+import dynamic from "next/dynamic";
 
 type MessageState = Record<string, TMessage[]>; // group of messages
+
+//dynamic import Message
+const Message = dynamic(() => import("./_components/Message"), { ssr: false });
 
 const ChatPage = () => {
   const [messages, setMessages] = React.useState<MessageState>({});
@@ -106,29 +110,6 @@ const ChatPage = () => {
       return () => clearTimeout(timeoutId);
     }
   }, [isPending]);
-
-  // const setVh = () => {
-  //   console.log("setVh", window?.visualViewport?.height ?? 0 - 192);
-  //   setViewPort((window?.visualViewport?.height ?? 0) - 192);
-  //   const vh = (window?.visualViewport?.height ?? 0) * 0.01;
-  //   document.documentElement.style.setProperty("--vh", `${vh}px`);
-  // };
-
-  // React.useEffect(() => {
-  //   if (window) {
-  //     setVh();
-
-  //     // window.addEventListener("resize", setVh);
-  //     window.visualViewport &&
-  //       window.visualViewport.addEventListener("resize", setVh);
-
-  //     return () => {
-  //       // window.removeEventListener("resize", setVh);
-  //       window.visualViewport &&
-  //         window.visualViewport.addEventListener("resize", setVh);
-  //     };
-  //   }
-  // }, []);
 
   return (
     <Card className="shadow-none border-none bg-gray-10">

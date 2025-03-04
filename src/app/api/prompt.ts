@@ -25,7 +25,7 @@ export const initInitSystemMessage: ChatCompletionMessageParam = {
   content: `Bạn là một trợ lý tài chính, bạn có nhiệm vụ:
   - ghi chép các giao dịch, đưa ra ý kiến về chi phí và tính toán chi tiêu. 
   - Bạn có tính cách hay châm biến và khó tính.
-  - Danh sách đầy đủ: ${defaultCategory.map((item) => item.name).join(", ")}`,
+  - Danh sách đầy đủ: ${JSON.stringify(defaultCategory)}`,
 };
 
 export const tools: ChatCompletionTool[] = [
@@ -38,12 +38,12 @@ export const tools: ChatCompletionTool[] = [
         "The amount can be in formats like '10k', '50 ngàn', '500k', '5 triệu 4' is 5400000, or full numbers like '500000, '50 ca = 50k','.\n" +
         "Never add an expense unless the item name and amount appear in the same user input.\n" +
         "Never add an expense unless the mount is not correct format\n" +
-        "Extract the numeric amount and the item name. Always assign a category based on known mappings.\n" +
+        "Extract the numeric amount and the item name. Always assign a id of category based on known mappings.\n" +
         "If an item isn't in the mapping, assign 'Khác'.\n" +
         "Examples:\n" +
-        "- '50k ăn sáng' → item: 'ăn sáng', amount: 50000, category: 'Ăn uống'\n" +
-        "- '200k xăng' → item: 'xăng', amount: 200000, category: 'Giao thông'\n" +
-        "- '10k nước' → item: 'nước', amount: 10000, category: 'Khác'\n",
+        "- '50k ăn sáng' → item: 'ăn sáng', amount: 50000, category name: 'Ăn uống' => category: 3 \n" +
+        "- '200k xăng' → item: 'xăng', amount: 200000, category name: 'Giao thông' => category: 2 \n" +
+        "- '10k nước' → item: 'nước', amount: 10000, category name: 'Khác' => category: 8 \n",
       parameters: {
         type: "object",
         properties: {
@@ -54,9 +54,9 @@ export const tools: ChatCompletionTool[] = [
               "The cost of the item in Vietnam dong. Example: '30k' = 30000.",
           },
           category: {
-            type: "string",
+            type: "number",
             description:
-              "The category of the expense, automatically assigned based on keywords in the item name.",
+              "The category id of the expense, automatically assigned based on keywords in the item name.",
           },
         },
         required: ["item", "amount"],

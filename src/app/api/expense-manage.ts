@@ -5,10 +5,6 @@ import {
 } from "@/utils/localStorage";
 import { getCategoryList } from "./category";
 
-export const getExpenseHistory = () => {
-  return loadDataFromLocalStorage("expense-history") || [];
-};
-
 // get expense history for a specific date
 export const getExpenseHistoryByDate = (date: string) => {
   const data = loadDataFromLocalStorage<Expense[]>("expense-history");
