@@ -5,7 +5,7 @@ import {
   loadDataFromLocalStorage,
   saveDataToLocalStorage,
 } from "@/utils/localStorage";
-import { calculateSpent, deleteExpense } from "./expense-manage";
+import { calculateSpent } from "./expense-manage";
 import {
   defaultCategory,
   defaultErrorMessage,
@@ -16,7 +16,7 @@ import { addIncome, calculateIncome, deleteIncome } from "./income-manage";
 import { Message, MessageKind } from "@/types/message";
 import { getMessagesByDate } from "@/utils/groupMessagesByDate";
 import { addMessage } from "./message";
-import { createExpense } from "@/actions/expense";
+import { createExpense, deleteExpense } from "@/actions/expense";
 
 const openai = new OpenAI({
   apiKey: process.env.NEXT_PUBLIC_API_KEY,
@@ -118,7 +118,7 @@ const handleToolCall = async (
       };
       break;
     case "delete_expense": {
-      const itemDeleted = deleteExpense(toolCallArguments);
+      const itemDeleted = await deleteExpense(toolCallArguments);
       toolResponse = {
         tool_call_id: toolCall.id,
         content: JSON.stringify(itemDeleted),

@@ -1,9 +1,5 @@
 import { Expense } from "@/types/expense";
-import {
-  loadDataFromLocalStorage,
-  saveDataToLocalStorage,
-} from "@/utils/localStorage";
-import { getCategoryList } from "./category";
+import { loadDataFromLocalStorage } from "@/utils/localStorage";
 
 // get expense history for a specific date
 export const getExpenseHistoryByDate = (date: string) => {
@@ -37,87 +33,6 @@ export const getExpenseHistoryByMonthAndYear = (
   });
 
   return result;
-};
-
-export const addExpense = (expense: Expense) => {
-  // prevent adding expense with duplicate item and amount in the same day
-  const expenseHistory = loadDataFromLocalStorage<Expense[]>("expense-history");
-  const duplicate = expenseHistory?.find(
-    (entry) =>
-      entry.item === expense.item &&
-      entry.amount === expense.amount &&
-      new Date(entry.timestamp).toDateString() ===
-        new Date(expense.timestamp).toDateString()
-  );
-
-  if (duplicate) {
-    return {
-      success: false,
-      message: "Duplicate expense found",
-    };
-  }
-
-  // convert the category name to id
-  const categoryList = getCategoryList();
-  const category = categoryList.find((c) => c.name === expense.category);
-  if (category) {
-    expense.category = category.id;
-  }
-
-  saveDataToLocalStorage("expense-history", [
-    ...(expenseHistory || []),
-    expense,
-  ]);
-  console.log("Saved expense", expense);
-
-  return {
-    success: true,
-    ...expense,
-  };
-};
-
-export const deleteExpense = (expense: any) => {
-  const expenseHistory = loadDataFromLocalStorage<Expense[]>("expense-history");
-
-  if (!expenseHistory) {
-    return {
-      success: false,
-      message: "No expense history found",
-    };
-  }
-  const updatedExpenseHistory = expenseHistory.filter(
-    (entry: any) =>
-      !(entry.amount === expense.amount && entry.item === expense.item)
-  );
-
-  const deleted = expenseHistory.length !== updatedExpenseHistory.length;
-
-  deleted && saveDataToLocalStorage("expense-history", updatedExpenseHistory);
-
-  return {
-    success: deleted,
-    ...expense,
-  };
-};
-
-export const updateExpense = (expense: any) => {
-  const expenseHistory = loadDataFromLocalStorage<Expense[]>("expense-history");
-
-  if (!expenseHistory) {
-    return false;
-  }
-
-  const updatedExpenseHistory = expenseHistory.map((entry: any) => {
-    const updated = entry.timestamp === expense.timestamp;
-
-    return updated
-      ? { ...entry, ...expense, category: Number(expense.category) }
-      : entry;
-  });
-
-  saveDataToLocalStorage("expense-history", updatedExpenseHistory);
-
-  return true;
 };
 
 export const calculateSpent = ({

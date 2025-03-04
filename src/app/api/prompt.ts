@@ -5,6 +5,8 @@ import {
 
 export const defaultErrorMessage = "Xin lỗi, mình không hiểu.";
 
+export const defaultCategoryId = 8;
+
 export const defaultCategory = [
   { id: 1, name: "Nhà ở", icon: "🏠" },
   { id: 2, name: "Giao thông", icon: "🚗" },

@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { expenseHistory } from "@/db/schema";
 import { Expense, ExpenseHistory, ExpenseResponse } from "@/types/expense";
+import { and, eq } from "drizzle-orm";
 
 export const getExpenseHistory = async (
   user_id: string,
@@ -83,4 +84,64 @@ async function createExpenseHistoryInternal(expense: Expense, user_id: string) {
     ...expense,
     userId: user_id,
   });
+}
+
+export const deleteExpenseHistory = async (
+  expense: ExpenseHistory,
+  user_id: string
+) => {
+  try {
+    await deleteExpenseHistoryInternal(expense, user_id);
+
+    return {
+      success: true,
+      data: expense,
+    };
+  } catch (e) {
+    return {
+      success: false,
+      message: (e as Error).message,
+    };
+  } finally {
+  }
+};
+
+async function deleteExpenseHistoryInternal(
+  expense: ExpenseHistory,
+  user_id: string
+) {
+  return db
+    .delete(expenseHistory)
+    .where(
+      and(
+        eq(expenseHistory.userId, user_id),
+        eq(expenseHistory.item, expense.item),
+        eq(expenseHistory.amount, expense.amount)
+      )
+    )
+    .returning({ id: expenseHistory.id });
+}
+
+export const updateExpenseHistory = async (
+  expense: ExpenseHistory,
+  user_id: string
+) => {
+  return updateExpenseHistoryInternal(expense, user_id);
+};
+
+async function updateExpenseHistoryInternal(
+  expense: ExpenseHistory,
+  user_id: string
+) {
+  return db
+    .update(expenseHistory)
+    .set({
+      ...expense,
+    })
+    .where(
+      and(
+        eq(expenseHistory.userId, user_id),
+        eq(expenseHistory.timestamp, expense.timestamp)
+      )
+    );
 }

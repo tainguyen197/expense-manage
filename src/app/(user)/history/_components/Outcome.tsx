@@ -1,24 +1,29 @@
-import { NotepadTextDashed } from "lucide-react";
+import React from "react";
+
 import Item from "./Item";
+import Empty from "./Empty";
+
 import { useRouter, useSearchParams } from "next/navigation";
+import { getIconCategoryByName } from "@/utils/getIconCategoryByName";
+import { Expense, ExpenseWithoutCategory } from "@/types/expense";
+import { useToast } from "@/hooks/use-toast";
 import {
   deleteExpense,
-  getExpenseHistoryByDate,
+  getExpenseByDate,
   updateExpense,
-} from "@/app/api/expense-manage";
-import { getIconCategoryByName } from "@/utils/getIconCategoryByName";
-import Empty from "./Empty";
-import { ExpenseWithoutCategory } from "@/types/expense";
-import { useToast } from "@/hooks/use-toast";
+} from "@/actions/expense";
+import { Category } from "@/types/category";
 
 const OutcomeList = () => {
   const searchParams = useSearchParams();
-  const router = useRouter();
+  const dateParams = searchParams.get("date");
 
-  const expenseList = getExpenseHistoryByDate(searchParams.get("date") || "");
   const { toast } = useToast();
 
-  const expenseListWithCategory = expenseList.map((item) => {
+  const [data, setData] = React.useState<Expense[]>([]);
+
+  //TODO: move to server
+  const expenseListWithCategory = data.map((item) => {
     const category = getIconCategoryByName(item.category);
     return {
       ...item,
@@ -26,37 +31,54 @@ const OutcomeList = () => {
     };
   });
 
-  const handleDelete = (item: ExpenseWithoutCategory) => {
-    const isDeleted = deleteExpense(item);
-    toast({
-      duration: 1000,
-      variant: isDeleted ? "success" : "error",
-      description: isDeleted ? "Outcome deleted" : "Failed to delete outcome",
+  const handleDelete = (
+    item: ExpenseWithoutCategory & {
+      category: Category;
+    }
+  ) => {
+    deleteExpense({ ...item, category: item.category.id }).then((result) => {
+      toast({
+        duration: 1000,
+        variant: result.success ? "success" : "error",
+        description: result.message,
+      });
     });
-    router.refresh();
   };
 
-  const handleEdit = (item: ExpenseWithoutCategory) => {
-    const isUpdate = updateExpense(item);
-
-    toast({
-      duration: 1000,
-      variant: isUpdate ? "success" : "error",
-      description: isUpdate ? "Out updated" : "Failed to update out",
+  const handleEdit = (item: Expense) => {
+    updateExpense({ ...item, category: item.category }).then((result) => {
+      toast({
+        duration: 1000,
+        variant: result.success ? "success" : "error",
+        description: result.message,
+      });
     });
-    router.refresh();
   };
 
-  return expenseList.length === 0 ? (
+  React.useEffect(() => {
+    const fetchingExpenseList = async () => {
+      const date = new Date(Number(dateParams));
+      const expenseList = dateParams ? await getExpenseByDate(date) : [];
+      return expenseList;
+    };
+
+    if (searchParams.has("date")) {
+      fetchingExpenseList().then((result) => {
+        setData(result);
+      });
+    }
+  }, []);
+
+  return data.length === 0 ? (
     <Empty />
   ) : (
     <div className="flex flex-col gap-1 transition-all animate-fadeIn">
       {expenseListWithCategory.map((item) => (
         <Item
-          {...item}
+          item={item}
           onDelete={handleDelete}
           onEdit={handleEdit}
-          key={item.timestamp}
+          key={item.timestamp.getTime()}
         />
       ))}
     </div>

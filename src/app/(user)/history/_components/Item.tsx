@@ -7,25 +7,28 @@ import moment from "moment";
 import { ConfirmDeleteModal } from "./ConfirmDelete";
 import { EditFormDialog } from "./EditForm";
 
-export type ItemProps = ExpenseWithoutCategory & {
-  category?: Category;
-  onEdit?: (item: ExpenseWithoutCategory) => void;
-  onDelete?: (item: ExpenseWithoutCategory) => void;
+type ItemData = ExpenseWithoutCategory & { category: Category };
+
+export type ItemProps = {
+  item: ItemData;
+  onDelete?: (item: ItemData) => void;
+  onEdit?: (item: Expense) => void;
 };
 
-const Item = (item: ItemProps) => {
+const Item = (props: ItemProps) => {
+  const { item } = props;
+
   const handleDelete = () => {
-    item.onDelete && item.onDelete(item);
+    props.onDelete && props.onDelete(item);
   };
 
   const handleEdit = (values: any) => {
-    item.onEdit && item.onEdit({ ...item, ...values });
+    props.onEdit && props.onEdit({ ...item, ...values });
   };
 
   return (
     <div
       className="flex items-center justify-between p-2 group focus:bg-gray-100 transition rounded cursor-pointer"
-      key={item.timestamp}
       tabIndex={0}
     >
       <div className="flex items-center">
