@@ -1,4 +1,5 @@
 import { getExpenseByDate } from "@/actions/expense";
+import { getIncomeByDate } from "@/actions/income";
 import { cn } from "@/lib/utils";
 import { formatCurrency } from "@/utils/curency";
 
@@ -17,21 +18,25 @@ const TotalToday = async ({
   let totalToday = 0;
 
   switch (tabUrl) {
-    // case "income":
-    //   const incomeList = getIncomeHistoryByDate(searchParams.get("date") || "");
-    //   totalToday = incomeList.reduce((acc, income) => {
-    //     return acc + income.amount;
-    //   }, 0);
-    //   break;
-    case "outcome":
-      const form = dateUrl;
+    case "income": {
+      const from = dateUrl;
       const to = new Date(dateUrl);
-      const expenseList = await getExpenseByDate(form, to);
+      const incomeList = await getIncomeByDate(from, to);
+
+      totalToday = incomeList.reduce((acc, income) => {
+        return acc + income.amount;
+      }, 0);
+      break;
+    }
+    case "outcome": {
+      const from = dateUrl;
+      const to = new Date(dateUrl);
+      const expenseList = await getExpenseByDate(from, to);
       console.log(expenseList);
       totalToday = expenseList.reduce((acc, expense) => {
         return acc + expense.amount;
       }, 0);
-
+    }
     default:
       break;
   }

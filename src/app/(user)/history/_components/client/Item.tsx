@@ -6,13 +6,14 @@ import { Pencil, Trash2 } from "lucide-react";
 import moment from "moment";
 import { ConfirmDeleteModal } from "./ConfirmDelete";
 import { EditFormDialog } from "./EditForm";
+import { SkeletonItem } from "../Skeleton";
 
 type ItemData = ExpenseWithoutCategory & { category: Category };
 
 export type ItemProps = {
   item: ItemData;
   onDelete?: (item: ItemData) => void;
-  onEdit?: (item: Expense) => void;
+  onEdit?: (item: Expense | Income) => void;
 };
 
 const Item = (props: ItemProps) => {
@@ -63,5 +64,7 @@ const Item = (props: ItemProps) => {
     </div>
   );
 };
+
+Item.Skeleton = SkeletonItem;
 
 export default Item;

@@ -5,9 +5,9 @@ import "react-day-picker/dist/style.css";
 import "./CustomDayPicker.css"; // Add custom styles
 import { Button } from "./button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { calculateIncome } from "@/app/api/income-manage";
 import { calculateSpentByDays } from "@/actions/expense";
 import { formatVND } from "@/utils/curency";
+import { calculateIncome, calculateIncomeByDays } from "@/actions/income";
 
 type CalenderProps = {
   selectedDate: Date;
@@ -28,6 +28,7 @@ const Calender = ({
   );
 
   const [weekSpent, setWeekSpent] = useState<number[]>([]);
+  const [weekIncome, setWeekIncome] = useState<number[]>([]);
 
   // Get the current week (start and end)
   const startOfWeek = new Date(displayDate!);
@@ -54,8 +55,15 @@ const Calender = ({
       const result = await calculateSpentByDays(startOfWeek, endOfWeek);
       setWeekSpent(result);
     };
+    const fetchIncome = async () => {
+      const result = await calculateIncomeByDays(startOfWeek, endOfWeek);
+      setWeekIncome(result);
+    };
 
-    if (displayDate) fetchData();
+    if (displayDate) {
+      fetchData();
+      fetchIncome();
+    }
   }, [displayDate]);
 
   const handleSelectedDate = (date: Date) => {
@@ -67,11 +75,6 @@ const Calender = ({
     () => (
       <div className="week-row">
         {weekDays.map((day, index) => {
-          const income = calculateIncome({
-            start_date: day,
-            end_date: day,
-          });
-
           return (
             <div key={day.toISOString()}>
               <Button
@@ -99,11 +102,17 @@ const Calender = ({
                 <div className="flex flex-col gap-1 pt-2">
                   <div className="text-[0.625rem] font-semibold flex justify-center items-end gap-1 text-muted">
                     <span className="leading-none">
-                      {weekSpent[index] && formatVND(weekSpent[index])}
+                      {weekSpent[index]
+                        ? formatVND(weekSpent[index])
+                        : undefined}
                     </span>
                   </div>
                   <div className="text-[0.625rem] font-semibold flex justify-center items-end gap-1 text-muted/70">
-                    <span className="leading-none">{formatVND(income)}</span>
+                    <span className="leading-none">
+                      {weekIncome[index]
+                        ? formatVND(weekIncome[index])
+                        : undefined}
+                    </span>
                   </div>
                 </div>
               )}

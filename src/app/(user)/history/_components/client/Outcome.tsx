@@ -14,15 +14,15 @@ import {
 import { Category } from "@/types/category";
 
 const OutcomeList = () => {
-  const searchParams = useSearchParams();
-  const dateParams = searchParams.get("date");
-
   const { toast } = useToast();
+  const searchParams = useSearchParams();
 
   const [data, setData] = React.useState<Expense[]>([]);
 
+  const dateParams = searchParams.get("date");
+
   //TODO: move to server
-  const expenseListWithCategory = data.map((item) => {
+  const expenseListWithCategory = data?.map((item) => {
     const category = getIconCategoryByName(item.category);
     return {
       ...item,
@@ -44,6 +44,7 @@ const OutcomeList = () => {
     });
   };
 
+  console.log("OutcomeList re render");
   const handleEdit = (item: Expense) => {
     updateExpense({ ...item, category: item.category }).then((result) => {
       toast({
@@ -67,6 +68,15 @@ const OutcomeList = () => {
       });
     }
   }, [dateParams]);
+
+  if (!expenseListWithCategory.length)
+    return (
+      <div className="flex flex-col gap-4 transition-all animate-fadeIn p-4">
+        {[1, 2, 3].map((item) => (
+          <Item.Skeleton key={item} />
+        ))}
+      </div>
+    );
 
   return data.length === 0 ? (
     <Empty />

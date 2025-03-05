@@ -3,7 +3,7 @@ import { expenseHistory } from "@/db/schema";
 import { Expense, ExpenseHistory, ExpenseResponse } from "@/types/expense";
 import { and, eq } from "drizzle-orm";
 
-export const getExpenseHistory = async (
+const getExpenseHistory = async (
   user_id: string,
   { limit }: { limit?: number }
 ) => {
@@ -20,7 +20,7 @@ function getExpenseHistoryInternal(
   });
 }
 
-export const getExpenseHistoryByDate = async (
+const getExpenseHistoryByDate = async (
   user_id: string,
   from: Date,
   to: Date
@@ -42,7 +42,7 @@ function getExpenseHistoryByDateInternal(
   });
 }
 
-export const createExpenseHistory = async (
+const createExpenseHistory = async (
   expense: Expense,
   user_id: string
 ): Promise<ExpenseResponse> => {
@@ -84,7 +84,7 @@ async function createExpenseHistoryInternal(expense: Expense, user_id: string) {
   });
 }
 
-export const deleteExpenseHistory = async (
+const deleteExpenseHistory = async (
   expense: ExpenseHistory,
   user_id: string
 ) => {
@@ -120,7 +120,7 @@ async function deleteExpenseHistoryInternal(
     .returning({ id: expenseHistory.id });
 }
 
-export const updateExpenseHistory = async (
+const updateExpenseHistory = async (
   expense: ExpenseHistory,
   user_id: string
 ) => {
@@ -143,3 +143,11 @@ async function updateExpenseHistoryInternal(
       )
     );
 }
+
+export {
+  getExpenseHistory,
+  getExpenseHistoryByDate,
+  createExpenseHistory,
+  updateExpenseHistory,
+  deleteExpenseHistory,
+};

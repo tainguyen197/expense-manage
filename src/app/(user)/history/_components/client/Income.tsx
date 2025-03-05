@@ -1,22 +1,21 @@
 import { ExpenseWithoutCategory, Income } from "@/types/expense";
 import Item from "./Item";
-import { useRouter, useSearchParams } from "next/navigation";
-import {
-  deleteIncome,
-  getIncomeHistoryByDate,
-  updateIncome,
-} from "@/app/api/income-manage";
+import { useSearchParams } from "next/navigation";
 import { getIconCategoryByName } from "@/utils/getIconCategoryByName";
 import Empty from "../Empty";
 import { useToast } from "@/hooks/use-toast";
+import React from "react";
+import { deleteIncome, getIncomeByDate, updateIncome } from "@/actions/income";
+import { Category } from "@/types/category";
 
 const IncomeList = () => {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const incomeList = getIncomeHistoryByDate(searchParams.get("date") || "");
   const { toast } = useToast();
+  const searchParams = useSearchParams();
+  const [data, setData] = React.useState<Income[]>([]);
 
-  const incomeListWithCategory = incomeList.map((item) => {
+  const dateParams = searchParams.get("date");
+
+  const incomeListWithCategory = data.map((item) => {
     const category = getIconCategoryByName(item.category);
     return {
       ...item,
@@ -24,37 +23,64 @@ const IncomeList = () => {
     };
   });
 
-  const handleDelete = (item: ExpenseWithoutCategory) => {
-    const isDeleted = deleteIncome(item);
-    toast({
-      duration: 1000,
-      variant: isDeleted ? "success" : "error",
-      description: isDeleted ? "Income deleted" : "Failed to delete income",
+  const handleDelete = (
+    item: ExpenseWithoutCategory & {
+      category: Category;
+    }
+  ) => {
+    deleteIncome({ ...item, category: item.category.id }).then((result) => {
+      toast({
+        duration: 1000,
+        variant: result.success ? "success" : "error",
+        description: result.success ? "Out deleted" : "Failed to delete out",
+      });
     });
-    router.refresh();
   };
 
-  const handleEdit = (item: ExpenseWithoutCategory) => {
-    const isUpdate = updateIncome(item);
-
-    toast({
-      duration: 1000,
-      variant: isUpdate ? "success" : "error",
-      description: isUpdate ? "Out updated" : "Failed to update out",
+  const handleEdit = (item: Income) => {
+    updateIncome({ ...item, category: item.category }).then((result) => {
+      toast({
+        duration: 1000,
+        variant: result.success ? "success" : "error",
+        description: result.success ? "Out updated" : "Failed to update out",
+      });
     });
-    router.refresh();
   };
 
-  return incomeList.length === 0 ? (
+  React.useEffect(() => {
+    const fetchingExpenseList = async () => {
+      const from = new Date(Number(dateParams));
+      const to = new Date(from);
+      const expenseList = dateParams ? await getIncomeByDate(from, to) : [];
+      return expenseList;
+    };
+
+    if (dateParams) {
+      fetchingExpenseList().then((result) => {
+        setData(result);
+      });
+    }
+  }, [dateParams]);
+
+  if (!incomeListWithCategory.length)
+    return (
+      <div className="flex flex-col gap-4 transition-all animate-fadeIn p-4">
+        {[1, 2, 3].map((item) => (
+          <Item.Skeleton key={item} />
+        ))}
+      </div>
+    );
+
+  return data.length === 0 ? (
     <Empty />
   ) : (
     <div className="flex flex-col gap-1 transition-all animate-fadeIn">
       {incomeListWithCategory.map((item) => (
         <Item
-          {...item}
+          item={item}
           onDelete={handleDelete}
           onEdit={handleEdit}
-          key={item.timestamp}
+          key={item.timestamp.getTime()}
         />
       ))}
     </div>

@@ -92,7 +92,7 @@ export const tools: ChatCompletionTool[] = [
         "Record an income when the user provides an amount and a source (e.g., 'Lương tháng 10 20 triệu', 'tiền thưởng 5 triệu', '50 triệu đầu tư').\n" +
         "The amount can be in formats like '10k', '50 ngàn', '500k', '5 triệu 4' is 5400000, or full numbers like '500000'.\n" +
         "Never add an expense unless the item name and amount appear in the same user input.\n" +
-        "Extract the numeric amount and the item name. Always assign a category based on known mappings.\n" +
+        "Extract the numeric amount and the item name. Always assign a id of category based on known mappings.\n" +
         "If an item isn't in the mapping, assign 'Khác'.\n" +
         "Example mappings:\n" +
         "- 'quỹ', 'lương', 'lương tháng', 'tiền công', 'tiền thưởng', 'bonus' → 'Lương thưởng' 💵\n" +
@@ -113,9 +113,9 @@ export const tools: ChatCompletionTool[] = [
               "The amount of income in Vietnam dong. Example: '5 triệu' = 5000000.",
           },
           category: {
-            type: "string",
+            type: "number",
             description:
-              "The category of the income, always assigned based on keywords in the item name.",
+              "The category id of the expense, automatically assigned based on keywords in the item name.",
           },
         },
         required: ["item", "amount"],

@@ -40,7 +40,12 @@ export const incomeHistory = pgTable("income_history", {
     .notNull(),
   item: text("item").notNull(),
   amount: integer("amount").notNull(),
-  timestamp: timestamp("timestamp").default(sql`CURRENT_TIMESTAMP`),
+  timestamp: timestamp("timestamp")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  category: integer("category")
+    .references(() => categories.id)
+    .notNull(),
 });
 
 // Chat history (if storing user messages)
@@ -70,6 +75,10 @@ export const incomeRelations = relations(incomeHistory, ({ one }) => ({
   user: one(users, {
     fields: [incomeHistory.userId],
     references: [users.id],
+  }),
+  categories: one(categories, {
+    fields: [incomeHistory.category],
+    references: [categories.id],
   }),
 }));
 

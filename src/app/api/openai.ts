@@ -5,18 +5,21 @@ import {
   loadDataFromLocalStorage,
   saveDataToLocalStorage,
 } from "@/utils/localStorage";
-import { calculateSpent } from "./expense-manage";
 import {
   defaultCategory,
   defaultErrorMessage,
   initInitSystemMessage,
   tools,
 } from "./prompt";
-import { addIncome, calculateIncome, deleteIncome } from "./income-manage";
 import { Message, MessageKind } from "@/types/message";
 import { getMessagesByDate } from "@/utils/groupMessagesByDate";
 import { addMessage } from "./message";
-import { createExpense, deleteExpense } from "@/actions/expense";
+import {
+  calculateSpent,
+  createExpense,
+  deleteExpense,
+} from "@/actions/expense";
+import { calculateIncome, createIncome, deleteIncome } from "@/actions/income";
 
 const openai = new OpenAI({
   apiKey: process.env.NEXT_PUBLIC_API_KEY,
@@ -127,15 +130,15 @@ const handleToolCall = async (
       break;
     }
     case "add_income": {
-      const { success, message } = addIncome({
+      const result = await createIncome({
         ...toolCallArguments,
-        timestamp: userTime,
+        timestamp: new Date(userTime),
       });
       toolResponse = {
         tool_call_id: toolCall.id,
         content: JSON.stringify({
-          success: success,
-          message: success ? "added" : message,
+          success: result.success,
+          message: result.success ? "added" : result.message,
           category: toolCallArguments.category,
         }),
         kind: "add_income",
@@ -148,7 +151,7 @@ const handleToolCall = async (
       break;
     }
     case "delete_income": {
-      const itemDeleted = deleteIncome(toolCallArguments);
+      const itemDeleted = await deleteIncome(toolCallArguments);
       toolResponse = {
         tool_call_id: toolCall.id,
         content: JSON.stringify(itemDeleted),
@@ -158,11 +161,11 @@ const handleToolCall = async (
     }
     case "calculate_income":
       console.log("calculating income");
-      const incomeData = calculateIncome({
+      const incomeData = await calculateIncome(
         // range: toolCallArguments.range,
-        start_date: toolCallArguments.start_date,
-        end_date: toolCallArguments.end_date,
-      });
+        toolCallArguments.start_date,
+        toolCallArguments.end_date
+      );
 
       toolResponse = {
         tool_call_id: toolCall.id,
@@ -172,11 +175,10 @@ const handleToolCall = async (
       break;
     case "calculate_spent":
       console.log("calculating spent");
-      const spentData = calculateSpent({
-        range: toolCallArguments.range,
-        start_date: toolCallArguments.start_date,
-        end_date: toolCallArguments.end_date,
-      });
+      const spentData = await calculateSpent(
+        toolCallArguments.start_date,
+        toolCallArguments.end_date
+      );
 
       toolResponse = {
         tool_call_id: toolCall.id,
