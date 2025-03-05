@@ -5,48 +5,39 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import CategoryItem from "./CategoryItem";
-import {
-  getExpenseHistoryByMonthAndYear,
-  groupTransactionsByDate,
-} from "@/app/api/expense-manage";
-import { useSearchParams } from "next/navigation";
-import { loadDataFromLocalStorage } from "@/utils/localStorage";
+import { groupTransactionsByDate } from "@/app/api/expense-manage";
 import { Category } from "@/types/category";
-import { TopCategoryChart } from "./TopCategoryChart";
 import { DailyTransactionsChart } from "./DailyTransactionsChart";
 import { ChartConfig } from "@/components/ui/chart";
-import {
-  convertArrayToObject,
-  mappingCategory,
-  transactionMonthByCategory,
-} from "../_utils";
+import { mappingCategory, transactionMonthByCategory } from "../_utils";
+import { Expense } from "@/types/expense";
 
-const MonthOutCome = () => {
-  const searchParams = useSearchParams();
-  const category = loadDataFromLocalStorage<Category[]>("category") || [];
+type MonthTransactionsProps = {
+  data: Expense[];
+  categories: Category[];
+};
 
-  const currentMonth = searchParams.get("month");
-  const currentYear = searchParams.get("year");
-
-  const expenseMonth = getExpenseHistoryByMonthAndYear(
-    Number(currentMonth),
-    Number(currentYear)
-  );
-
-  const totalOutcome = expenseMonth.reduce((acc, expense) => {
+const MonthTransactions = ({
+  data = [],
+  categories = [],
+}: MonthTransactionsProps) => {
+  const totalOutcome = data.reduce((acc, expense) => {
     return acc + expense.amount;
   }, 0);
 
   // get expense history by date
-  const expenseByDate = groupTransactionsByDate(expenseMonth).sort(
+  const expenseByDate = groupTransactionsByDate(data).sort(
     (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
   );
 
-  const getExpenseHistoryCategory = transactionMonthByCategory(expenseMonth);
+  const getExpenseHistoryCategory = transactionMonthByCategory(data);
 
   const chartConfig: ChartConfig = {};
 
-  const expenseByCategory = mappingCategory(getExpenseHistoryCategory, category)
+  const expenseByCategory = mappingCategory(
+    getExpenseHistoryCategory,
+    categories
+  )
     .filter((item) => item.total > 0)
     .sort((a, b) => b.total - a.total);
 
@@ -61,11 +52,10 @@ const MonthOutCome = () => {
     <Card className="p-0">
       <CardHeader className="p-2">
         <DailyTransactionsChart chartData={expenseByDate} />
-        {/* <TopCategoryChart chartData={[chartData]} chartConfig={chartConfig} /> */}
       </CardHeader>
       <CardContent className="flex flex-col gap-2 p-2 transition-all animate-fadeIn">
         <CardDescription className="text-muted/70 mb-2">
-          All expenses:
+          All transactions:
         </CardDescription>
         {expenseByCategory.map((item, index) => (
           <div className="flex items-center w-full" key={index}>
@@ -85,4 +75,4 @@ const MonthOutCome = () => {
   );
 };
 
-export default MonthOutCome;
+export default MonthTransactions;

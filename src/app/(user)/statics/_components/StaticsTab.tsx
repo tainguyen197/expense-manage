@@ -2,14 +2,24 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import React from "react";
-import MonthOutCome from "./MonthOutCome";
-import { useRouter, useSearchParams } from "next/navigation";
+import MonthOutCome from "./MonthTransactions";
+import { useSearchParams } from "next/navigation";
 import { CupSoda, WalletMinimal } from "lucide-react";
-import MonthIncome from "./MonthIncome";
 import { useUpdateSearchParams } from "@/hooks/useUpdateSearchParams";
+import { Expense, Income } from "@/types/expense";
+import { Category } from "@/types/category";
 
-export function StaticsTab() {
-  const router = useRouter();
+type StaticsTabProps = {
+  incomeData: Income[];
+  outcomeData: Expense[];
+  categories: Category[];
+};
+
+export function StaticsTab({
+  incomeData,
+  outcomeData,
+  categories,
+}: StaticsTabProps) {
   const params = useSearchParams();
   const updateSearchParams = useUpdateSearchParams();
   const defaultTab = params.get("tab") || "outcome";
@@ -37,10 +47,10 @@ export function StaticsTab() {
         </TabsTrigger>
       </TabsList>
       <TabsContent value="outcome">
-        <MonthOutCome />
+        <MonthOutCome data={outcomeData} categories={categories} />
       </TabsContent>
       <TabsContent value="income">
-        <MonthIncome />
+        <MonthOutCome data={incomeData} categories={categories} />
       </TabsContent>
     </Tabs>
   );

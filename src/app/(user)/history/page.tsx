@@ -1,12 +1,5 @@
-import React, { Suspense } from "react";
-import Calendar from "@/components/ui/calendar";
+import React from "react";
 import { StaticsTab } from "./_components/client/Tabs";
-import { useSearchParams } from "next/navigation";
-import { getExpenseHistoryByDate } from "@/app/api/expense-manage";
-import { formatCurrency } from "@/utils/curency";
-import { useUpdateSearchParams } from "@/hooks/useUpdateSearchParams";
-import { getIncomeHistoryByDate } from "@/app/api/income-manage";
-import { cn } from "@/lib/utils";
 import TotalToday from "./_components/TotalToday";
 import WeekCalender from "./_components/client/WeekCalender";
 

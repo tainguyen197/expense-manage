@@ -44,7 +44,6 @@ const OutcomeList = () => {
     });
   };
 
-  console.log("OutcomeList re render");
   const handleEdit = (item: Expense) => {
     updateExpense({ ...item, category: item.category }).then((result) => {
       toast({
