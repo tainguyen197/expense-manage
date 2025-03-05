@@ -6,7 +6,7 @@ import { Message } from "@/types/message";
 import { formatCurrency } from "@/utils/curency";
 import { useSearchParams, useRouter } from "next/navigation";
 import React from "react";
-import Typewriter from "../Typewriter";
+import Typewriter from "./Typewriter";
 import { Button } from "@/components/ui/button";
 import { Send } from "lucide-react";
 
