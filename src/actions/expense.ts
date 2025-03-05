@@ -8,27 +8,28 @@ import {
 } from "@/db/expense-history";
 import { Expense, ExpenseResponse } from "@/types/expense";
 
-export async function createExpense(data: Expense): Promise<ExpenseResponse> {
+async function createExpense(data: Expense): Promise<ExpenseResponse> {
   // const { userId } = await auth();
   const userId = "mock_user";
 
   return createExpenseHistory(data, userId);
 }
 
-export async function getExpenseByDate(date: Date) {
-  if (!(date instanceof Date)) return [];
+async function getExpenseByDate(from: Date, to: Date) {
+  if (!(from instanceof Date)) return [];
   // const { userId } = await auth();
   const userId = "mock_user";
 
-  return getExpenseHistoryByDate(userId, date);
+  return getExpenseHistoryByDate(userId, from, to);
 }
 
-export async function deleteExpense(expense: Expense) {
+async function deleteExpense(expense: Expense) {
   // const { userId } = await auth();
   const userId = "mock_user";
 
   const expenseHistory = await getExpenseHistoryByDate(
     userId,
+    expense.timestamp,
     expense.timestamp
   );
 
@@ -58,15 +59,56 @@ export async function deleteExpense(expense: Expense) {
   };
 }
 
-export async function updateExpense(expense: Expense) {
+async function updateExpense(expense: Expense) {
   // const { userId } = await auth();
   const userId = "mock_user";
 
   const result = await updateExpenseHistory({ ...expense, userId }, userId);
-  debugger;
-  console.log("this updateExpense running... ", result);
   return {
     success: Boolean(result),
     message: Boolean(result) ? "Expense updated" : "Failed to update expense",
   };
 }
+
+async function calculateSpent(from: Date, to: Date) {
+  const expenseHistory = await getExpenseByDate(from, to);
+  const total = expenseHistory.reduce((acc, cur) => acc + cur.amount, 0);
+
+  return total;
+}
+
+async function calculateSpentByDays(from: Date, to: Date) {
+  const expenseHistory = await getExpenseByDate(from, to);
+  const dayLength = Math.ceil(
+    (to.getTime() - from.getTime()) / (1000 * 60 * 60 * 24)
+  );
+
+  //return arr of spent by days [1000, 40000, 6000, 0,0,0,0]
+  const spentByDays = Array.from({ length: dayLength }, (_, i) => {
+    const date = new Date(from);
+    date.setDate(date.getDate() + i);
+    const spent = expenseHistory
+      .filter((entry) => {
+        const entryDate = new Date(entry.timestamp);
+        return (
+          entryDate.getFullYear() === date.getFullYear() &&
+          entryDate.getMonth() === date.getMonth() &&
+          entryDate.getDate() === date.getDate()
+        );
+      })
+      .reduce((acc, cur) => acc + cur.amount, 0);
+
+    return spent;
+  });
+
+  return spentByDays;
+}
+
+export {
+  createExpense,
+  getExpenseByDate,
+  deleteExpense,
+  updateExpense,
+  calculateSpent,
+  calculateSpentByDays,
+};

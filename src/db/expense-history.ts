@@ -22,25 +22,23 @@ function getExpenseHistoryInternal(
 
 export const getExpenseHistoryByDate = async (
   user_id: string,
-  date: Date
+  from: Date,
+  to: Date
 ): Promise<ExpenseHistory[]> => {
-  return getExpenseHistoryByDateInternal(user_id, date);
+  return getExpenseHistoryByDateInternal(user_id, from, to);
 };
 
-function getExpenseHistoryByDateInternal(user_id: string, date: Date) {
-  const startOfDay = new Date(date);
-  startOfDay.setHours(0, 0, 0, 0); // Set to 00:00:00
-
-  const endOfDay = new Date(startOfDay);
-  endOfDay.setDate(startOfDay.getDate() + 1); // Move to next day at 00:00:00
+function getExpenseHistoryByDateInternal(
+  user_id: string,
+  from: Date,
+  to: Date
+) {
+  from.setHours(0, 0, 0, 0); // Set to 00:00:00
+  to.setHours(23, 59, 59, 999); // Set to 23:59:59
 
   return db.query.expenseHistory.findMany({
     where: ({ userId, timestamp }, { and, eq, gte, lt }) =>
-      and(
-        eq(userId, user_id),
-        gte(timestamp, startOfDay),
-        lt(timestamp, endOfDay)
-      ),
+      and(eq(userId, user_id), gte(timestamp, from), lt(timestamp, to)),
   });
 }
 

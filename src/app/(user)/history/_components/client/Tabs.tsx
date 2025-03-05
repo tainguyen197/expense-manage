@@ -1,3 +1,5 @@
+"use client";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CupSoda, Plus, WalletMinimal } from "lucide-react";
 import React from "react";
@@ -5,17 +7,23 @@ import IncomeList from "./Income";
 import OutcomeList from "./Outcome";
 import { Button } from "@/components/ui/button";
 import AddNew from "./AddNew";
+import { useUpdateSearchParams } from "@/hooks/useUpdateSearchParams";
+import { useSearchParams } from "next/navigation";
 
-type StaticsTabProps = {
-  value: string;
-  onTabChange?: (value: string) => void;
-};
+export function StaticsTab() {
+  const searchParams = useSearchParams();
+  const updateSearchParams = useUpdateSearchParams();
 
-export function StaticsTab({ value, onTabChange }: StaticsTabProps) {
+  const tabUrl = searchParams.get("tab") ?? "outcome";
+
+  const handleTabChange = (value: string) => {
+    updateSearchParams({ tab: value });
+  };
+
   return (
     <Tabs
-      onValueChange={onTabChange}
-      value={value}
+      onValueChange={handleTabChange}
+      value={tabUrl}
       className="p-2 bg-background rounded-tl-2xl rounded-tr-2xl w-full"
     >
       <TabsList className="grid w-full grid-cols-2">

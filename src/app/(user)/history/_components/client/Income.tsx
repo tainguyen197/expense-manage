@@ -7,7 +7,7 @@ import {
   updateIncome,
 } from "@/app/api/income-manage";
 import { getIconCategoryByName } from "@/utils/getIconCategoryByName";
-import Empty from "./Empty";
+import Empty from "../Empty";
 import { useToast } from "@/hooks/use-toast";
 
 const IncomeList = () => {

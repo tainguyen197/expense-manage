@@ -1,9 +1,8 @@
 import React from "react";
-
 import Item from "./Item";
-import Empty from "./Empty";
+import Empty from "../Empty";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { getIconCategoryByName } from "@/utils/getIconCategoryByName";
 import { Expense, ExpenseWithoutCategory } from "@/types/expense";
 import { useToast } from "@/hooks/use-toast";
@@ -58,16 +57,16 @@ const OutcomeList = () => {
   React.useEffect(() => {
     const fetchingExpenseList = async () => {
       const date = new Date(Number(dateParams));
-      const expenseList = dateParams ? await getExpenseByDate(date) : [];
+      const expenseList = dateParams ? await getExpenseByDate(date, date) : [];
       return expenseList;
     };
 
-    if (searchParams.has("date")) {
+    if (dateParams) {
       fetchingExpenseList().then((result) => {
         setData(result);
       });
     }
-  }, []);
+  }, [dateParams]);
 
   return data.length === 0 ? (
     <Empty />
