@@ -1,6 +1,14 @@
-import { pgTable, serial, text, integer, timestamp } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  serial,
+  text,
+  integer,
+  timestamp,
+  pgEnum,
+} from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { sql } from "drizzle-orm";
+import { kind } from "openai/_shims/index.mjs";
 
 // Clerk user table
 export const users = pgTable("users", {
@@ -48,15 +56,28 @@ export const incomeHistory = pgTable("income_history", {
     .notNull(),
 });
 
+export const roleEnum = pgEnum("role", ["system", "user", "assistant", "tool"]);
+const chatKindEnum = pgEnum("kind", [
+  "add_expense",
+  "delete_expense",
+  "add_income",
+  "delete_income",
+  "default",
+  "calculate_income",
+  "calculate_expense",
+]);
 // Chat history (if storing user messages)
 export const chatHistory = pgTable("chat_history", {
   id: serial("id").primaryKey(),
   userId: text("user_id")
     .references(() => users.id)
     .notNull(),
-  role: text("role").notNull(), // "user" or "assistant"
+  role: roleEnum("role").notNull(), // "user" or "assistant"
   content: text("content").notNull(),
-  timestamp: timestamp("timestamp").default(sql`CURRENT_TIMESTAMP`),
+  timestamp: timestamp("timestamp")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  kind: chatKindEnum("kind"),
 });
 
 // Define relations

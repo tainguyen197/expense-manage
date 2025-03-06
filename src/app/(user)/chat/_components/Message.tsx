@@ -11,7 +11,7 @@ const Message = ({
 }: {
   content: string | null;
   isSender?: boolean;
-  kind?: MessageKind;
+  kind: MessageKind | null;
   params?: any;
 }) => {
   const kindObj = kind ? kindToMessage(kind) : null;
