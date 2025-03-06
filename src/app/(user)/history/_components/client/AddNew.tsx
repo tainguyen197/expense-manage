@@ -1,14 +1,12 @@
 "use client";
 
-import { getExpenseParams } from "@/app/api/openai";
 import { Input } from "@/components/ui/input";
-import { Message } from "@/types/message";
-import { formatCurrency } from "@/utils/curency";
 import { useSearchParams, useRouter } from "next/navigation";
 import React from "react";
 import Typewriter from "./Typewriter";
 import { Button } from "@/components/ui/button";
 import { Send } from "lucide-react";
+import { interactWithAIAction } from "@/actions/ai";
 
 const AddNew = ({
   trigger,
@@ -35,33 +33,28 @@ const AddNew = ({
 
   const handleSubmit = (formDate: FormData) => {
     const value = formDate.get("value") as string;
-    const date = searchParams.get("date");
-    const now = new Date();
-    const dateWithTime = new Date(Number(date)).setHours(
-      now.getHours(),
-      now.getMinutes(),
-      now.getSeconds()
-    );
-    if (!dateWithTime || !value) return;
+    const date = searchParams.get("date") || new Date().toISOString();
+
+    if (!value) return;
 
     startTransition(async () => {
-      const result = (await getExpenseParams(value, {
-        timestamp: Number(dateWithTime),
-        persistStorage: false,
-      })) as Message;
+      const result = await interactWithAIAction(
+        {
+          content: value,
+          role: "user",
+          kind: null,
+          timestamp: new Date(date),
+        },
+        false
+      );
 
       let content = "Có vẻ như yêu cầu của bạn không hợp lệ, hãy thử lại";
-      if (result.kind == "add_expense") {
-        const { amount, item } = result.params;
 
-        content =
-          "Đã thêm khoản chi mới: " + item + " " + formatCurrency(amount);
+      if (result.kind == "add_expense") {
+        content = result.content;
       }
       if (result.kind == "add_income") {
-        const { amount, item } = result.params;
-
-        content =
-          "Đã thêm khoản thu mới: " + item + " " + formatCurrency(amount);
+        content = result.content;
       }
 
       setResult(content);
@@ -125,6 +118,7 @@ const AddNew = ({
                   </div>
                 </div>
                 <Button
+                  disabled={isPending}
                   type="submit"
                   className="bg-[#2a7afc] text-white p-5 bg-gradient-to-r from-blue-500 to-green-500"
                   formAction={handleSubmit}
