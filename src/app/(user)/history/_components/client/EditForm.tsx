@@ -19,12 +19,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { getCategoryList } from "@/app/api/category";
 import { Expense, Income } from "@/types/expense";
 import { Formik, Form, Field } from "formik";
 import React from "react";
-import { set } from "lodash";
+import CategorySelect from "./CategorySelect";
 
 const EditForm = ({
   defaultValue,
@@ -33,8 +31,6 @@ const EditForm = ({
   defaultValue?: Expense | Income;
   onSave?: (values: any) => void;
 }) => {
-  const category = getCategoryList();
-
   const initialValues = {
     item: defaultValue?.item || "",
     amount: defaultValue?.amount || "",
@@ -70,24 +66,10 @@ const EditForm = ({
             )}
           </Field>
 
-          <Select
-            value={String(values.category)}
+          <CategorySelect
+            value={values.category.toString()}
             onValueChange={(value) => setFieldValue("category", value)}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select a category" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>--Select category--</SelectLabel>
-                {category.map((item) => (
-                  <SelectItem key={item.id} value={String(item.id)}>
-                    {item.icon} {item.name}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+          />
           <Button
             type="submit"
             className="w-full mt-2 text-white font-semibold"

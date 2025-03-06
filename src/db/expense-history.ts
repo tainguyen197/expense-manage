@@ -1,7 +1,7 @@
 import { db } from "@/db";
 import { expenseHistory } from "@/db/schema";
 import { Expense, ExpenseHistory, ExpenseResponse } from "@/types/expense";
-import { and, eq } from "drizzle-orm";
+import { and, asc, desc, eq } from "drizzle-orm";
 
 const getExpenseHistory = async (
   user_id: string,
@@ -16,6 +16,8 @@ function getExpenseHistoryInternal(
 ) {
   return db.query.expenseHistory.findMany({
     where: ({ userId }, { eq }) => eq(userId, user_id),
+    orderBy: [desc(expenseHistory.timestamp)],
+
     limit,
   });
 }
@@ -39,6 +41,7 @@ function getExpenseHistoryByDateInternal(
   return db.query.expenseHistory.findMany({
     where: ({ userId, timestamp }, { and, eq, gte, lt }) =>
       and(eq(userId, user_id), gte(timestamp, from), lt(timestamp, to)),
+    orderBy: [desc(expenseHistory.timestamp)],
   });
 }
 

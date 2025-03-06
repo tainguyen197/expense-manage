@@ -5,12 +5,12 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import CategoryItem from "./CategoryItem";
-import { groupTransactionsByDate } from "@/app/api/expense-manage";
 import { Category } from "@/types/category";
 import { DailyTransactionsChart } from "./DailyTransactionsChart";
 import { ChartConfig } from "@/components/ui/chart";
 import { mappingCategory, transactionMonthByCategory } from "../_utils";
 import { Expense } from "@/types/expense";
+import { groupTransactionsByDate } from "../../chat/_utils/groupTransactionsByDate";
 
 type MonthTransactionsProps = {
   data: Expense[];

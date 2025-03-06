@@ -32,7 +32,6 @@ const TotalToday = async ({
       const from = dateUrl;
       const to = new Date(dateUrl);
       const expenseList = await getExpenseByDate(from, to);
-      console.log(expenseList);
       totalToday = expenseList.reduce((acc, expense) => {
         return acc + expense.amount;
       }, 0);

@@ -1,7 +1,7 @@
 import { db } from "@/db";
 import { Income, IncomeHistory, IncomeResponse } from "@/types/expense";
 import { incomeHistory } from "./schema";
-import { and, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 
 const getIncomeHistory = async (
   user_id: string,
@@ -17,6 +17,7 @@ function getIncomeHistoryInternal(
   return db.query.incomeHistory.findMany({
     where: ({ userId }, { eq }) => eq(userId, user_id),
     limit,
+    orderBy: [desc(incomeHistory.timestamp)],
   });
 }
 
@@ -32,12 +33,10 @@ function getIncomeHistoryByDateInternal(user_id: string, from: Date, to: Date) {
   from.setHours(0, 0, 0, 0); // Set to 00:00:00
   to.setHours(23, 59, 59, 999); // Set to 23:59:59
 
-  console.log("from", from);
-  console.log("to", to);
-
   return db.query.incomeHistory.findMany({
     where: ({ userId, timestamp }, { and, eq, gte, lt }) =>
       and(eq(userId, user_id), gte(timestamp, from), lt(timestamp, to)),
+    orderBy: [desc(incomeHistory.timestamp)],
   });
 }
 
