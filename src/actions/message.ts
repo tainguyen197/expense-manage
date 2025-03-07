@@ -6,14 +6,13 @@ import { auth } from "@clerk/nextjs/server";
 
 async function addMessage(message: Message) {
   const { userId } = await auth();
-  console.log(userId);
   return createMessage(message, userId!);
 }
 
 async function getMessages() {
   const { userId } = await auth();
 
-  return getMessageHistory(userId!, { limit: 10 });
+  return getMessageHistory(userId!, { limit: 20 });
 }
 
 async function addMessageWithAI(message: Message) {
