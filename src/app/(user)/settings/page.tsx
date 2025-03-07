@@ -9,6 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import Migrating from "./_components/Migration";
 
 const SettingPage = () => {
   const profileItems = [
@@ -81,6 +82,7 @@ const SettingPage = () => {
       <div className="flex flex-col gap-4 mt-8">
         <MenuList items={profileItems} title="Profile" />
         <MenuList items={settingItems} title="Settings" />
+        <Migrating />
       </div>
     </div>
   );

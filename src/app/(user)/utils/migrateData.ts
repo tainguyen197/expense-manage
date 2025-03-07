@@ -1,6 +1,7 @@
 // Migrate from local storage to online storage
 
 import { createExpense } from "@/actions/expense";
+import { createIncome } from "@/actions/income";
 import { addMessage } from "@/actions/message";
 import { Expense } from "@/types/expense";
 import { Message } from "@/types/message";
@@ -67,7 +68,7 @@ const migrateIncomeHistory = () => {
     // create promise all to save to db
     const promises = incomeArray.map(
       (income: Expense & { timestamp: number }) => {
-        return createExpense({
+        return createIncome({
           ...income,
           timestamp: new Date(income.timestamp),
         });

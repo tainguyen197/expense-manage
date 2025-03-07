@@ -5,11 +5,11 @@ import { config } from "dotenv";
 import { Toaster } from "@/components/ui/toaster";
 import {
   ClerkProvider,
-  // SignInButton,
-  // SignUpButton,
-  // SignedIn,
-  // SignedOut,
-  // UserButton,
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
 } from "@clerk/nextjs";
 
 config();
@@ -34,15 +34,6 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="vi">
         <body className={`${nunito.className} bg-background antialiased pink`}>
-          {/* <header className="flex justify-end items-center p-4 gap-4 h-16">
-            <SignedOut>
-              <SignInButton />
-              <SignUpButton />
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-          </header> */}
           {children}
           <Toaster />
         </body>

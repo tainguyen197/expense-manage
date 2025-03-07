@@ -14,11 +14,6 @@ import { interactWithAIAction } from "@/actions/ai";
 import MessageList from "./MessageList";
 import Header from "./Header";
 import { flushSync } from "react-dom";
-import {
-  migrateChatHistory,
-  migrateExpenseHistory,
-  migrateIncomeHistory,
-} from "../../utils/migrateData";
 
 type MessageProps = {
   messages: Message[];
@@ -26,7 +21,6 @@ type MessageProps = {
 
 const ChatPage = ({ messages: messagesProp }: MessageProps) => {
   const [messages, setMessages] = React.useState<Message[]>(messagesProp);
-  const [isPending, startTransition] = React.useTransition();
 
   const scrollToBottom = () => {
     document.getElementById("scroll-area")?.scrollIntoView({
@@ -35,7 +29,6 @@ const ChatPage = ({ messages: messagesProp }: MessageProps) => {
     });
   };
 
-  // migrateChatHistory();
   const handleSubmit = (data: Message) => {
     try {
       // Force immediate update
@@ -54,18 +47,6 @@ const ChatPage = ({ messages: messagesProp }: MessageProps) => {
   React.useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
-  React.useEffect(() => {
-    startTransition(async () => {
-      console.log("Migrating history...");
-      await migrateIncomeHistory();
-      await migrateExpenseHistory();
-      await migrateChatHistory();
-      console.log("Migrating history done");
-    });
-  }, []);
-
-  if (isPending) return <div>Migrating...</div>;
 
   return (
     <Card className="shadow-none border-none bg-gray-10">
