@@ -20,6 +20,8 @@ const WeekCalender = () => {
       date.getDate()
     );
     const timestampStartOfToday = startOfToday.getTime().toString(); // Timestamp in milliseconds
+    console.log("startOfToday", startOfToday);
+
     updateSearchParams({ date: timestampStartOfToday });
   };
 
@@ -33,6 +35,8 @@ const WeekCalender = () => {
       )
         .getTime()
         .toString();
+
+      console.log("startOfToday --", startOfToday);
 
       updateSearchParams({ date: startOfToday });
     }
