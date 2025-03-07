@@ -5,8 +5,7 @@ import { Expense, Income } from "@/types/expense";
 export const transactionMonthByCategory = (
   transactionList: Expense[] | Income[]
 ) => {
-  const transactionByCategory = new Map<string, number>();
-
+  const transactionByCategory = new Map<number, number>();
   transactionList.forEach((trans) => {
     const currentAmount = transactionByCategory.get(trans.category) ?? 0;
     transactionByCategory.set(trans.category, currentAmount + trans.amount);
@@ -16,7 +15,7 @@ export const transactionMonthByCategory = (
 };
 
 export const mappingCategory = (
-  expenseByCategory: Map<string, number>,
+  expenseByCategory: Map<number, number>,
   category: Category[]
 ) => {
   const data = category.map((item) => {

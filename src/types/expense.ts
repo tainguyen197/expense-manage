@@ -20,3 +20,8 @@ export type IncomeResponse = ExpenseResponse;
 export type ExpenseHistory = Expense & { userId: string };
 
 export type IncomeHistory = Income & { userId: string };
+
+export type GroupedData = {
+  timestamp: string; // formatted date string
+  amount: number;
+};

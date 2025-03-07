@@ -1,4 +1,3 @@
-import { over } from "lodash";
 import type { Config } from "tailwindcss";
 
 export default {
