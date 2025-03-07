@@ -36,7 +36,14 @@ const WeekCalender = () => {
         .getTime()
         .toString();
 
-      console.log("startOfToday --", startOfToday);
+      console.log(
+        "startOfToday --",
+        new Date(
+          new Date().getFullYear(),
+          new Date().getMonth(),
+          new Date().getDate()
+        )
+      );
 
       updateSearchParams({ date: startOfToday });
     }
