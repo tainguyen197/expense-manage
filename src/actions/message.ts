@@ -1,25 +1,23 @@
 import { createMessage, getMessageHistory } from "@/db/message-history";
 import { Message } from "@/types/message";
+import { auth } from "@clerk/nextjs/server";
 
 async function addMessage(message: Message) {
-  // const { userId } = await auth();
-  const userId = "mock_user";
-
-  return createMessage(message, userId);
+  const { userId } = await auth();
+  console.log(userId);
+  return createMessage(message, userId!);
 }
 
 async function getMessages() {
-  // const { userId } = await auth();
-  const userId = "mock_user";
+  const { userId } = await auth();
 
-  return getMessageHistory(userId, { limit: 10 });
+  return getMessageHistory(userId!, { limit: 10 });
 }
 
 async function addMessageWithAI(message: Message) {
-  // const { userId } = await auth();
-  const userId = "mock_user";
+  const { userId } = await auth();
 
-  return createMessage(message, userId);
+  return createMessage(message, userId!);
 }
 
 export { addMessage, getMessages };

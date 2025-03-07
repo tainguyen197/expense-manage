@@ -8,12 +8,12 @@ import {
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { sql } from "drizzle-orm";
-import { kind } from "openai/_shims/index.mjs";
 
 // Clerk user table
 export const users = pgTable("users", {
   id: text("id").primaryKey(), // Clerk provides a string-based user ID
-  email: text("email").notNull().unique(),
+  name: text("name").notNull(),
+  avatar: text("avatar").notNull(),
   createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`),
 });
 
@@ -56,8 +56,13 @@ export const incomeHistory = pgTable("income_history", {
     .notNull(),
 });
 
-export const roleEnum = pgEnum("role", ["system", "user", "assistant", "tool"]);
-const chatKindEnum = pgEnum("kind", [
+export const roleTypeEnum = pgEnum("role_type", [
+  "system",
+  "user",
+  "assistant",
+  "tool",
+]);
+export const chatKindEnum = pgEnum("kind_type", [
   "add_expense",
   "delete_expense",
   "add_income",
@@ -66,18 +71,19 @@ const chatKindEnum = pgEnum("kind", [
   "calculate_income",
   "calculate_expense",
 ]);
+
 // Chat history (if storing user messages)
 export const chatHistory = pgTable("chat_history", {
   id: serial("id").primaryKey(),
   userId: text("user_id")
     .references(() => users.id)
     .notNull(),
-  role: roleEnum("role").notNull(), // "user" or "assistant"
+  role: roleTypeEnum("role_type").notNull(),
   content: text("content").notNull(),
   timestamp: timestamp("timestamp")
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
-  kind: chatKindEnum("kind"),
+  kind: chatKindEnum("kind_type"),
 });
 
 // Define relations

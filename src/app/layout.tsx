@@ -3,6 +3,15 @@ import { Nunito } from "next/font/google";
 import "./globals.css";
 import { config } from "dotenv";
 import { Toaster } from "@/components/ui/toaster";
+import {
+  ClerkProvider,
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
+
 config();
 
 const nunito = Nunito({
@@ -22,11 +31,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="vi">
-      <body className={`${nunito.className} bg-background antialiased pink`}>
-        {children}
-        <Toaster />
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="vi">
+        <body className={`${nunito.className} bg-background antialiased pink`}>
+          <header className="flex justify-end items-center p-4 gap-4 h-16">
+            <SignedOut>
+              <SignInButton />
+              <SignUpButton />
+            </SignedOut>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
+          </header>
+          {children}
+          <Toaster />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

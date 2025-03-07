@@ -7,26 +7,24 @@ import {
   updateIncomeHistory,
 } from "@/db/income-history";
 import { Income, IncomeResponse } from "@/types/expense";
+import { auth } from "@clerk/nextjs/server";
 
 async function createIncome(data: Income): Promise<IncomeResponse> {
-  // const { userId } = await auth();
-  const userId = "mock_user";
+  const { userId } = await auth();
 
-  return createIncomeHistory(data, userId);
+  return createIncomeHistory(data, userId!);
 }
 
 async function getIncomeByDate(from: Date, to: Date) {
   if (!(from instanceof Date)) return [];
-  // const { userId } = await auth();
-  const userId = "mock_user";
+  const { userId } = await auth();
 
-  return getIncomeHistoryByDate(userId, from, to);
+  return getIncomeHistoryByDate(userId!, from, to);
 }
 
 async function deleteIncome(income: Income) {
-  const userId = "mock_user";
-
-  const result = await deleteIncomeHistory(income, userId);
+  const { userId } = await auth();
+  const result = await deleteIncomeHistory(income, userId!);
 
   return {
     success: Boolean(result),

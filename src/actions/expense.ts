@@ -7,28 +7,26 @@ import {
   updateExpenseHistory,
 } from "@/db/expense-history";
 import { Expense, ExpenseResponse } from "@/types/expense";
+import { auth } from "@clerk/nextjs/server";
 
 async function createExpense(data: Expense): Promise<ExpenseResponse> {
-  // const { userId } = await auth();
-  const userId = "mock_user";
+  const { userId } = await auth();
 
-  return createExpenseHistory(data, userId);
+  return createExpenseHistory(data, userId!);
 }
 
 async function getExpenseByDate(from: Date, to: Date) {
   if (!(from instanceof Date)) return [];
-  // const { userId } = await auth();
-  const userId = "mock_user";
+  const { userId } = await auth();
 
-  return getExpenseHistoryByDate(userId, from, to);
+  return getExpenseHistoryByDate(userId!, from, to);
 }
 
 async function deleteExpense(expense: Expense) {
-  // const { userId } = await auth();
-  const userId = "mock_user";
+  const { userId } = await auth();
 
   const expenseHistory = await getExpenseHistoryByDate(
-    userId,
+    userId!,
     expense.timestamp,
     expense.timestamp
   );
@@ -51,7 +49,7 @@ async function deleteExpense(expense: Expense) {
     };
   }
 
-  const result = await deleteExpenseHistory(updatedExpenseHistory, userId);
+  const result = await deleteExpenseHistory(updatedExpenseHistory, userId!);
 
   return {
     success: Boolean(result),
@@ -60,10 +58,12 @@ async function deleteExpense(expense: Expense) {
 }
 
 async function updateExpense(expense: Expense) {
-  // const { userId } = await auth();
-  const userId = "mock_user";
+  const { userId } = await auth();
 
-  const result = await updateExpenseHistory({ ...expense, userId }, userId);
+  const result = await updateExpenseHistory(
+    { ...expense, userId: userId! },
+    userId!
+  );
   return {
     success: Boolean(result),
     message: Boolean(result) ? "Expense updated" : "Failed to update expense",
