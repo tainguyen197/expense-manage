@@ -1,3 +1,5 @@
+"use server";
+
 import { createMessage, getMessageHistory } from "@/db/message-history";
 import { Message } from "@/types/message";
 import { auth } from "@clerk/nextjs/server";

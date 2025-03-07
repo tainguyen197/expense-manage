@@ -9,7 +9,6 @@ const interactWithAIAction = async (
   persistStorage = true
 ) => {
   const { userId } = await auth();
-
   return interactWithAI(message, userId!, persistStorage);
 };
 

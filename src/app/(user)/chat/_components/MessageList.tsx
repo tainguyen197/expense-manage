@@ -11,7 +11,6 @@ type Props = {
 const MessageList = ({ messages }: Props) => {
   // group of messages
   const groupMessage = groupMessagesByDate(messages);
-  console.log(groupMessage);
   return (
     <div className="flex flex-col gap-4 overflow-auto">
       {Object.keys(groupMessage ?? {}).length ? (

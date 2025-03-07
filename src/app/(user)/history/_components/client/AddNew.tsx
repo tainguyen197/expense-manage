@@ -33,7 +33,7 @@ const AddNew = ({
 
   const handleSubmit = (formDate: FormData) => {
     const value = formDate.get("value") as string;
-    const date = searchParams.get("date") || new Date().toISOString();
+    const date = searchParams.get("date") || new Date().getTime().toString();
 
     if (!value) return;
 
@@ -43,7 +43,7 @@ const AddNew = ({
           content: value,
           role: "user",
           kind: null,
-          timestamp: new Date(date),
+          timestamp: new Date(Number(date)),
         },
         false
       );

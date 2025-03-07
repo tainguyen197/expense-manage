@@ -6,12 +6,9 @@ import OpenAI from "openai";
 import { createMessage, getMessagesByDate } from "./message-history";
 import { defaultErrorMessage, initInitSystemMessage, tools } from "./prompt";
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
-import {
-  calculateSpent,
-  createExpense,
-  deleteExpense,
-} from "@/actions/expense";
-import { calculateIncome, createIncome, deleteIncome } from "@/actions/income";
+
+import * as expenseAction from "@/actions/expense";
+import * as incomeAction from "@/actions/income";
 
 const openai = new OpenAI({
   apiKey: process.env.NEXT_PUBLIC_API_KEY,
@@ -52,10 +49,10 @@ const handleToolCall = async (
     kind: MessageKind;
     params?: any;
   } | null = null;
-
+  console.log(expenseAction, "expenseActions");
   switch (toolCall.function.name) {
     case "add_expense":
-      const result = await createExpense({
+      const result = await expenseAction.createExpense({
         ...toolCallArguments,
         timestamp: userTime,
       });
@@ -76,7 +73,7 @@ const handleToolCall = async (
       };
       break;
     case "delete_expense": {
-      const itemDeleted = await deleteExpense(toolCallArguments);
+      const itemDeleted = await expenseAction.deleteExpense(toolCallArguments);
       toolResponse = {
         tool_call_id: toolCall.id,
         content: JSON.stringify(itemDeleted),
@@ -85,7 +82,7 @@ const handleToolCall = async (
       break;
     }
     case "add_income": {
-      const result = await createIncome({
+      const result = await incomeAction.createIncome({
         ...toolCallArguments,
         timestamp: userTime,
       });
@@ -106,7 +103,7 @@ const handleToolCall = async (
       break;
     }
     case "delete_income": {
-      const itemDeleted = await deleteIncome(toolCallArguments);
+      const itemDeleted = await incomeAction.deleteIncome(toolCallArguments);
       toolResponse = {
         tool_call_id: toolCall.id,
         content: JSON.stringify(itemDeleted),
@@ -116,7 +113,7 @@ const handleToolCall = async (
     }
     case "calculate_income":
       console.log("calculating income");
-      const incomeData = await calculateIncome(
+      const incomeData = await incomeAction.calculateIncome(
         // range: toolCallArguments.range,
         toolCallArguments.start_date,
         toolCallArguments.end_date
@@ -130,7 +127,7 @@ const handleToolCall = async (
       break;
     case "calculate_spent":
       console.log("calculating spent");
-      const spentData = await calculateSpent(
+      const spentData = await expenseAction.calculateSpent(
         toolCallArguments.start_date,
         toolCallArguments.end_date
       );
@@ -179,7 +176,7 @@ const interactWithAI = async (
   const toolResponse = await handleToolCall(
     toolCall,
     JSON.parse(toolCall.function.arguments),
-    new Date()
+    message.timestamp
   );
 
   const messageList = [

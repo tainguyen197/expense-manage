@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
         hostname: "assetsio.gnwcdn.com",
         port: "",
       },
+      {
+        protocol: "https",
+        hostname: "img.clerk.com",
+      },
     ],
   },
 };
