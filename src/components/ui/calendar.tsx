@@ -53,6 +53,8 @@ const Calender = ({
   React.useEffect(() => {
     const fetchData = async () => {
       const result = await calculateSpentByDays(startOfWeek, endOfWeek);
+
+      console.log("result", result, startOfWeek, endOfWeek);
       setWeekSpent(result);
     };
     const fetchIncome = async () => {
