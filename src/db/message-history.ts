@@ -3,7 +3,7 @@
 import { Message } from "@/types/message";
 import { chatHistory } from "./schema";
 import { db } from "@/db";
-import { asc } from "drizzle-orm";
+import { asc, desc } from "drizzle-orm";
 
 // get message history
 const getMessageHistory = async (
@@ -17,11 +17,13 @@ const getMessageHistoryInternal = async (
   user_id: string,
   { limit }: { limit: number }
 ): Promise<Message[]> => {
-  return db.query.chatHistory.findMany({
+  const messages = await db.query.chatHistory.findMany({
     where: ({ userId }, { eq }) => eq(userId, user_id),
-    orderBy: [asc(chatHistory.timestamp)],
+    orderBy: [desc(chatHistory.timestamp)],
     limit,
   });
+
+  return messages.reverse();
 };
 
 const getMessagesByDate = async (userId: string, from: Date, to: Date) => {
