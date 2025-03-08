@@ -75,24 +75,31 @@ async function calculateSpent(from: string, to: string) {
 
   return total;
 }
-
 async function calculateSpentByDays(from: string, to: string) {
   const expenseHistory = await getExpenseByDate(from, to);
-  const dayLength = Math.ceil(
-    (new Date(to).getTime() - new Date(from).getTime()) / (1000 * 60 * 60 * 24)
-  );
 
-  //return arr of spent by days [1000, 40000, 6000, 0,0,0,0]
+  // Calculate the number of days correctly
+  const fromDate = new Date(from);
+  const toDate = new Date(to);
+  fromDate.setHours(0, 0, 0, 0);
+  toDate.setHours(23, 59, 59, 999); // Include the full last day
+
+  const dayLength =
+    Math.ceil((toDate.getTime() - fromDate.getTime()) / (1000 * 60 * 60 * 24)) +
+    1; // +1 to include the end date
+
+  // Return an array of spent by days [1000, 40000, 6000, 0,0,0,0]
   const spentByDays = Array.from({ length: dayLength }, (_, i) => {
-    const date = new Date(from);
-    date.setDate(date.getDate() + i);
+    const date = new Date(fromDate);
+    date.setUTCDate(date.getUTCDate() + i); // Move by days in UTC
+
     const spent = expenseHistory
       .filter((entry) => {
         const entryDate = new Date(entry.timestamp);
         return (
-          entryDate.getFullYear() === date.getFullYear() &&
-          entryDate.getMonth() === date.getMonth() &&
-          entryDate.getDate() === date.getDate()
+          entryDate.getUTCFullYear() === date.getUTCFullYear() &&
+          entryDate.getUTCMonth() === date.getUTCMonth() &&
+          entryDate.getUTCDate() === date.getUTCDate()
         );
       })
       .reduce((acc, cur) => acc + cur.amount, 0);

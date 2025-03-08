@@ -5,9 +5,10 @@ import "react-day-picker/dist/style.css";
 import "./CustomDayPicker.css"; // Add custom styles
 import { Button } from "./button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { calculateSpentByDays } from "@/actions/expense";
+import { getExpenseByDate } from "@/actions/expense";
 import { formatVND } from "@/utils/curency";
 import { calculateIncomeByDays } from "@/actions/income";
+import calculateSpentByDays from "@/utils/calculateSpentByDays";
 
 type CalenderProps = {
   selectedDate: Date;
@@ -55,12 +56,14 @@ const Calender = ({
       startOfWeek.setHours(0, 0, 0, 0);
       endOfWeek.setHours(23, 59, 59, 999);
 
-      const result = await calculateSpentByDays(
+      const result = await getExpenseByDate(
         startOfWeek.toISOString(),
         endOfWeek.toISOString()
       );
 
-      setWeekSpent(result);
+      const expenseByDate = calculateSpentByDays(result, 7, startOfWeek);
+
+      setWeekSpent(expenseByDate);
     };
     const fetchIncome = async () => {
       startOfWeek.setHours(0, 0, 0, 0);
