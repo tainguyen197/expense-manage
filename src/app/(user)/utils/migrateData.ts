@@ -18,7 +18,10 @@ const migrateChatHistory = () => {
   if (chatArray.length) {
     // create promise all to save to db
     const promises = chatArray.map((chat: Message & { timestamp: number }) => {
-      return addMessage({ ...chat, timestamp: new Date(chat.timestamp) });
+      return addMessage({
+        ...chat,
+        timestamp: new Date(chat.timestamp).toISOString(),
+      });
     });
 
     return Promise.all(promises).then(() => {
@@ -43,7 +46,7 @@ const migrateExpenseHistory = () => {
       (expense: Expense & { timestamp: number }) => {
         return createExpense({
           ...expense,
-          timestamp: new Date(expense.timestamp),
+          timestamp: new Date(expense.timestamp).toISOString(),
         });
       }
     );
@@ -70,7 +73,7 @@ const migrateIncomeHistory = () => {
       (income: Expense & { timestamp: number }) => {
         return createIncome({
           ...income,
-          timestamp: new Date(income.timestamp),
+          timestamp: new Date(income.timestamp).toISOString(),
         });
       }
     );

@@ -51,7 +51,13 @@ const IncomeList = () => {
     const fetchingExpenseList = async () => {
       const from = new Date(Number(dateParams));
       const to = new Date(from);
-      const expenseList = dateParams ? await getIncomeByDate(from, to) : [];
+
+      from.setHours(0, 0, 0, 0);
+      to.setHours(23, 59, 59, 999);
+
+      const expenseList = dateParams
+        ? await getIncomeByDate(from.toISOString(), to.toISOString())
+        : [];
       return expenseList;
     };
 
@@ -80,7 +86,7 @@ const IncomeList = () => {
           item={item}
           onDelete={handleDelete}
           onEdit={handleEdit}
-          key={item.timestamp.getTime()}
+          key={item.timestamp}
         />
       ))}
     </div>

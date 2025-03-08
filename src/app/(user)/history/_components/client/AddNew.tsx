@@ -43,7 +43,7 @@ const AddNew = ({
           content: value,
           role: "user",
           kind: null,
-          timestamp: new Date(Number(date)),
+          timestamp: new Date(Number(date)).toISOString(),
         },
         false
       );

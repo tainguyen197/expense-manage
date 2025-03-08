@@ -11,7 +11,7 @@ export default async function StaticsTabWrapper({
   let { month, year } = await searchParams;
 
   if (!month || !year) {
-    month = new Date().getMonth().toString();
+    month = (new Date().getMonth() + 1).toString();
     year = new Date().getFullYear().toString();
   }
 
@@ -21,8 +21,8 @@ export default async function StaticsTabWrapper({
   const to = new Date(Number(year), Number(month), 0);
 
   const [outcomeData, incomeData, categories] = await Promise.all([
-    getExpenseByDate(from, to),
-    getIncomeByDate(from, to),
+    getExpenseByDate(from.toISOString(), to.toISOString()),
+    getIncomeByDate(from.toISOString(), to.toISOString()),
     getCategories(),
   ]);
 

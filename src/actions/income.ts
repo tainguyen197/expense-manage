@@ -15,8 +15,7 @@ async function createIncome(data: Income): Promise<IncomeResponse> {
   return createIncomeHistory(data, userId!);
 }
 
-async function getIncomeByDate(from: Date, to: Date) {
-  if (!(from instanceof Date)) return [];
+async function getIncomeByDate(from: string, to: string) {
   const { userId } = await auth();
 
   return getIncomeHistoryByDate(userId!, from, to);
@@ -43,16 +42,16 @@ async function updateIncome(income: Income) {
   };
 }
 
-async function calculateIncome(from: Date, to: Date) {
+async function calculateIncome(from: string, to: string) {
   const incomeList = await getIncomeByDate(from, to);
 
   return incomeList.reduce((acc, item) => acc + item.amount, 0);
 }
 
-async function calculateIncomeByDays(from: Date, to: Date) {
+async function calculateIncomeByDays(from: string, to: string) {
   const incomeHistory = await getIncomeByDate(from, to);
   const dayLength = Math.ceil(
-    (to.getTime() - from.getTime()) / (1000 * 60 * 60 * 24)
+    (new Date(to).getTime() - new Date(from).getTime()) / (1000 * 60 * 60 * 24)
   );
 
   //return arr of spent by days [1000, 40000, 6000, 0,0,0,0]

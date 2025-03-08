@@ -26,17 +26,17 @@ const getMessageHistoryInternal = async (
   return messages.reverse();
 };
 
-const getMessagesByDate = async (userId: string, from: Date, to: Date) => {
+const getMessagesByDate = async (userId: string, from: string, to: string) => {
   return getMessagesByDateInternal(userId, from, to);
 };
 
 const getMessagesByDateInternal = async (
   user_id: string,
-  from: Date,
-  to: Date
+  from: string,
+  to: string
 ) => {
-  from.setHours(0, 0, 0, 0); // Set to 00:00:00
-  to.setHours(23, 59, 59, 999); // Set to 23:59:59
+  // from.setHours(0, 0, 0, 0); // Set to 00:00:00
+  // to.setHours(23, 59, 59, 999); // Set to 23:59:59
 
   return db.query.chatHistory.findMany({
     where: ({ userId, timestamp }, { and, eq, gte, lt }) =>

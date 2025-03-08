@@ -1,7 +1,7 @@
 export type Expense = {
   item: string;
   amount: number;
-  timestamp: Date;
+  timestamp: string;
   category: number;
 };
 

@@ -23,16 +23,17 @@ function getIncomeHistoryInternal(
 
 const getIncomeHistoryByDate = async (
   user_id: string,
-  from: Date,
-  to: Date
+  from: string,
+  to: string
 ): Promise<IncomeHistory[]> => {
   return getIncomeHistoryByDateInternal(user_id, from, to);
 };
 
-function getIncomeHistoryByDateInternal(user_id: string, from: Date, to: Date) {
-  from.setHours(0, 0, 0, 0); // Set to 00:00:00
-  to.setHours(23, 59, 59, 999); // Set to 23:59:59
-
+function getIncomeHistoryByDateInternal(
+  user_id: string,
+  from: string,
+  to: string
+) {
   return db.query.incomeHistory.findMany({
     where: ({ userId, timestamp }, { and, eq, gte, lt }) =>
       and(eq(userId, user_id), gte(timestamp, from), lt(timestamp, to)),

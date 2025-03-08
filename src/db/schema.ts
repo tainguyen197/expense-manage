@@ -35,7 +35,7 @@ export const expenseHistory = pgTable("expense_history", {
   category: integer("category")
     .references(() => categories.id)
     .notNull(),
-  timestamp: timestamp("timestamp")
+  timestamp: text("timestamp")
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
 });
@@ -48,7 +48,7 @@ export const incomeHistory = pgTable("income_history", {
     .notNull(),
   item: text("item").notNull(),
   amount: integer("amount").notNull(),
-  timestamp: timestamp("timestamp")
+  timestamp: text("timestamp")
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
   category: integer("category")
@@ -80,7 +80,7 @@ export const chatHistory = pgTable("chat_history", {
     .notNull(),
   role: roleTypeEnum("role_type").notNull(),
   content: text("content").notNull(),
-  timestamp: timestamp("timestamp")
+  timestamp: text("timestamp")
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
   kind: chatKindEnum("kind_type"),

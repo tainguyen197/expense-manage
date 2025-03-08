@@ -11,7 +11,7 @@ async function MonthTotal({
   let { month, year } = await searchParams;
 
   if (!month || !year) {
-    month = new Date().getMonth().toString();
+    month = (new Date().getMonth() + 1).toString();
     year = new Date().getFullYear().toString();
   }
 
@@ -20,14 +20,16 @@ async function MonthTotal({
   // create a new date object with end of the month
   const to = new Date(Number(year), Number(month), 0);
 
-  const totalIncome = await getIncomeByDate(from, to);
-  const totalOutcome = await getExpenseByDate(from, to);
+  const [outcomeData, incomeData] = await Promise.all([
+    getExpenseByDate(from.toISOString(), to.toISOString()),
+    getIncomeByDate(from.toISOString(), to.toISOString()),
+  ]);
 
-  const totalIncomeAmount = totalIncome.reduce((acc, income) => {
+  const totalIncomeAmount = outcomeData.reduce((acc, income) => {
     return acc + income.amount;
   }, 0);
 
-  const totalOutcomeAmount = totalOutcome.reduce((acc, expense) => {
+  const totalOutcomeAmount = incomeData.reduce((acc, expense) => {
     return acc + expense.amount;
   }, 0);
 

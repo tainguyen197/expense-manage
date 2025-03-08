@@ -24,20 +24,17 @@ function getExpenseHistoryInternal(
 
 const getExpenseHistoryByDate = async (
   user_id: string,
-  from: Date,
-  to: Date
+  from: string,
+  to: string
 ): Promise<ExpenseHistory[]> => {
   return getExpenseHistoryByDateInternal(user_id, from, to);
 };
 
 function getExpenseHistoryByDateInternal(
   user_id: string,
-  from: Date,
-  to: Date
+  from: string,
+  to: string
 ) {
-  from.setHours(0, 0, 0, 0); // Set to 00:00:00
-  to.setHours(23, 59, 59, 999); // Set to 23:59:59
-
   return db.query.expenseHistory.findMany({
     where: ({ userId, timestamp }, { and, eq, gte, lt }) =>
       and(eq(userId, user_id), gte(timestamp, from), lt(timestamp, to)),

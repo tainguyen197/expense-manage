@@ -15,8 +15,7 @@ async function createExpense(data: Expense): Promise<ExpenseResponse> {
   return createExpenseHistory(data, userId!);
 }
 
-async function getExpenseByDate(from: Date, to: Date) {
-  if (!(from instanceof Date)) return [];
+async function getExpenseByDate(from: string, to: string) {
   const { userId } = await auth();
 
   return getExpenseHistoryByDate(userId!, from, to);
@@ -70,17 +69,17 @@ async function updateExpense(expense: Expense) {
   };
 }
 
-async function calculateSpent(from: Date, to: Date) {
+async function calculateSpent(from: string, to: string) {
   const expenseHistory = await getExpenseByDate(from, to);
   const total = expenseHistory.reduce((acc, cur) => acc + cur.amount, 0);
 
   return total;
 }
 
-async function calculateSpentByDays(from: Date, to: Date) {
+async function calculateSpentByDays(from: string, to: string) {
   const expenseHistory = await getExpenseByDate(from, to);
   const dayLength = Math.ceil(
-    (to.getTime() - from.getTime()) / (1000 * 60 * 60 * 24)
+    (new Date(to).getTime() - new Date(from).getTime()) / (1000 * 60 * 60 * 24)
   );
 
   //return arr of spent by days [1000, 40000, 6000, 0,0,0,0]

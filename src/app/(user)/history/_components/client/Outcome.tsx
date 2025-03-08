@@ -56,8 +56,15 @@ const OutcomeList = () => {
 
   React.useEffect(() => {
     const fetchingExpenseList = async () => {
-      const date = new Date(Number(dateParams));
-      const expenseList = dateParams ? await getExpenseByDate(date, date) : [];
+      const from = new Date(Number(dateParams));
+      const to = new Date(from);
+
+      from.setHours(0, 0, 0, 0);
+      to.setHours(23, 59, 59, 999);
+
+      const expenseList = dateParams
+        ? await getExpenseByDate(from.toISOString(), to.toISOString())
+        : [];
       return expenseList;
     };
 
@@ -81,12 +88,12 @@ const OutcomeList = () => {
     <Empty />
   ) : (
     <div className="flex flex-col gap-1 transition-all animate-fadeIn">
-      {expenseListWithCategory.map((item) => (
+      {expenseListWithCategory.map((item, key) => (
         <Item
           item={item}
           onDelete={handleDelete}
           onEdit={handleEdit}
-          key={item.timestamp.getTime()}
+          key={key}
         />
       ))}
     </div>

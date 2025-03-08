@@ -11,6 +11,6 @@ export type Message = {
   content: string;
   role: "system" | "user" | "assistant" | "tool";
   kind: MessageKind | null;
-  timestamp: Date;
+  timestamp: string;
   params?: any;
 };

@@ -7,7 +7,7 @@ import { Button } from "./button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { calculateSpentByDays } from "@/actions/expense";
 import { formatVND } from "@/utils/curency";
-import { calculateIncome, calculateIncomeByDays } from "@/actions/income";
+import { calculateIncomeByDays } from "@/actions/income";
 
 type CalenderProps = {
   selectedDate: Date;
@@ -52,13 +52,24 @@ const Calender = ({
 
   React.useEffect(() => {
     const fetchData = async () => {
-      const result = await calculateSpentByDays(startOfWeek, endOfWeek);
+      startOfWeek.setHours(0, 0, 0, 0);
+      endOfWeek.setHours(23, 59, 59, 999);
 
-      console.log("result", result, startOfWeek, endOfWeek);
+      const result = await calculateSpentByDays(
+        startOfWeek.toISOString(),
+        endOfWeek.toISOString()
+      );
+
       setWeekSpent(result);
     };
     const fetchIncome = async () => {
-      const result = await calculateIncomeByDays(startOfWeek, endOfWeek);
+      startOfWeek.setHours(0, 0, 0, 0);
+      endOfWeek.setHours(23, 59, 59, 999);
+
+      const result = await calculateIncomeByDays(
+        startOfWeek.toISOString(),
+        endOfWeek.toISOString()
+      );
       setWeekIncome(result);
     };
 

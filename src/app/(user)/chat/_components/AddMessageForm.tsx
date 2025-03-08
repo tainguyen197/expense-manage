@@ -17,7 +17,7 @@ const AddMessageForm = ({ onSubmit }: AddMessageFormProps) => {
       onSubmit({
         content: userMessage,
         role: "user",
-        timestamp: new Date(),
+        timestamp: new Date().toISOString(),
         kind: null,
       });
   };

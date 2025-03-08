@@ -17,7 +17,11 @@ const openai = new OpenAI({
 const model = "gpt-4o-mini";
 
 const analyzeMessage = async (message: Message, userId: string) => {
-  const todayMessages = await getMessagesByDate(userId, new Date(), new Date());
+  const todayMessages = await getMessagesByDate(
+    userId,
+    new Date().toISOString(),
+    new Date().toDateString()
+  );
 
   const todayMessagesContent = todayMessages.map((m) => ({
     content: m.content,
@@ -41,7 +45,7 @@ const analyzeMessage = async (message: Message, userId: string) => {
 const handleToolCall = async (
   toolCall: any,
   toolCallArguments: any,
-  userTime: Date
+  userTime: string
 ) => {
   let toolResponse: {
     tool_call_id: string;
@@ -160,7 +164,7 @@ const interactWithAI = async (
     const newMessage: Message = {
       role: "assistant",
       content: normalResponse,
-      timestamp: new Date(),
+      timestamp: new Date().toISOString(),
       kind: "default",
     };
 
@@ -199,7 +203,7 @@ const interactWithAI = async (
     return {
       role: "assistant",
       content: "Úi, mình không hiểu ý bạn lắm, bạn có thể nói rõ hơn không?",
-      timestamp: new Date(),
+      timestamp: new Date().toISOString(),
       kind: "default" as MessageKind,
       params: {},
     } as Message;
@@ -216,7 +220,7 @@ const interactWithAI = async (
   const newMessage: Message = {
     role: "assistant",
     content: response2,
-    timestamp: new Date(),
+    timestamp: new Date().toISOString(),
     kind: toolResponse.kind,
     params: toolResponse.params,
   };

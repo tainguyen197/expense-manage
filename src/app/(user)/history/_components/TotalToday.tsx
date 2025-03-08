@@ -21,7 +21,14 @@ const TotalToday = async ({
     case "income": {
       const from = dateUrl;
       const to = new Date(dateUrl);
-      const incomeList = await getIncomeByDate(from, to);
+
+      from.setHours(0, 0, 0, 0);
+      to.setHours(23, 59, 59, 999);
+
+      const incomeList = await getIncomeByDate(
+        from.toISOString(),
+        to.toISOString()
+      );
 
       totalToday = incomeList.reduce((acc, income) => {
         return acc + income.amount;
@@ -31,7 +38,14 @@ const TotalToday = async ({
     case "outcome": {
       const from = dateUrl;
       const to = new Date(dateUrl);
-      const expenseList = await getExpenseByDate(from, to);
+
+      from.setHours(0, 0, 0, 0);
+      to.setHours(23, 59, 59, 999);
+
+      const expenseList = await getExpenseByDate(
+        from.toISOString(),
+        to.toISOString()
+      );
       totalToday = expenseList.reduce((acc, expense) => {
         return acc + expense.amount;
       }, 0);
