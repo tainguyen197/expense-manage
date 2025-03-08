@@ -3,11 +3,7 @@ import { StaticsTab } from "./_components/client/Tabs";
 import TotalToday from "./_components/TotalToday";
 import WeekCalender from "./_components/client/WeekCalender";
 
-async function HistoryPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
+async function HistoryPage() {
   return (
     <Suspense fallback={<div>Loading statics...</div>}>
       <div className="flex flex-col items-center mx-auto container pt-4 gap-10 h-full">
@@ -16,7 +12,7 @@ async function HistoryPage({
             <WeekCalender />
           </div>
         </div>
-        <TotalToday searchParams={searchParams} />
+        <TotalToday />
         <div className="flex justify-center w-full h-full">
           <StaticsTab />
         </div>

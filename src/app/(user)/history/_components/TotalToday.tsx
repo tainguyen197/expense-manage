@@ -1,63 +1,47 @@
+"use client";
+
 import { getExpenseByDate } from "@/actions/expense";
 import { getIncomeByDate } from "@/actions/income";
 import { cn } from "@/lib/utils";
 import { formatCurrency } from "@/utils/curency";
+import { useSearchParams } from "next/navigation";
+import React from "react";
 
-const TotalToday = async ({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) => {
-  const params = await searchParams;
+const TotalToday = () => {
+  const searchParams = useSearchParams();
+  const [total, setTotal] = React.useState(0);
+  const tabUrl = searchParams.get("tab") ?? "outcome";
+  const dateParams = searchParams.get("date") || undefined;
 
-  const tabUrl = params.tab ?? "outcome";
-  const dateUrl = Number(params.date)
-    ? new Date(Number(params.date))
-    : new Date();
+  let from = new Date(Number(dateParams));
+  let to = new Date(from);
 
-  let totalToday = 0;
-
-  switch (tabUrl) {
-    case "income": {
-      const from = dateUrl;
-      const to = new Date(dateUrl);
-
+  React.useEffect(() => {
+    const fetchingExpenseList = async () => {
       from.setHours(0, 0, 0, 0);
       to.setHours(23, 59, 59, 999);
 
-      const incomeList = await getIncomeByDate(
-        from.toISOString(),
-        to.toISOString()
-      );
+      const transactions =
+        tabUrl === "income"
+          ? await getIncomeByDate(from.toISOString(), to.toISOString())
+          : await getExpenseByDate(from.toISOString(), to.toISOString());
 
-      totalToday = incomeList.reduce((acc, income) => {
-        return acc + income.amount;
-      }, 0);
-      break;
-    }
-    case "outcome": {
-      const from = dateUrl;
-      const to = new Date(dateUrl);
-
-      from.setHours(0, 0, 0, 0);
-      to.setHours(23, 59, 59, 999);
-
-      const expenseList = await getExpenseByDate(
-        from.toISOString(),
-        to.toISOString()
-      );
-      totalToday = expenseList.reduce((acc, expense) => {
+      const totalToday = transactions.reduce((acc, expense) => {
         return acc + expense.amount;
       }, 0);
+
+      setTotal(totalToday);
+    };
+
+    if (tabUrl) {
+      fetchingExpenseList();
     }
-    default:
-      break;
-  }
+  }, [tabUrl, dateParams]);
 
   return (
     <div className="font-semibold text-balance flex flex-col items-center gap-2">
       <span className={cn("text-3xl font-bold text-accent")}>
-        {formatCurrency(totalToday)}
+        {formatCurrency(total)}
       </span>
       <span className="text-sm text-gray-500">
         ✨ It is your total expense today
