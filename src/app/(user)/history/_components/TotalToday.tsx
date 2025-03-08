@@ -13,8 +13,8 @@ const TotalToday = () => {
   const tabUrl = searchParams.get("tab") ?? "outcome";
   const dateParams = searchParams.get("date") || undefined;
 
-  let from = new Date(Number(dateParams));
-  let to = new Date(from);
+  const from = new Date(Number(dateParams));
+  const to = new Date(from);
 
   React.useEffect(() => {
     const fetchingExpenseList = async () => {
