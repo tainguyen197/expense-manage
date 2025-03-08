@@ -11,14 +11,14 @@ const Message = ({
 }: {
   content: string | null;
   isSender?: boolean;
-  kind?: MessageKind;
+  kind: MessageKind | null;
   params?: any;
 }) => {
   const kindObj = kind ? kindToMessage(kind) : null;
 
   return (
     <div
-      className={` border-solid border rounded-xl px-3 py-2 text-sm transform transition-transform duration-200 hover:scale-105 ${
+      className={` border-solid border rounded-xl px-3 py-2 text-sm transform transition-transform duration-200 ${
         isSender
           ? "ml-auto text-accent bg-background-secondary "
           : "text-muted bg-background bg-white"

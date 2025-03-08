@@ -8,8 +8,8 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { GroupedData } from "@/app/api/expense-manage";
 import { formatCurrency } from "@/utils/curency";
+import { GroupedData } from "@/types/expense";
 
 const chartConfig = {
   amount: {

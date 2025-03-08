@@ -8,9 +8,9 @@ export type MessageKind =
   | "calculate_expense";
 
 export type Message = {
-  content: string | null;
+  content: string;
   role: "system" | "user" | "assistant" | "tool";
-  kind?: MessageKind;
-  timestamp: number;
+  kind: MessageKind | null;
+  timestamp: string;
   params?: any;
 };

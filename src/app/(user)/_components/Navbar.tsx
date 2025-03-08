@@ -8,9 +8,12 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
+import Image from "next/image";
 
 const Navbar = () => {
   const pathname = usePathname();
+  const { user, isLoaded, isSignedIn } = useUser();
 
   const tabList = [
     {
@@ -29,11 +32,23 @@ const Navbar = () => {
       value: "/statics",
     },
     {
-      icon: <Settings size={30} />,
-      title: "Settings",
+      icon: user?.imageUrl ? (
+        <Image
+          src={user?.imageUrl}
+          alt="avatar"
+          width={36}
+          height={36}
+          className="rounded-full"
+        />
+      ) : (
+        <Settings size={30} />
+      ),
+      title: "Menu",
       value: "/settings",
     },
   ];
+
+  if (!isLoaded) return null;
 
   return (
     <Tabs defaultValue="/chat" className="h-16" value={pathname}>
