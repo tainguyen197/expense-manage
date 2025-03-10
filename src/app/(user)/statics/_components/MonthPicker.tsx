@@ -19,6 +19,7 @@ import {
 import React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useUpdateSearchParams } from "@/hooks/useUpdateSearchParams";
+import { Button } from "@/components/ui/button";
 
 const monthName = [
   {
@@ -102,51 +103,71 @@ const MonthPicker = () => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <CardTitle className="flex items-end text-md gap-2 text-accent">
-          <CalendarDays />{" "}
-          <span className="text-sm font-bold leading-4">
-            {currentMonthName?.name} {currentYear}
-          </span>
-          <ChevronDown size={16} />
-        </CardTitle>
+        <Button
+          variant="outline"
+          size="sm"
+          className="bg-gray-800/50 border-gray-700/50 hover:bg-gray-700/50 hover:border-gray-600/50"
+        >
+          <div className="flex items-center gap-2">
+            <CalendarDays className="h-4 w-4 text-gray-400" />
+            <span className="text-sm font-medium text-gray-200">
+              {currentMonthName?.name} {currentYear}
+            </span>
+            <ChevronDown className="h-4 w-4 text-gray-400" />
+          </div>
+        </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 flex gap-4">
-        <Select
-          defaultValue={currentMonthName?.value}
-          onValueChange={(value) => handleValueChange({ month: value })}
-        >
-          <SelectTrigger className="border-none shadow-none">
-            <SelectValue placeholder="Select a month" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Month</SelectLabel>
-              {monthName.map((month) => (
-                <SelectItem key={month.value} value={month.value}>
-                  {month.name}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-        <Select
-          defaultValue={currentYear ?? undefined}
-          onValueChange={(value) => handleValueChange({ year: value })}
-        >
-          <SelectTrigger className="border-none shadow-none">
-            <SelectValue placeholder="Select a year" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Year</SelectLabel>
-              {yearName.map((year) => (
-                <SelectItem key={year} value={year}>
-                  {year}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+      <PopoverContent className="w-[280px] p-2 bg-gray-800/95 border-gray-700/50 backdrop-blur-sm">
+        <div className="flex gap-2">
+          <Select
+            defaultValue={currentMonthName?.value}
+            onValueChange={(value) => handleValueChange({ month: value })}
+          >
+            <SelectTrigger className="h-9 bg-gray-900/50 border-gray-700/50 text-gray-200">
+              <SelectValue placeholder="Month" />
+            </SelectTrigger>
+            <SelectContent className="bg-gray-800 border-gray-700">
+              <SelectGroup>
+                <SelectLabel className="text-gray-400 px-2 py-1.5 text-xs">
+                  Month
+                </SelectLabel>
+                {monthName.map((month) => (
+                  <SelectItem
+                    key={month.value}
+                    value={month.value}
+                    className="text-gray-200 focus:bg-gray-700 focus:text-gray-200"
+                  >
+                    {month.name}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          <Select
+            defaultValue={currentYear ?? undefined}
+            onValueChange={(value) => handleValueChange({ year: value })}
+          >
+            <SelectTrigger className="h-9 bg-gray-900/50 border-gray-700/50 text-gray-200">
+              <SelectValue placeholder="Year" />
+            </SelectTrigger>
+            <SelectContent className="bg-gray-800 border-gray-700">
+              <SelectGroup>
+                <SelectLabel className="text-gray-400 px-2 py-1.5 text-xs">
+                  Year
+                </SelectLabel>
+                {yearName.map((year) => (
+                  <SelectItem
+                    key={year}
+                    value={year}
+                    className="text-gray-200 focus:bg-gray-700 focus:text-gray-200"
+                  >
+                    {year}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
       </PopoverContent>
     </Popover>
   );
