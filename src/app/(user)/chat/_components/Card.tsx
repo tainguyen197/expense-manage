@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
-
-type MessageKind = "add_expense" | "default" | "info" | string;
+import Message from "./Message";
+import { MessageKind } from "@/types/message";
 
 // Assuming this function exists in your codebase
 function kindToMessage(kind: MessageKind) {
@@ -18,9 +18,10 @@ interface ExpenseCardProps {
     kind: MessageKind | null;
     params?: any;
   };
+  className?: string;
 }
 
-export function ExpenseCard({ expense }: ExpenseCardProps) {
+export function ExpenseCard({ expense, className }: ExpenseCardProps) {
   const kindObj = expense.kind ? kindToMessage(expense.kind) : null;
 
   const getCardStyle = () => {
@@ -54,40 +55,12 @@ export function ExpenseCard({ expense }: ExpenseCardProps) {
   };
 
   return (
-    <div
-      className={cn(
-        "flex flex-col animate-fade-in",
-        expense.isSender ? "items-end" : "items-start"
-      )}
-    >
-      <div
-        className={cn(
-          "max-w-[85%] rounded-2xl shadow-sm backdrop-blur-sm p-4",
-          "transform transition-all duration-200 ease-out hover:scale-[1.02]",
-          "hover:shadow-md",
-          getCardStyle()
-        )}
-      >
-        {kindObj && (
-          <div
-            className={cn(
-              "inline-block px-2 py-0.5 rounded-full text-xs font-medium mb-2",
-              getBadgeStyle()
-            )}
-          >
-            {kindObj.title}
-          </div>
-        )}
-
-        <p
-          className={cn(
-            "text-base leading-relaxed",
-            expense.isSender ? "text-white" : "text-gray-700 dark:text-gray-200"
-          )}
-        >
-          {expense.content}
-        </p>
-      </div>
-    </div>
+    <Message
+      content={expense.content}
+      isSender={expense.isSender}
+      kind={expense.kind}
+      params={expense.params}
+      className={className}
+    />
   );
 }

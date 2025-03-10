@@ -1,36 +1,47 @@
 import { Badge } from "@/components/ui/badge";
 import { kindToMessage } from "../_utils/kindToMessage";
 import { MessageKind } from "@/types/message";
-import get from "lodash/get";
+import { cn } from "@/lib/utils";
 
 const Message = ({
   content,
   isSender = false,
   kind,
   params,
+  className,
 }: {
   content: string | null;
   isSender?: boolean;
   kind: MessageKind | null;
   params?: any;
+  className?: string;
 }) => {
   const kindObj = kind ? kindToMessage(kind) : null;
 
   return (
     <div
-      className={` border-solid border rounded-xl px-3 py-2 text-sm transform transition-transform duration-200 ${
+      className={cn(
+        "relative px-4 py-3 rounded-2xl text-sm shadow-sm",
+        "transform transition-all duration-200",
+        "max-w-[85%]",
         isSender
-          ? "ml-auto text-accent bg-background-secondary "
-          : "text-muted bg-background bg-white"
-      } transition-opacity duration-400 animate-fadeIn
-      w-fit max-w-[70%]`}
+          ? "bg-indigo-500 text-white ml-auto rounded-br-none"
+          : "bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 mr-auto rounded-bl-none",
+        className
+      )}
     >
       {kindObj && (
-        <Badge className="px-0 mr-1 text-xs" variant={kindObj.variant as any}>
+        <Badge
+          className={cn(
+            "absolute -top-2 left-2 px-2 py-0.5 text-xs",
+            isSender ? "bg-indigo-600" : "bg-gray-100 dark:bg-gray-700"
+          )}
+          variant={kindObj.variant as any}
+        >
           {kindObj.message}
         </Badge>
       )}
-      {content}
+      <div className="prose dark:prose-invert max-w-none">{content}</div>
     </div>
   );
 };
