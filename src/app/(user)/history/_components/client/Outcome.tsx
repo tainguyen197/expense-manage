@@ -37,13 +37,18 @@ const OutcomeList = () => {
       category: Category;
     }
   ) => {
-    deleteExpense({ ...item, category: item.category.id }).then((result) => {
-      toast({
-        duration: 1000,
-        variant: result.success ? "success" : "error",
-        description: result.message,
-      });
-    });
+    // modified timestamp to now
+    const modifiedItem = { ...item, timestamp: new Date().toISOString() };
+
+    deleteExpense({ ...modifiedItem, category: item.category.id }).then(
+      (result) => {
+        toast({
+          duration: 3000,
+          variant: result.success ? "success" : "error",
+          description: result.message,
+        });
+      }
+    );
   };
 
   const handleEdit = (item: Expense) => {
