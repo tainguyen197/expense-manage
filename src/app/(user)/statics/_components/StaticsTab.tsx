@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import React from "react";
 import MonthOutCome from "./MonthTransactions";
 import { useSearchParams } from "next/navigation";
-import { CupSoda, WalletMinimal } from "lucide-react";
+import { CircleArrowDown, CircleArrowUp } from "lucide-react";
 import { useUpdateSearchParams } from "@/hooks/useUpdateSearchParams";
 import { Expense, Income } from "@/types/expense";
 import { Category } from "@/types/category";
@@ -38,7 +38,7 @@ export function StaticsTab({
           className="flex-1 px-4 py-3 rounded-none data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-rose-400 data-[state=active]:text-rose-400 text-gray-400"
         >
           <div className="flex items-center gap-2">
-            <CupSoda className="h-4 w-4" />
+            <CircleArrowUp className="h-4 w-4" />
             <span className="font-medium">Outcome</span>
           </div>
         </TabsTrigger>
@@ -47,7 +47,7 @@ export function StaticsTab({
           className="flex-1 px-4 py-3 rounded-none data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-emerald-400 data-[state=active]:text-emerald-400 text-gray-400"
         >
           <div className="flex items-center gap-2">
-            <WalletMinimal className="h-4 w-4" />
+            <CircleArrowDown className="h-4 w-4" />
             <span className="font-medium">Income</span>
           </div>
         </TabsTrigger>
