@@ -1,4 +1,12 @@
-import { Settings } from "lucide-react";
+import {
+  Settings,
+  Bell,
+  Globe,
+  Palette,
+  Lock,
+  Mail,
+  LogOut,
+} from "lucide-react";
 import MenuList from "./_components/MenuList";
 import Profile from "./_components/Profile";
 import {
@@ -14,36 +22,65 @@ import Migrating from "./_components/Migration";
 const SettingPage = () => {
   const profileItems = [
     {
-      icon: "🔐",
+      icon: <Lock className="w-5 h-5" />,
       title: "Change Password",
-      description: "Change your password",
+      description: "Update your account password",
+      actionMenu: (
+        <button className="text-sm text-primary hover:text-primary/80">
+          Change
+        </button>
+      ),
     },
     {
-      icon: "📧",
+      icon: <Mail className="w-5 h-5" />,
       title: "Change Email",
-      description: "Change your email",
+      description: "Update your email address",
+      actionMenu: (
+        <button className="text-sm text-primary hover:text-primary/80">
+          Change
+        </button>
+      ),
     },
     {
-      icon: "🔒",
+      icon: <LogOut className="w-5 h-5" />,
       title: "Logout",
-      description: "Logout your account",
+      description: "Sign out of your account",
+      actionMenu: (
+        <button className="text-sm text-destructive hover:text-destructive/80">
+          Logout
+        </button>
+      ),
     },
   ];
 
   const settingItems = [
     {
-      icon: <Settings size={20} />,
-      title: "Notification",
-      description: "Notification setting",
+      icon: <Bell className="w-5 h-5" />,
+      title: "Notifications",
+      description: "Manage your notification preferences",
+      actionMenu: (
+        <Select defaultValue="all">
+          <SelectTrigger className="border-none shadow-none text-foreground">
+            <SelectValue placeholder="Select option" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="all">All Notifications</SelectItem>
+              <SelectItem value="important">Important Only</SelectItem>
+              <SelectItem value="none">None</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      ),
     },
     {
-      icon: "🌐",
+      icon: <Globe className="w-5 h-5" />,
       title: "Language",
-      description: "Change your language",
+      description: "Choose your preferred language",
       actionMenu: (
-        <Select>
-          <SelectTrigger className="border-none shadow-none text-muted/70 gap-4">
-            <SelectValue placeholder="Select a language" />
+        <Select defaultValue="en">
+          <SelectTrigger className="border-none shadow-none text-foreground">
+            <SelectValue placeholder="Select language" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
@@ -57,18 +94,19 @@ const SettingPage = () => {
       ),
     },
     {
+      icon: <Palette className="w-5 h-5" />,
       title: "Theme",
-      icon: "🎨",
-      description: "Change your theme",
+      description: "Customize your app appearance",
       actionMenu: (
-        <Select>
-          <SelectTrigger className="border-none shadow-none text-muted/70 gap-4">
-            <SelectValue placeholder="Select a theme" />
+        <Select defaultValue="system">
+          <SelectTrigger className="border-none shadow-none text-foreground">
+            <SelectValue placeholder="Select theme" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
               <SelectItem value="light">☀️ Light</SelectItem>
               <SelectItem value="dark">🌙 Dark</SelectItem>
+              <SelectItem value="system">💻 System</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
@@ -77,12 +115,24 @@ const SettingPage = () => {
   ];
 
   return (
-    <div className="container p-4">
-      <Profile />
-      <div className="flex flex-col gap-4 mt-8">
-        <MenuList items={profileItems} title="Profile" />
-        <MenuList items={settingItems} title="Settings" />
-        <Migrating />
+    <div className="container max-w-4xl mx-auto p-6 space-y-8">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">Settings</h1>
+        <p className="text-muted-foreground">Manage your account preferences</p>
+      </div>
+
+      <div className="space-y-6">
+        <Profile />
+
+        <div>
+          <h2 className="text-lg font-semibold mb-4">Account Settings</h2>
+          <MenuList items={profileItems} />
+        </div>
+
+        <div>
+          <h2 className="text-lg font-semibold mb-4">Preferences</h2>
+          <MenuList items={settingItems} />
+        </div>
       </div>
     </div>
   );
