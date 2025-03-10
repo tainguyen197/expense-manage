@@ -17,18 +17,20 @@ const OutcomeList = () => {
   const { toast } = useToast();
   const searchParams = useSearchParams();
 
-  const [data, setData] = React.useState<Expense[]>([]);
+  const [data, setData] = React.useState<Expense[] | null>(null);
 
   const dateParams = searchParams.get("date");
 
   //TODO: move to server
-  const expenseListWithCategory = data?.map((item) => {
-    const category = getIconCategoryByName(item.category);
-    return {
-      ...item,
-      category: category,
-    };
-  });
+  const expenseListWithCategory = data
+    ? data?.map((item) => {
+        const category = getIconCategoryByName(item.category);
+        return {
+          ...item,
+          category: category,
+        };
+      })
+    : null;
 
   const handleDelete = (
     item: ExpenseWithoutCategory & {
@@ -75,7 +77,7 @@ const OutcomeList = () => {
     }
   }, [dateParams]);
 
-  if (!expenseListWithCategory.length)
+  if (!dateParams || !expenseListWithCategory)
     return (
       <div className="flex flex-col gap-4 transition-all animate-fadeIn p-4">
         {[1, 2, 3].map((item) => (
@@ -84,9 +86,11 @@ const OutcomeList = () => {
       </div>
     );
 
-  return data.length === 0 ? (
-    <Empty />
-  ) : (
+  if (!dateParams || !data || data.length === 0) {
+    return <Empty />;
+  }
+
+  return (
     <div className="flex flex-col gap-1 transition-all animate-fadeIn">
       {expenseListWithCategory.map((item, key) => (
         <Item

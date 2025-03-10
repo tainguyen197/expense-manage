@@ -1,10 +1,10 @@
-import { Header } from "../_components/Header";
+// import { NavigationBar } from "../chat/_components/NavigationBar";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div id="history-layout" className="bg-gray-100">
-      <Header title="History" />
-      <div className="pt-14">{children}</div>
+    <div className="flex flex-col min-h-screen bg-gray-900">
+      <div className="flex-1 pb-16">{children}</div>
+      {/* <NavigationBar /> */}
     </div>
   );
 }

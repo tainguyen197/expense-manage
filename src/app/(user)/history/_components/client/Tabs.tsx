@@ -1,19 +1,16 @@
 "use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CupSoda, Plus, WalletMinimal } from "lucide-react";
+import { ArrowDownCircle, ArrowUpCircle } from "lucide-react";
 import React from "react";
 import IncomeList from "./Income";
 import OutcomeList from "./Outcome";
-import { Button } from "@/components/ui/button";
-import AddNew from "./AddNew";
 import { useUpdateSearchParams } from "@/hooks/useUpdateSearchParams";
 import { useSearchParams } from "next/navigation";
 
 export function StaticsTab() {
   const searchParams = useSearchParams();
   const updateSearchParams = useUpdateSearchParams();
-
   const tabUrl = searchParams.get("tab") ?? "outcome";
 
   const handleTabChange = (value: string) => {
@@ -24,58 +21,35 @@ export function StaticsTab() {
     <Tabs
       onValueChange={handleTabChange}
       value={tabUrl}
-      className="p-2 bg-background rounded-tl-2xl rounded-tr-2xl w-full"
+      className="w-full relative"
     >
-      <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="outcome">
-          <div className="flex gap-1 text-primary data-[state=active]:border-b-border">
-            <CupSoda size={20} />
-            <h3>Outcome</h3>
+      <TabsList className="grid w-full grid-cols-2 p-1 bg-gray-800/50">
+        <TabsTrigger
+          value="outcome"
+          className="data-[state=active]:bg-gray-700 data-[state=active]:text-white text-gray-300"
+        >
+          <div className="flex items-center gap-2">
+            <ArrowUpCircle className="h-4 w-4 text-rose-400" />
+            <span>Expenses</span>
           </div>
         </TabsTrigger>
         <TabsTrigger
           value="income"
-          className="flex gap-1 text-primary data-[state=active]:border-b-border"
+          className="data-[state=active]:bg-gray-700 data-[state=active]:text-white text-gray-300"
         >
-          <div className="flex gap-2">
-            <WalletMinimal size={20} />
-            <h3>Income</h3>
+          <div className="flex items-center gap-2">
+            <ArrowDownCircle className="h-4 w-4 text-emerald-400" />
+            <span>Income</span>
           </div>
         </TabsTrigger>
       </TabsList>
-      <TabsContent value="outcome">
-        <div className="">
-          <OutcomeList />
-          <AddNew
-            type="add_expense"
-            trigger={
-              <div className="fixed bottom-20 right-4">
-                <Button
-                  size={"icon"}
-                  className="bg-accent text-white rounded-full p-7"
-                >
-                  <Plus size={36} />
-                </Button>
-              </div>
-            }
-          />
-        </div>
+
+      <TabsContent value="outcome" className="mt-4">
+        <OutcomeList />
       </TabsContent>
-      <TabsContent value="income">
+
+      <TabsContent value="income" className="mt-4">
         <IncomeList />
-        <AddNew
-          type="add_income"
-          trigger={
-            <div className="fixed bottom-20 right-4">
-              <Button
-                size={"icon"}
-                className="bg-accent text-white rounded-full p-7"
-              >
-                <Plus size={36} />
-              </Button>
-            </div>
-          }
-        />
       </TabsContent>
     </Tabs>
   );
