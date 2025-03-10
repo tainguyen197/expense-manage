@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import React from "react";
 import MonthOutCome from "./MonthTransactions";
 import { useSearchParams } from "next/navigation";
-import { CupSoda, WalletMinimal } from "lucide-react";
+import { CircleArrowDown, CircleArrowUp } from "lucide-react";
 import { useUpdateSearchParams } from "@/hooks/useUpdateSearchParams";
 import { Expense, Income } from "@/types/expense";
 import { Category } from "@/types/category";
@@ -27,29 +27,35 @@ export function StaticsTab({
   return (
     <Tabs
       defaultValue={defaultTab}
-      className=" bg-card p-2 pt-0 rounded-tl-2xl rounded-tr-2xl w-full"
+      className="bg-gray-800/30 rounded-lg border border-gray-700/30"
       onValueChange={(value) => {
         updateSearchParams({ tab: value });
       }}
     >
-      <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="outcome">
-          <div className="flex  justify-center items-center gap-1 data-[state=active]:border-b-border">
-            <CupSoda size={20} />
-            <h3 className="text-xs leading-none mt-1">Outcome</h3>
+      <TabsList className="w-full flex p-0 h-auto bg-transparent border-b border-gray-700/30">
+        <TabsTrigger
+          value="outcome"
+          className="flex-1 px-4 py-3 rounded-none data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-rose-400 data-[state=active]:text-rose-400 text-gray-400"
+        >
+          <div className="flex items-center gap-2">
+            <CircleArrowUp className="h-4 w-4" />
+            <span className="font-medium">Outcome</span>
           </div>
         </TabsTrigger>
-        <TabsTrigger value="income">
-          <div className="flex justify-center items-center gap-1 data-[state=active]:border-b-border">
-            <WalletMinimal size={20} />
-            <h3 className="text-xs leading-none mt-1">Income</h3>
+        <TabsTrigger
+          value="income"
+          className="flex-1 px-4 py-3 rounded-none data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-emerald-400 data-[state=active]:text-emerald-400 text-gray-400"
+        >
+          <div className="flex items-center gap-2">
+            <CircleArrowDown className="h-4 w-4" />
+            <span className="font-medium">Income</span>
           </div>
         </TabsTrigger>
       </TabsList>
-      <TabsContent value="outcome">
+      <TabsContent value="outcome" className="mt-0 focus-visible:outline-none">
         <MonthOutCome data={outcomeData} categories={categories} />
       </TabsContent>
-      <TabsContent value="income">
+      <TabsContent value="income" className="mt-0 focus-visible:outline-none">
         <MonthOutCome data={incomeData} categories={categories} />
       </TabsContent>
     </Tabs>

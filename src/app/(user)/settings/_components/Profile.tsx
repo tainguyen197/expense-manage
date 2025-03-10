@@ -21,10 +21,10 @@ const Profile = async () => {
         <AvatarFallback>KR</AvatarFallback>
       </Avatar>
       <div className="text-center">
-        <p className="text-lg font-bold leading-none text-muted/90">
+        <p className="text-lg font-bold leading-none text-foreground">
           {user.fullName}
         </p>
-        <p className="text-sm text-muted/50">
+        <p className="text-sm text-muted-foreground">
           {user.primaryEmailAddress?.emailAddress}
         </p>
       </div>

@@ -6,6 +6,7 @@ import StaticsTabWrapper from "./_components/StaticsTabWrapper";
 import { getExpenseByDate } from "@/actions/expense";
 import { getIncomeByDate } from "@/actions/income";
 import { getCategories } from "@/actions/category";
+import Header from "./_components/Header";
 
 const StaticPage = async ({
   searchParams,
@@ -31,16 +32,39 @@ const StaticPage = async ({
   ]);
 
   return (
-    <div className="flex flex-col container">
-      <div className="m-4 rounded-xl bg-white border border-solid overflow-hidden">
-        <Suspense fallback={<div>Loading statics...</div>}>
-          {/* TODO: Wrap the MonthStatic with new MonthStaticWrapper */}
-          <MonthStatic searchParams={searchParams} />
-        </Suspense>
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-950 text-white">
+      <Header />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div className="space-y-4">
+          {/* Monthly Overview Card */}
+          <Suspense
+            fallback={
+              <div className="p-8 flex items-center justify-center">
+                <div className="animate-pulse text-gray-400">
+                  Loading statistics...
+                </div>
+              </div>
+            }
+          >
+            <MonthStatic searchParams={searchParams} />
+          </Suspense>
+
+          {/* Detailed Statistics */}
+          <div className="bg-gray-800/30 backdrop-blur-sm rounded-lg border border-gray-700/50 shadow-xl">
+            <Suspense
+              fallback={
+                <div className="p-8 flex items-center justify-center">
+                  <div className="animate-pulse text-gray-400">
+                    Loading statistics...
+                  </div>
+                </div>
+              }
+            >
+              <StaticsTabWrapper searchParams={searchParams} />
+            </Suspense>
+          </div>
+        </div>
       </div>
-      <Suspense fallback={<div>Loading statics...</div>}>
-        <StaticsTabWrapper searchParams={searchParams} />
-      </Suspense>
     </div>
   );
 };

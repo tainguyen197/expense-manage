@@ -29,31 +29,36 @@ const Item = (props: ItemProps) => {
 
   return (
     <div
-      className="flex items-center justify-between p-2 group focus:bg-gray-100 transition rounded cursor-pointer"
+      className="flex items-center justify-between p-2 group transition rounded cursor-pointer"
       tabIndex={0}
     >
       <div className="flex items-center">
-        <Button size="icon" className="bg-gray-100 shadow-none text-lg">
+        <Button
+          size="icon"
+          className="bg-gray-800 dark:bg-gray-700 shadow-none text-lg"
+        >
           {item.category?.icon ?? ""}
         </Button>
         <div className="ml-4">
-          <p className="font-semibold text-sm text-muted">{item.item}</p>
-          <p className="text-gray-500 text-xs">
+          <p className="font-semibold text-sm text-gray-100">{item.item}</p>
+          <p className="text-gray-400 text-xs">
             {moment(item.timestamp).format("LL, LT")}
           </p>
         </div>
       </div>
       <div className="text-right group-hover:hidden group-focus-within:hidden">
-        <p className="font-semibold text-sm text-muted">
+        <p className="font-semibold text-sm text-gray-100">
           {formatCurrency(item.amount)}
         </p>
-        <p className="text-gray-500 text-xs">{item.category?.name}</p>
+        <p className="text-gray-400 text-xs">{item.category?.name}</p>
       </div>
       <div className="hidden group-hover:flex group-focus-within:flex gap-4 transition">
         <EditFormDialog
           onSave={handleEdit}
           defaultValue={{ ...item, category: item.category?.id ?? "" }}
-          trigger={<Pencil size={16} className="cursor-pointer text-muted" />}
+          trigger={
+            <Pencil size={16} className="cursor-pointer text-gray-100" />
+          }
         />
         <ConfirmDeleteModal
           onConfirm={handleDelete}

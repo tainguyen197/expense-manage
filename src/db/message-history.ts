@@ -8,7 +8,7 @@ import { asc, desc } from "drizzle-orm";
 // get message history
 const getMessageHistory = async (
   userId: string,
-  { limit = 50 }
+  { limit = 100 }
 ): Promise<Message[]> => {
   return getMessageHistoryInternal(userId, { limit });
 };

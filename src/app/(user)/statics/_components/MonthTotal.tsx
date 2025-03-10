@@ -25,11 +25,11 @@ async function MonthTotal({
     getIncomeByDate(from.toISOString(), to.toISOString()),
   ]);
 
-  const totalIncomeAmount = outcomeData.reduce((acc, income) => {
+  const totalIncomeAmount = incomeData.reduce((acc, income) => {
     return acc + income.amount;
   }, 0);
 
-  const totalOutcomeAmount = incomeData.reduce((acc, expense) => {
+  const totalOutcomeAmount = outcomeData.reduce((acc, expense) => {
     return acc + expense.amount;
   }, 0);
 
@@ -39,21 +39,81 @@ async function MonthTotal({
       : (totalOutcomeAmount / totalIncomeAmount) * 100;
 
   return (
-    <div>
-      <Progress className="h-2" value={progressValue} />
-      <div className="flex justify-between mt-6 gap-1">
-        <div className="block">
-          <p className="text-xl font-bold transition-all animate-fadeIn text-muted/70">
-            {formatCurrency(totalOutcomeAmount)}
-          </p>
-          <h3 className="text-sm text-gray-500">Outcome</h3>
+    <div className="space-y-4">
+      <div className="bg-gray-800/30 rounded-lg p-4 border border-gray-700/30">
+        <div className="flex items-center justify-between">
+          <div className="flex flex-col">
+            <span className="text-sm font-medium text-gray-400 mb-1">
+              Total Outcome
+            </span>
+            <span className="text-2xl font-bold text-rose-400 transition-all animate-fadeIn">
+              {formatCurrency(totalOutcomeAmount)}
+            </span>
+          </div>
+          <div className="h-8 w-[1px] bg-gray-700/50" />
+          <div className="flex flex-col">
+            <span className="text-sm font-medium text-gray-400 mb-1">
+              Total Income
+            </span>
+            <span className="text-2xl font-bold text-emerald-400 transition-all animate-fadeIn">
+              {formatCurrency(totalIncomeAmount)}
+            </span>
+          </div>
         </div>
-        <div className="block">
-          <p className="text-xl font-bold text-muted/70 animate-fadeIn">
-            {formatCurrency(totalIncomeAmount)}
-          </p>
+      </div>
 
-          <h3 className="text-sm text-gray-500 text-right">Income</h3>
+      <div className="bg-gray-900/50 rounded-lg p-4 border border-gray-700/50">
+        <div className="flex items-center justify-between">
+          <div>
+            <span className="text-sm font-medium text-gray-400">
+              Remaining Balance
+            </span>
+            <div className="flex items-center gap-2 mt-1">
+              <span
+                className={`text-2xl font-bold ${
+                  totalIncomeAmount - totalOutcomeAmount > 0
+                    ? "text-blue-400"
+                    : "text-indigo-400"
+                }`}
+              >
+                {formatCurrency(
+                  Math.abs(totalIncomeAmount - totalOutcomeAmount)
+                )}
+              </span>
+              <span className="text-xs text-gray-500">
+                {totalIncomeAmount - totalOutcomeAmount > 0
+                  ? "saved"
+                  : "over budget"}
+              </span>
+            </div>
+          </div>
+          <div className="flex flex-col items-end">
+            <span className="text-sm text-gray-400">Budget Usage</span>
+            <span
+              className={`text-lg font-semibold ${
+                progressValue > 80 ? "text-rose-400" : "text-emerald-400"
+              }`}
+            >
+              {Math.round(progressValue)}%
+            </span>
+          </div>
+        </div>
+        <div className="mt-3">
+          <Progress
+            className={`h-2 bg-gray-700 ${
+              progressValue > 80
+                ? "[&>div]:bg-rose-500"
+                : "[&>div]:bg-emerald-500"
+            }`}
+            value={progressValue}
+          />
+          <div className="text-xs text-gray-500 mt-2">
+            {progressValue > 100
+              ? "⚠️ You've exceeded your income"
+              : progressValue > 80
+              ? "⚠️ Approaching income limit"
+              : "✨ Within budget"}
+          </div>
         </div>
       </div>
     </div>

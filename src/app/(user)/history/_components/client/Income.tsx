@@ -11,17 +11,19 @@ import { Category } from "@/types/category";
 const IncomeList = () => {
   const { toast } = useToast();
   const searchParams = useSearchParams();
-  const [data, setData] = React.useState<Income[]>([]);
+  const [data, setData] = React.useState<Income[] | null>(null);
 
   const dateParams = searchParams.get("date");
 
-  const incomeListWithCategory = data.map((item) => {
-    const category = getIconCategoryByName(item.category);
-    return {
-      ...item,
-      category: category,
-    };
-  });
+  const incomeListWithCategory = data
+    ? data.map((item) => {
+        const category = getIconCategoryByName(item.category);
+        return {
+          ...item,
+          category: category,
+        };
+      })
+    : null;
 
   const handleDelete = (
     item: ExpenseWithoutCategory & {
@@ -68,7 +70,7 @@ const IncomeList = () => {
     }
   }, [dateParams]);
 
-  if (!incomeListWithCategory.length)
+  if (!dateParams || !incomeListWithCategory)
     return (
       <div className="flex flex-col gap-4 transition-all animate-fadeIn p-4">
         {[1, 2, 3].map((item) => (
@@ -77,7 +79,7 @@ const IncomeList = () => {
       </div>
     );
 
-  return data.length === 0 ? (
+  return data && data.length === 0 ? (
     <Empty />
   ) : (
     <div className="flex flex-col gap-1 transition-all animate-fadeIn">

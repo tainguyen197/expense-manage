@@ -1,29 +1,36 @@
-import { Button } from "@/components/ui/button";
-import { Settings } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-export type MenuItemProps = {
+export interface MenuItemProps {
   icon: React.ReactNode;
   title: string;
-  active?: boolean;
+  description: string;
   actionMenu?: React.ReactNode;
-};
+  onClick?: () => void;
+}
 
-const MenuItem = ({ icon, title, active, actionMenu }: MenuItemProps) => {
+const MenuItem = ({
+  icon,
+  title,
+  description,
+  actionMenu,
+  onClick,
+}: MenuItemProps) => {
   return (
-    <div className="flex justify-between p-2 pr-4">
-      <div className="flex items-center gap-2">
-        <Button className="bg-white shadow-none text-muted/70" size={"icon"}>
-          {icon}
-        </Button>
-        <span
-          className={`text-sm font-semibold ${
-            active ? "text-primary" : "text-muted/70"
-          }`}
-        >
-          {title}
-        </span>
+    <div
+      className={cn(
+        "flex items-center justify-between py-3 px-4 rounded-lg transition-colors",
+        onClick && "cursor-pointer hover:bg-muted/50"
+      )}
+      onClick={onClick}
+    >
+      <div className="flex items-center gap-4">
+        <div className="text-muted-foreground">{icon}</div>
+        <div className="flex flex-col">
+          <span className="font-medium">{title}</span>
+          <span className="text-sm text-muted-foreground">{description}</span>
+        </div>
       </div>
-      <div>{actionMenu}</div>
+      {actionMenu && <div className="flex items-center">{actionMenu}</div>}
     </div>
   );
 };

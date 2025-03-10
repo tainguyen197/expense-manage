@@ -47,12 +47,7 @@ const EditForm = ({
         <Form className="flex flex-col gap-3 items-center w-full px-0 pt-0">
           <Field name="item">
             {({ field }: { field: any }) => (
-              <Input
-                {...field}
-                className="text-sm"
-                id="content"
-                placeholder="50k trà sữa ..."
-              />
+              <Input {...field} id="content" placeholder="50k trà sữa ..." />
             )}
           </Field>
           <Field name="amount">
@@ -60,7 +55,6 @@ const EditForm = ({
               <Input
                 {...field}
                 type="number"
-                className="text-sm"
                 placeholder="Input your amount..."
               />
             )}

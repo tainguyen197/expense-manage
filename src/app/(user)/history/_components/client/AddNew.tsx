@@ -5,8 +5,9 @@ import { useSearchParams, useRouter } from "next/navigation";
 import React from "react";
 import Typewriter from "./Typewriter";
 import { Button } from "@/components/ui/button";
-import { Send } from "lucide-react";
+import { Send, X } from "lucide-react";
 import { interactWithAIAction } from "@/actions/ai";
+import { cn } from "@/lib/utils";
 
 const AddNew = ({
   trigger,
@@ -17,7 +18,6 @@ const AddNew = ({
 }) => {
   const searchParams = useSearchParams();
   const router = useRouter();
-
   const [isAddNew, setIsAddNew] = React.useState<boolean>(false);
   const [result, setResult] = React.useState<string>("");
   const [isPending, startTransition] = React.useTransition();
@@ -50,10 +50,7 @@ const AddNew = ({
 
       let content = "Có vẻ như yêu cầu của bạn không hợp lệ, hãy thử lại";
 
-      if (result.kind == "add_expense") {
-        content = result.content;
-      }
-      if (result.kind == "add_income") {
+      if (result.kind == "add_expense" || result.kind == "add_income") {
         content = result.content;
       }
 
@@ -66,7 +63,8 @@ const AddNew = ({
     if (result) {
       const timer = setTimeout(() => {
         setResult("");
-      }, 5000);
+        setIsAddNew(false);
+      }, 3000);
       return () => clearTimeout(timer);
     }
   }, [result]);
@@ -83,52 +81,86 @@ const AddNew = ({
     <>
       <div onClick={() => setIsAddNew(true)}>{trigger}</div>
       {isAddNew && (
-        <>
+        <div className="fixed inset-0 z-50">
+          {/* Backdrop */}
           <div
-            className="absolute inset-0 w-screen h-screen bg-black opacity-75"
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
             onClick={() => setIsAddNew(false)}
           />
 
-          <form>
-            <div className="fixed bottom-20 right-0 px-2 w-full">
-              {result && (
-                <div className="text-sm bg-gradient-to-r from-blue-500 to-green-500 bg-clip-text text-transparent font-semibold transform-all animate-fadeIn overflow-hidden p-2 rounded-lg">
-                  {result}
-                </div>
-              )}
-              {isPending ? (
-                <div className="text-sm bg-gradient-to-r from-blue-500 to-green-500 bg-clip-text text-transparent font-semibold transform-all animate-typing overflow-hidden p-2 rounded-lg">
-                  ✨ Đang suy nghĩ ...
-                </div>
-              ) : (
-                <></>
-              )}
-              <div className="flex items-center gap-1 mt-2">
-                <div className="relative w-full">
-                  <div className="group w-full p-[1.5px] bg-gradient-to-r from-blue-500 to-green-500 rounded focus-visible:from-blue-600 focus-visible:to-green-600 focus-within:from-blue-600 focus-within:to-green-600">
+          {/* Modal - adjusted positioning to be above navbar */}
+          <div className="absolute inset-x-0 bottom-[64px] transform transition-transform">
+            {" "}
+            {/* 64px is typical navbar height */}
+            <div className="relative mx-4 bg-gray-900 rounded-2xl p-4 shadow-xl border border-gray-800">
+              {/* Close button */}
+              <button
+                onClick={() => setIsAddNew(false)}
+                className="absolute right-4 top-4 text-gray-400 hover:text-gray-300"
+              >
+                <X size={20} />
+              </button>
+
+              {/* Title */}
+              <h2 className="text-lg font-medium text-gray-100 mb-6">
+                Add New {type === "add_income" ? "Income" : "Expense"}
+              </h2>
+
+              {/* Form */}
+              <form className="space-y-4">
+                {/* Result message */}
+                {(result || isPending) && (
+                  <div
+                    className={cn(
+                      "p-3 rounded-lg text-sm font-medium transition-all",
+                      isPending
+                        ? "bg-blue-500/10 text-blue-400"
+                        : "bg-emerald-500/10 text-emerald-400"
+                    )}
+                  >
+                    {isPending ? "✨ Đang suy nghĩ ..." : result}
+                  </div>
+                )}
+
+                {/* Input group */}
+                <div className="flex gap-2">
+                  <div className="relative flex-1">
                     <Input
                       name="value"
-                      className="bg-white w-full rounded outline-none border-none focus-visible:ring-0 focus-visible:relative focus-visible:z-10 text-gray-500"
+                      className={cn(
+                        "w-full bg-gray-800 border-0 focus-visible:ring-1 focus-visible:ring-gray-700 text-gray-100 placeholder-gray-500",
+                        isPending && "opacity-50"
+                      )}
+                      placeholder="Input amount and description..."
+                      disabled={isPending}
                     />
-                    {!isPending && (
-                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400 text-sm">
-                        <Typewriter texts={messagePlaceholder} />
-                      </span>
-                    )}
+                    {/* {!isPending && !result && (
+                      <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500 text-sm">
+                        <Typewriter
+                          texts={messagePlaceholder}
+                          className="text-gray-500/70"
+                        />
+                      </div>
+                    )} */}
                   </div>
+                  <Button
+                    disabled={isPending}
+                    type="submit"
+                    formAction={handleSubmit}
+                    className={cn(
+                      "px-6 transition-all shadow-lg hover:shadow-xl",
+                      type === "add_income"
+                        ? "bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20"
+                        : "bg-rose-500/10 text-rose-400 hover:bg-rose-500/20"
+                    )}
+                  >
+                    <Send size={18} />
+                  </Button>
                 </div>
-                <Button
-                  disabled={isPending}
-                  type="submit"
-                  className="bg-[#2a7afc] text-white p-5 bg-gradient-to-r from-blue-500 to-green-500"
-                  formAction={handleSubmit}
-                >
-                  <Send />
-                </Button>
-              </div>
+              </form>
             </div>
-          </form>
-        </>
+          </div>
+        </div>
       )}
     </>
   );

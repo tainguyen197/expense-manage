@@ -1,15 +1,16 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+"use client";
+
+import { cn } from "@/lib/utils";
+import { MessageSquare } from "lucide-react";
 
 const Header = () => {
   return (
-    <div className="flex gap-2 items-center">
-      <Avatar>
-        <AvatarImage src="https://i.pinimg.com/236x/36/ff/67/36ff67aa91f7a4ba0f6db40b36f31436.jpg" />
-        <AvatarFallback>KR</AvatarFallback>
-      </Avatar>
-      <div>
-        <p className="text-sm font-bold leading-none text-muted/90">Kira</p>
-        <p className="text-sm text-muted/50">expert_here@example.com</p>
+    <div className="flex items-center gap-3">
+      <div className="space-y-0.5">
+        <h1 className="text-lg font-medium text-gray-100">Kira</h1>
+        <div className="flex items-center gap-1.5 text-xs text-gray-400">
+          <span>Chat with Kira or ask anything</span>
+        </div>
       </div>
     </div>
   );

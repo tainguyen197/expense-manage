@@ -24,35 +24,14 @@ async function getExpenseByDate(from: string, to: string) {
 async function deleteExpense(expense: Expense) {
   const { userId } = await auth();
 
-  const expenseHistory = await getExpenseHistoryByDate(
-    userId!,
-    expense.timestamp,
-    expense.timestamp
+  const result = await deleteExpenseHistory(
+    { ...expense, userId: userId! },
+    userId!
   );
-
-  if (!expenseHistory) {
-    return {
-      success: false,
-      message: "No expense history found",
-    };
-  }
-
-  const updatedExpenseHistory = expenseHistory.find(
-    (entry) => entry.amount === expense.amount && entry.item === expense.item
-  );
-
-  if (!updatedExpenseHistory) {
-    return {
-      success: false,
-      message: "No expense history found",
-    };
-  }
-
-  const result = await deleteExpenseHistory(updatedExpenseHistory, userId!);
 
   return {
     success: Boolean(result),
-    ...expense,
+    message: Boolean(result) ? "Expense deleted" : "Failed to delete expense",
   };
 }
 
