@@ -29,7 +29,7 @@ const Item = (props: ItemProps) => {
 
   return (
     <div
-      className="flex items-center justify-between p-2 group focus:bg-gray-100 transition rounded cursor-pointer"
+      className="flex items-center justify-between p-2 group transition rounded cursor-pointer"
       tabIndex={0}
     >
       <div className="flex items-center">
