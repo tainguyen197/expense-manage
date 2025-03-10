@@ -64,7 +64,7 @@ const ChatPage = ({ messages: messagesProp }: MessageProps) => {
           <MessageList messages={messages} />
         </div>
       </CardContent>
-      <CardFooter className="p-3 w-screen bg-white z-10 fixed bottom-16 gap-1 rounded-t-2xl">
+      <CardFooter className="p-3 w-screen z-10 fixed bottom-16 gap-1 rounded-t-2xl">
         <AddMessageForm onSubmit={handleSubmit} />
       </CardFooter>
     </Card>

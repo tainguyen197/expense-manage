@@ -1,72 +1,46 @@
 "use client";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  MessageSquareMore,
-  CalendarDays,
-  ChartPie,
-  Settings,
-} from "lucide-react";
+
+import { useState } from "react";
+import { MessageSquare, Clock, BarChart3, Menu } from "lucide-react";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
-import Image from "next/image";
 
-const Navbar = () => {
-  const pathname = usePathname();
-  const { user, isLoaded, isSignedIn } = useUser();
+function NavigationBar() {
+  const [activeTab, setActiveTab] = useState("chat");
 
-  const tabList = [
-    {
-      icon: <MessageSquareMore size={30} />,
-      title: "Chat",
-      value: "/chat",
-    },
-    {
-      icon: <CalendarDays size={30} />,
-      title: "History",
-      value: "/history",
-    },
-    {
-      icon: <ChartPie size={30} />,
-      title: "Statics",
-      value: "/statics",
-    },
-    {
-      icon: user?.imageUrl ? (
-        <Image
-          src={user?.imageUrl}
-          alt="avatar"
-          width={36}
-          height={36}
-          className="rounded-full"
-        />
-      ) : (
-        <Settings size={30} />
-      ),
-      title: "Menu",
-      value: "/settings",
-    },
+  const items = [
+    { id: "chat", icon: MessageSquare, label: "Chat", value: "/chat" },
+    { id: "history", icon: Clock, label: "History", value: "/history" },
+    { id: "stats", icon: BarChart3, label: "Statistics", value: "/statics" },
+    { id: "menu", icon: Menu, label: "Menu", value: "/settings" },
   ];
 
-  if (!isLoaded) return null;
-
   return (
-    <Tabs defaultValue="/chat" className="h-16" value={pathname}>
-      <TabsList className="rounded-tl-xl rounded-tr-xl  border border-solid justify-between fixed bottom-0 w-full h-16 py-2 bg-white shadow-sm shadow-gray-100">
-        {tabList.map((tab) => (
-          <TabsTrigger
-            key={tab.value}
-            className="text-muted/90 flex-col border-none item-center justify-center h-full relative rounded-none shadow-none data-[state=active]:shadow-none data-[state=active]:border-b-0"
-            value={tab.value}
+    <div className="sticky bottom-0 z-10 backdrop-blur-md bg-white/70 dark:bg-gray-900/70 border-t border-indigo-100 dark:border-gray-700">
+      <div className="max-w-3xl mx-auto grid grid-cols-4">
+        {items.map((item) => (
+          <button
+            key={item.id}
+            onClick={() => setActiveTab(item.id)}
+            className={cn(
+              "flex flex-col items-center justify-center py-3 relative",
+              activeTab === item.id
+                ? "text-indigo-600 dark:text-indigo-400"
+                : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+            )}
           >
-            <Link href={tab.value} className="absolute w-full h-full" />
-            {tab.icon}
-            <h3 className="text-xs leading-none mt-1">{tab.title}</h3>
-          </TabsTrigger>
-        ))}
-      </TabsList>
-    </Tabs>
-  );
-};
+            <Link href={item.value} className="absolute w-full h-full" />
+            <item.icon className="h-5 w-5 mb-1" />
+            <span className="text-xs">{item.label}</span>
 
-export default Navbar;
+            {activeTab === item.id && (
+              <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-indigo-500 dark:bg-indigo-400 rounded-t-full" />
+            )}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default NavigationBar;

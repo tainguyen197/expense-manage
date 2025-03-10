@@ -33,7 +33,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="vi">
-        <body className={`${nunito.className} bg-background antialiased pink`}>
+        <body className={`${nunito.className} bg-background antialiased dark`}>
           {children}
           <Toaster />
         </body>

@@ -2,14 +2,18 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Header = () => {
   return (
-    <div className="flex gap-2 items-center">
-      <Avatar>
-        <AvatarImage src="https://i.pinimg.com/236x/36/ff/67/36ff67aa91f7a4ba0f6db40b36f31436.jpg" />
-        <AvatarFallback>KR</AvatarFallback>
+    <div className="flex items-center gap-3">
+      <Avatar className="h-10 w-10 ring-2 ring-indigo-200 dark:ring-indigo-700">
+        <AvatarImage src="/placeholder.svg?height=40&width=40" alt="User" />
+        <AvatarFallback className="bg-gradient-to-br from-indigo-400 to-purple-500 text-white">
+          K
+        </AvatarFallback>
       </Avatar>
       <div>
-        <p className="text-sm font-bold leading-none text-muted/90">Kira</p>
-        <p className="text-sm text-muted/50">expert_here@example.com</p>
+        <h1 className="font-semibold text-gray-900 dark:text-white">Kira</h1>
+        <p className="text-xs text-indigo-600 dark:text-indigo-400">
+          expert_here@example.com
+        </p>
       </div>
     </div>
   );
