@@ -5,11 +5,19 @@ import { useUpdateSearchParams } from "@/hooks/useUpdateSearchParams";
 import { useSearchParams } from "next/navigation";
 import React from "react";
 import { cn } from "@/lib/utils";
+import { getExpenseByDate } from "@/actions/expense";
+import { getIncomeByDate } from "@/actions/income";
 
 const WeekCalender = () => {
   const updateSearchParams = useUpdateSearchParams();
   const searchParams = useSearchParams();
   const [currentWeek, setCurrentWeek] = React.useState(new Date());
+  const [daysWithTransactions, setDaysWithTransactions] = React.useState<
+    Set<string>
+  >(new Set());
+  const tabUrl = searchParams.get("tab") ?? "outcome";
+  const lastFetchedWeek = React.useRef("");
+  const lastFetchedTab = React.useRef(tabUrl);
 
   const dateUrl = searchParams.get("date")
     ? new Date(Number(searchParams.get("date")))
@@ -35,6 +43,56 @@ const WeekCalender = () => {
 
     return days;
   }, [dateUrl, currentWeek]);
+
+  React.useEffect(() => {
+    const weekKey = `${currentWeek.getFullYear()}-${currentWeek.getMonth()}-${currentWeek.getDate()}`;
+
+    // Only fetch if week or tab has changed
+    if (
+      weekKey === lastFetchedWeek.current &&
+      tabUrl === lastFetchedTab.current
+    ) {
+      return;
+    }
+
+    const fetchTransactions = async () => {
+      try {
+        // Get start and end of week
+        const weekStart = new Date(daysInWeek[0]);
+        const weekEnd = new Date(daysInWeek[6]);
+        weekStart.setHours(0, 0, 0, 0);
+        weekEnd.setHours(23, 59, 59, 999);
+
+        // Single API call for the entire week
+        const transactions =
+          tabUrl === "income"
+            ? await getIncomeByDate(
+                weekStart.toISOString(),
+                weekEnd.toISOString()
+              )
+            : await getExpenseByDate(
+                weekStart.toISOString(),
+                weekEnd.toISOString()
+              );
+
+        // Group transactions by date
+        const datesWithTransactions = new Set(
+          transactions.map((t) => {
+            const date = new Date(t.timestamp);
+            return date.toDateString();
+          })
+        );
+
+        setDaysWithTransactions(datesWithTransactions);
+        lastFetchedWeek.current = weekKey;
+        lastFetchedTab.current = tabUrl;
+      } catch (error) {
+        console.error("Error fetching transactions:", error);
+      }
+    };
+
+    fetchTransactions();
+  }, [daysInWeek, tabUrl]);
 
   const handleSelectedDate = (date: Date) => {
     const startOfDay = new Date(
@@ -85,6 +143,10 @@ const WeekCalender = () => {
     return date > today;
   };
 
+  const hasTransactions = (date: Date) => {
+    return daysWithTransactions.has(date.toDateString());
+  };
+
   return (
     <div className="w-full max-w-md mx-auto">
       <div className="flex items-center justify-between mb-4 text-gray-200">
@@ -117,7 +179,7 @@ const WeekCalender = () => {
             onClick={() => !isFuture(date) && handleSelectedDate(date)}
             disabled={isFuture(date)}
             className={cn(
-              "flex flex-col items-center p-2 rounded-lg transition-all",
+              "flex flex-col items-center p-2 rounded-lg transition-all relative",
               isFuture(date) && "opacity-30 cursor-not-allowed",
               isSelected(date) && "bg-indigo-600 text-white",
               isToday(date) &&
@@ -139,6 +201,18 @@ const WeekCalender = () => {
             >
               {date.getDate()}
             </span>
+            {hasTransactions(date) && !isFuture(date) && (
+              <span
+                className={cn(
+                  "absolute bottom-1 w-1 h-1 rounded-full",
+                  isSelected(date)
+                    ? "bg-white"
+                    : tabUrl === "income"
+                    ? "bg-emerald-400"
+                    : "bg-rose-400"
+                )}
+              />
+            )}
           </button>
         ))}
       </div>
