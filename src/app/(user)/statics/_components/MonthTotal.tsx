@@ -2,6 +2,7 @@ import { getExpenseByDate } from "@/actions/expense";
 import { getIncomeByDate } from "@/actions/income";
 import { Progress } from "@/components/ui/progress";
 import { formatCurrency } from "@/utils/curency";
+import { cn } from "@/lib/utils";
 
 async function MonthTotal({
   searchParams,
@@ -70,17 +71,26 @@ async function MonthTotal({
             </span>
             <div className="flex items-center gap-2 mt-1">
               <span
-                className={`text-2xl font-bold ${
+                className={cn(
+                  "text-2xl font-bold",
                   totalIncomeAmount - totalOutcomeAmount > 0
-                    ? "text-blue-400"
-                    : "text-indigo-400"
-                }`}
+                    ? "text-emerald-400"
+                    : "text-red-500"
+                )}
               >
+                {totalIncomeAmount - totalOutcomeAmount < 0 && "- "}
                 {formatCurrency(
                   Math.abs(totalIncomeAmount - totalOutcomeAmount)
                 )}
               </span>
-              <span className="text-xs text-gray-500">
+              <span
+                className={cn(
+                  "text-xs",
+                  totalIncomeAmount - totalOutcomeAmount > 0
+                    ? "text-emerald-500/70"
+                    : "text-red-500/70"
+                )}
+              >
                 {totalIncomeAmount - totalOutcomeAmount > 0
                   ? "saved"
                   : "over budget"}
@@ -94,7 +104,7 @@ async function MonthTotal({
                 progressValue > 80 ? "text-rose-400" : "text-emerald-400"
               }`}
             >
-              {Math.round(progressValue)}%
+              {Math.round(progressValue || 0)}%
             </span>
           </div>
         </div>

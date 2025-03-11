@@ -51,14 +51,19 @@ const TotalToday = () => {
             <span
               className={cn(
                 "block text-4xl font-bold",
-                tabUrl === "income" ? "text-emerald-400" : "text-rose-400"
+                tabUrl === "income"
+                  ? "text-emerald-400"
+                  : total < 0
+                  ? "text-red-500"
+                  : "text-rose-400"
               )}
             >
-              {formatCurrency(total)}
+              {total < 0 && tabUrl !== "income" && "- "}
+              {formatCurrency(Math.abs(total))}
             </span>
             <span className="block text-sm text-gray-300">
               ✨ Total {tabUrl === "income" ? "income" : "expense"} for selected
-              date
+              date {total < 0 && tabUrl !== "income" && "(Negative Balance)"}
             </span>
             <div>
               <AddNew

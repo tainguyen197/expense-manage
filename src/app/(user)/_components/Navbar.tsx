@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MessageSquare, Clock, BarChart3, Menu, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -10,6 +10,30 @@ import { useRouter } from "next/navigation";
 function NavigationBar() {
   const router = useRouter();
   const pathname = usePathname();
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      // Show navbar when scrolling up or at the top
+      // Hide navbar when scrolling down
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        setIsVisible(false);
+      } else {
+        setIsVisible(true);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [lastScrollY]);
 
   const isActive = (path: string) => pathname === path;
 
@@ -21,7 +45,12 @@ function NavigationBar() {
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-10 backdrop-blur-md bg-white/70 dark:bg-gray-900/70 border-t border-indigo-100 dark:border-gray-700">
+    <div
+      className={cn(
+        "fixed bottom-0 left-0 right-0 z-10 backdrop-blur-md bg-white/70 dark:bg-gray-900/70 border-t border-indigo-100 dark:border-gray-700 transition-transform duration-300",
+        !isVisible && "translate-y-full"
+      )}
+    >
       <div className="max-w-3xl mx-auto px-4">
         <div className="grid grid-cols-4 gap-0">
           {items.map((item) => (

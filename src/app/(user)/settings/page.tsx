@@ -22,16 +22,6 @@ import Migrating from "./_components/Migration";
 const SettingPage = () => {
   const profileItems = [
     {
-      icon: <Lock className="w-5 h-5" />,
-      title: "Change Password",
-      description: "Update your account password",
-      actionMenu: (
-        <button className="text-sm text-primary hover:text-primary/80">
-          Change
-        </button>
-      ),
-    },
-    {
       icon: <Mail className="w-5 h-5" />,
       title: "Change Email",
       description: "Update your email address",
