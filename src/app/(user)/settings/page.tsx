@@ -1,12 +1,5 @@
-import {
-  Settings,
-  Bell,
-  Globe,
-  Palette,
-  Lock,
-  Mail,
-  LogOut,
-} from "lucide-react";
+import { Suspense } from "react";
+import { Bell, Globe, Palette, Lock, Mail, LogOut } from "lucide-react";
 import MenuList from "./_components/MenuList";
 import Profile from "./_components/Profile";
 import {
@@ -20,6 +13,52 @@ import {
 import Migrating from "./_components/Migration";
 
 const SettingPage = () => {
+  return (
+    <div className="container max-w-4xl mx-auto p-6 space-y-8">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">Settings</h1>
+        <p className="text-muted-foreground">Manage your account preferences</p>
+      </div>
+
+      <div className="space-y-6">
+        <Suspense
+          fallback={
+            <div className="h-32 bg-gray-800/50 animate-pulse rounded-lg" />
+          }
+        >
+          <Profile />
+        </Suspense>
+
+        <Suspense
+          fallback={
+            <div className="space-y-2">
+              <h2 className="text-lg font-semibold mb-4">Account Settings</h2>
+              <div className="h-20 bg-gray-800/50 animate-pulse rounded-lg" />
+              <div className="h-20 bg-gray-800/50 animate-pulse rounded-lg" />
+            </div>
+          }
+        >
+          <AccountSettings />
+        </Suspense>
+
+        <Suspense
+          fallback={
+            <div className="space-y-2">
+              <h2 className="text-lg font-semibold mb-4">Preferences</h2>
+              <div className="h-20 bg-gray-800/50 animate-pulse rounded-lg" />
+              <div className="h-20 bg-gray-800/50 animate-pulse rounded-lg" />
+              <div className="h-20 bg-gray-800/50 animate-pulse rounded-lg" />
+            </div>
+          }
+        >
+          <PreferencesSettings />
+        </Suspense>
+      </div>
+    </div>
+  );
+};
+
+const AccountSettings = () => {
   const profileItems = [
     {
       icon: <Mail className="w-5 h-5" />,
@@ -43,6 +82,15 @@ const SettingPage = () => {
     },
   ];
 
+  return (
+    <div>
+      <h2 className="text-lg font-semibold mb-4">Account Settings</h2>
+      <MenuList items={profileItems} />
+    </div>
+  );
+};
+
+const PreferencesSettings = () => {
   const settingItems = [
     {
       icon: <Bell className="w-5 h-5" />,
@@ -105,25 +153,9 @@ const SettingPage = () => {
   ];
 
   return (
-    <div className="container max-w-4xl mx-auto p-6 space-y-8">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Settings</h1>
-        <p className="text-muted-foreground">Manage your account preferences</p>
-      </div>
-
-      <div className="space-y-6">
-        <Profile />
-
-        <div>
-          <h2 className="text-lg font-semibold mb-4">Account Settings</h2>
-          <MenuList items={profileItems} />
-        </div>
-
-        <div>
-          <h2 className="text-lg font-semibold mb-4">Preferences</h2>
-          <MenuList items={settingItems} />
-        </div>
-      </div>
+    <div>
+      <h2 className="text-lg font-semibold mb-4">Preferences</h2>
+      <MenuList items={settingItems} />
     </div>
   );
 };
