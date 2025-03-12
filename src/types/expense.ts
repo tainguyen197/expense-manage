@@ -1,4 +1,5 @@
 export type Expense = {
+  id: number;
   item: string;
   amount: number;
   timestamp: string;

@@ -38,8 +38,20 @@ async function deleteExpense(expense: Expense) {
 async function updateExpense(expense: Expense) {
   const { userId } = await auth();
 
+  // Ensure category is handled as an ID and exclude id from update
+  const { id, ...expenseWithoutId } = expense;
+  const expenseToUpdate = {
+    ...expenseWithoutId,
+    category:
+      typeof expense.category === "object"
+        ? (expense.category as any).id
+        : expense.category,
+  };
+
+  console.log("expenseToUpdate", expense);
+
   const result = await updateExpenseHistory(
-    { ...expense, userId: userId! },
+    { ...expenseToUpdate, id, userId: userId! },
     userId!
   );
   return {

@@ -2,7 +2,7 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowDownCircle, ArrowUpCircle } from "lucide-react";
-import React, { useState, useTransition, useEffect } from "react";
+import React, { useState, useTransition, useEffect, useCallback } from "react";
 import { useUpdateSearchParams } from "@/hooks/useUpdateSearchParams";
 import { useSearchParams } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
@@ -14,6 +14,7 @@ import {
 } from "@/actions/expense";
 import TransactionList from "./TransactionList";
 import { Expense, Income } from "@/types/expense";
+import { useTransactionCache } from "@/contexts/TransactionCacheContext";
 
 export function StaticsTab() {
   const searchParams = useSearchParams();
@@ -22,43 +23,65 @@ export function StaticsTab() {
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
   const dateParams = searchParams.get("date");
+  const { getCache, setCache, invalidateCache, subscribeToInvalidation } =
+    useTransactionCache();
 
   const [incomeData, setIncomeData] = useState<Income[] | null>(null);
   const [expenseData, setExpenseData] = useState<Expense[] | null>(null);
+
+  const fetchData = useCallback(async () => {
+    if (!dateParams) return;
+
+    const from = new Date(Number(dateParams));
+    const to = new Date(from);
+
+    from.setHours(0, 0, 0, 0);
+    to.setHours(23, 59, 59, 999);
+
+    // Fetch both income and expense data regardless of current tab
+    const [income, expense] = await Promise.all([
+      getIncomeByDate(from.toISOString(), to.toISOString()),
+      getExpenseByDate(from.toISOString(), to.toISOString()),
+    ]);
+
+    setIncomeData(income);
+    setExpenseData(expense);
+
+    // Cache the fetched data
+    setCache(dateParams, { income, expense });
+  }, [dateParams, setCache]);
+
+  useEffect(() => {
+    if (!dateParams) return;
+
+    // Try to get data from cache first
+    const cachedData = getCache(dateParams);
+    if (cachedData) {
+      setIncomeData(cachedData.income);
+      setExpenseData(cachedData.expense);
+      return;
+    }
+
+    fetchData();
+  }, [dateParams, getCache, fetchData]);
+
+  // Add effect to listen for cache invalidation
+  useEffect(() => {
+    if (!dateParams) return;
+
+    // Subscribe to cache invalidation events
+    const unsubscribe = subscribeToInvalidation(dateParams, fetchData);
+
+    return () => {
+      unsubscribe();
+    };
+  }, [dateParams, fetchData, subscribeToInvalidation]);
 
   const handleTabChange = (value: string) => {
     startTransition(() => {
       updateSearchParams({ tab: value });
     });
   };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!dateParams) return;
-
-      const from = new Date(Number(dateParams));
-      const to = new Date(from);
-
-      from.setHours(0, 0, 0, 0);
-      to.setHours(23, 59, 59, 999);
-
-      if (tabUrl === "income") {
-        const data = await getIncomeByDate(
-          from.toISOString(),
-          to.toISOString()
-        );
-        setIncomeData(data);
-      } else {
-        const data = await getExpenseByDate(
-          from.toISOString(),
-          to.toISOString()
-        );
-        setExpenseData(data);
-      }
-    };
-
-    fetchData();
-  }, [dateParams, tabUrl]);
 
   const handleDelete = async (item: any) => {
     if (tabUrl === "income") {
@@ -77,6 +100,8 @@ export function StaticsTab() {
         setIncomeData(
           (prev) => prev?.filter((i) => i.timestamp !== item.timestamp) ?? null
         );
+        // Invalidate cache when data changes
+        invalidateCache(dateParams!);
       }
     } else {
       const result = await deleteExpense({
@@ -94,6 +119,8 @@ export function StaticsTab() {
         setExpenseData(
           (prev) => prev?.filter((i) => i.timestamp !== item.timestamp) ?? null
         );
+        // Invalidate cache when data changes
+        invalidateCache(dateParams!);
       }
     }
   };
@@ -114,6 +141,8 @@ export function StaticsTab() {
             prev?.map((i) => (i.timestamp === item.timestamp ? item : i)) ??
             null
         );
+        // Invalidate cache when data changes
+        invalidateCache(dateParams!);
       }
     } else {
       const result = await updateExpense(item);
@@ -130,6 +159,8 @@ export function StaticsTab() {
             prev?.map((i) => (i.timestamp === item.timestamp ? item : i)) ??
             null
         );
+        // Invalidate cache when data changes
+        invalidateCache(dateParams!);
       }
     }
   };

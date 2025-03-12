@@ -43,10 +43,10 @@ const TransactionList = ({ data, onDelete, onEdit }: TransactionListProps) => {
     <div className="flex flex-col gap-1 transition-all animate-fadeIn">
       {transactionsWithCategory.map((item) => (
         <Item
-          item={item}
+          key={`${item.timestamp}-${item.id}`}
+          transaction={item}
           onDelete={onDelete}
           onEdit={onEdit}
-          key={item.timestamp}
         />
       ))}
     </div>

@@ -32,13 +32,23 @@ const EditForm = ({
   onSave?: (values: any) => void;
 }) => {
   const initialValues = {
+    id: defaultValue?.id || 0,
     item: defaultValue?.item || "",
     amount: defaultValue?.amount || "",
     category: defaultValue?.category || "",
+    timestamp: defaultValue?.timestamp || new Date().toISOString(),
   };
 
   const handleSubmit = (values: typeof initialValues) => {
-    onSave && onSave(values);
+    // Ensure we pass all required fields and convert category to number if it's a string
+    const submissionValues = {
+      ...values,
+      category:
+        typeof values.category === "string"
+          ? parseInt(values.category, 10)
+          : values.category,
+    };
+    onSave && onSave(submissionValues);
   };
 
   return (

@@ -13,77 +13,64 @@ type TransactionWithCategory = (Expense | Income) & {
 };
 
 export type ItemProps = {
-  item: TransactionWithCategory;
+  transaction: TransactionWithCategory;
   onDelete?: (item: TransactionWithCategory) => void;
   onEdit?: (item: Income | Expense) => void;
 };
 
-const Item = ({ item, onDelete, onEdit }: ItemProps) => {
+const Item = ({ transaction, onDelete, onEdit }: ItemProps) => {
   const handleDelete = () => {
-    onDelete?.(item);
+    onDelete?.(transaction);
   };
 
   const handleEdit = (values: any) => {
-    onEdit?.({ ...item, ...values });
+    onEdit?.({ ...transaction, ...values });
   };
 
   return (
-    <div className="flex items-center justify-between gap-4 p-4 bg-gray-800/50 hover:bg-gray-800/70 transition-colors rounded-lg">
-      <div className="flex items-center gap-3">
+    <div className="group relative flex items-center justify-between p-3 hover:bg-gray-800/50 transition-colors rounded-xs">
+      <div className="flex items-center gap-2 flex-1">
         <div
           className={`p-1.5 rounded-lg ${
-            "type" in item && item.type === "income"
+            "type" in transaction && transaction.type === "income"
               ? "bg-emerald-500/10"
               : "bg-rose-500/10"
           }`}
         >
-          {item.category.icon}
+          {transaction.category.icon}
         </div>
-        <div className="space-y-0.5">
-          <h3 className="font-medium text-gray-200">{item.item}</h3>
-          <p className="text-sm text-gray-400">
-            {moment(item.timestamp).format("MMM D, YYYY")}
+        <div>
+          <h3 className="font-medium text-gray-200">{transaction.item}</h3>
+          <p className="text-xs text-gray-400">
+            {moment(transaction.timestamp).format("MMMM D, YYYY, h:mm A")}
           </p>
         </div>
       </div>
-      <div className="flex items-center gap-4">
-        <span
-          className={`font-medium ${
-            "type" in item && item.type === "income"
-              ? "text-emerald-400"
-              : "text-rose-400"
-          }`}
-        >
-          {formatCurrency(item.amount)}
+      <div className="text-right group-focus-within:hidden group-hover:hidden">
+        <span className={`text-md font-medium text-white`}>
+          {formatCurrency(transaction.amount)}
         </span>
-        <div className="flex items-center gap-1">
-          <EditFormDialog
-            trigger={
-              <Button
-                size="icon"
-                variant="ghost"
-                className="h-8 w-8 text-gray-400 hover:text-gray-300"
-              >
-                <Pencil className="h-4 w-4" />
-              </Button>
-            }
-            defaultValue={item}
-            onSave={handleEdit}
-          />
-          <ConfirmDeleteModal
-            trigger={
-              <Button
-                size="icon"
-                variant="ghost"
-                className="h-8 w-8 text-gray-400 hover:text-gray-300"
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            }
-            onConfirm={handleDelete}
-            onCancel={() => {}}
-          />
-        </div>
+        <p className="text-gray-400 text-xs">{transaction.category.name}</p>
+      </div>
+      <div className="hidden group-hover:flex group-focus-within:flex gap-1">
+        <EditFormDialog
+          trigger={
+            <Button size="icon" variant="ghost" className="h-7 w-7 text-white">
+              <Pencil className="h-4 w-4" />
+            </Button>
+          }
+          defaultValue={{ ...transaction, category: transaction.category.id }}
+          onSave={handleEdit}
+        />
+        <ConfirmDeleteModal
+          trigger={
+            <Button size="icon" variant="ghost" className="h-7 w-7 ">
+              <Trash2 className="h-4 w-4 text-rose-400" />
+            </Button>
+          }
+          onConfirm={handleDelete}
+          onCancel={() => {}}
+        />
       </div>
     </div>
   );

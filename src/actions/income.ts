@@ -32,9 +32,8 @@ async function deleteIncome(income: Income) {
 }
 
 async function updateIncome(income: Income) {
-  const userId = "mock_user";
-
-  const result = await updateIncomeHistory(income, userId);
+  const { userId } = await auth();
+  const result = await updateIncomeHistory(income, userId!);
 
   return {
     success: Boolean(result),

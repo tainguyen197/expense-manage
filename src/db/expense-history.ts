@@ -137,10 +137,7 @@ async function updateExpenseHistoryInternal(
       ...expense,
     })
     .where(
-      and(
-        eq(expenseHistory.userId, user_id),
-        eq(expenseHistory.timestamp, expense.timestamp)
-      )
+      and(eq(expenseHistory.userId, user_id), eq(expenseHistory.id, expense.id))
     );
 }
 

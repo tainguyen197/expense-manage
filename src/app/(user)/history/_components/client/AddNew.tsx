@@ -3,11 +3,11 @@
 import { Input } from "@/components/ui/input";
 import { useSearchParams, useRouter } from "next/navigation";
 import React from "react";
-import Typewriter from "./Typewriter";
 import { Button } from "@/components/ui/button";
 import { Send, X } from "lucide-react";
 import { interactWithAIAction } from "@/actions/ai";
 import { cn } from "@/lib/utils";
+import { useTransactionCache } from "@/contexts/TransactionCacheContext";
 
 const AddNew = ({
   trigger,
@@ -21,15 +21,7 @@ const AddNew = ({
   const [isAddNew, setIsAddNew] = React.useState<boolean>(false);
   const [result, setResult] = React.useState<string>("");
   const [isPending, startTransition] = React.useTransition();
-
-  const messagePlaceholder = React.useMemo(() => {
-    switch (type) {
-      case "add_expense":
-        return ["50k trà sữa ...", "100k tiền lì xì ...", "5 triệu tiền phòng"];
-      case "add_income":
-        return ["100k lương ...", "500k thưởng ...", "1 triệu tiền thưởng"];
-    }
-  }, [type]);
+  const { invalidateCache } = useTransactionCache();
 
   const handleSubmit = (formDate: FormData) => {
     const value = formDate.get("value") as string;
@@ -52,6 +44,7 @@ const AddNew = ({
 
       if (result.kind == "add_expense" || result.kind == "add_income") {
         content = result.content;
+        invalidateCache(date);
       }
 
       setResult(content);
