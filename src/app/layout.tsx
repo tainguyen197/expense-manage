@@ -1,14 +1,18 @@
-import { ClerkProvider } from "@clerk/nextjs";
+import type { Metadata } from "next";
+import { Nunito } from "next/font/google";
 import "./globals.css";
+import ConditionalLayout from "./components/ConditionalLayout";
 import { Toaster } from "@/components/ui/toaster";
 import { TransactionCacheProvider } from "@/contexts/TransactionCacheContext";
-import { Nunito } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
+import React from "react";
 
 const nunito = Nunito({ subsets: ["latin"] });
 
-export const metadata = {
-  title: "Money Manager",
-  description: "Track your expenses and income",
+export const metadata: Metadata = {
+  title: "AI Chat - Intelligent Conversations",
+  description:
+    "Transform your communication with intelligent, context-aware chat experiences",
 };
 
 export default function RootLayout({
@@ -21,7 +25,7 @@ export default function RootLayout({
       <body className={`${nunito.className} bg-background antialiased dark`}>
         <ClerkProvider>
           <TransactionCacheProvider>
-            {children}
+            <ConditionalLayout>{children}</ConditionalLayout>
             <Toaster />
           </TransactionCacheProvider>
         </ClerkProvider>

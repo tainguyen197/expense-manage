@@ -12,24 +12,34 @@ import {
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 
-const ChatMessage = ({ isAI = false, delay = 0 }) => (
+const ChatMessage = ({
+  isAI = false,
+  delay = 0,
+  title = "",
+  message = "",
+  emoji = "",
+}) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ delay }}
     className={`flex ${isAI ? "flex-row" : "flex-row-reverse"} gap-4 mb-4`}
   >
-    <div className={`flex-1 max-w-[80%] ${isAI ? "text-left" : "text-right"}`}>
+    <div className={`max-w-[80%] ${isAI ? "text-left" : "text-right"}`}>
       <div
-        className={`p-4 rounded-2xl ${
+        className={`p-4 rounded-3xl ${
           isAI
-            ? "bg-background text-foreground"
+            ? "bg-[#0c0f1a] text-gray-200 border border-gray-800"
             : "bg-primary text-primary-foreground"
         }`}
       >
-        {isAI
-          ? "Hello! How can I assist you today?"
-          : "I need help with my project"}
+        {title && (
+          <div className="text-sm font-medium mb-1 text-gray-400">{title}</div>
+        )}
+        <div className="text-base">
+          {message}
+          {emoji && <span className="ml-1">{emoji}</span>}
+        </div>
       </div>
     </div>
   </motion.div>
@@ -85,13 +95,6 @@ export default function HomePage() {
                     Get Started
                   </span>
                 </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="relative overflow-hidden px-8 py-4 rounded-full font-semibold border-2 border-background text-background hover:bg-background hover:text-foreground transition-colors duration-200"
-                >
-                  Watch Demo
-                </motion.button>
               </div>
             </motion.div>
 
@@ -103,22 +106,39 @@ export default function HomePage() {
               transition={{ duration: 0.8 }}
             >
               <div className="relative w-full h-[500px] transform rotate-y-[-8deg] rotate-z-2">
-                <div className="absolute inset-0 bg-card/10 backdrop-blur-xl rounded-2xl shadow-2xl border border-border">
+                <div className="absolute inset-0 bg-[#0f1219]/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-800">
                   <div className="p-4">
                     <div className="flex items-center justify-between mb-6">
                       <div className="flex space-x-2">
-                        <div className="w-3 h-3 rounded-full bg-destructive"></div>
+                        <div className="w-3 h-3 rounded-full bg-red-500"></div>
                         <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
                         <div className="w-3 h-3 rounded-full bg-green-500"></div>
                       </div>
-                      <div className="text-sm text-muted-foreground">
+                      <div className="text-sm text-gray-400">
                         AI Chat Interface
                       </div>
                     </div>
-                    <div className="space-y-4">
-                      <ChatMessage isAI delay={0.2} />
-                      <ChatMessage isAI={false} delay={0.4} />
-                      <ChatMessage isAI delay={0.6} />
+                    <div className="space-y-6">
+                      <ChatMessage
+                        isAI
+                        delay={0.2}
+                        title="Thêm chi phí"
+                        message="Bạn đã tiêu 595k cho việc ăn nhà hàng. Chúc bạn ăn ngon miệng, nhưng hãy cẩn thận với chi phí nhé!"
+                        emoji="🍔"
+                      />
+                      <ChatMessage
+                        isAI={false}
+                        delay={0.4}
+                        message="500k tiền thưởng"
+                      />
+                      <ChatMessage
+                        isAI
+                        delay={0.6}
+                        title="Thêm thu nhập"
+                        message="Đã thêm 500k từ tiền thưởng vào tài khoản của bạn. Tốt hơn hết là bạn nên cẩn nhắc kỹ lương trước khi tiêu xài nhé, đừng để tháng sau lại đốm!"
+                        emoji="🤑"
+                      />
+                      <ChatMessage isAI={false} delay={0.8} message="hehe" />
                     </div>
                   </div>
                 </div>
@@ -131,7 +151,7 @@ export default function HomePage() {
             animate={{ y: [0, 10, 0] }}
             transition={{ repeat: Infinity, duration: 2 }}
           >
-            <ArrowDownIcon className="w-8 h-8 text-background" />
+            <ArrowDownIcon className="w-8 h-8 text-white" />
           </motion.div>
         </div>
       </section>

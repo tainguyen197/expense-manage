@@ -45,7 +45,7 @@ function NavigationBar() {
   return (
     <div
       className={cn(
-        "fixed bottom-0 left-0 right-0 z-10 backdrop-blur-md bg-white/70 dark:bg-gray-900/70 border-t border-indigo-100 dark:border-gray-700 transition-transform duration-300",
+        "md:hidden fixed bottom-0 left-0 right-0 z-10 backdrop-blur-md bg-white/70 dark:bg-gray-900/70 border-t border-indigo-100 dark:border-gray-700 transition-transform duration-300",
         !isVisible && "translate-y-full"
       )}
     >
