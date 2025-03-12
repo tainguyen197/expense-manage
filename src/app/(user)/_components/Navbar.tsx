@@ -5,10 +5,8 @@ import { MessageSquare, Clock, BarChart3, Menu, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useRouter } from "next/navigation";
 
 function NavigationBar() {
-  const router = useRouter();
   const pathname = usePathname();
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -56,7 +54,6 @@ function NavigationBar() {
           {items.map((item) => (
             <button
               key={item.id}
-              onClick={() => router.push(item.value)}
               className={cn(
                 "flex flex-col items-center justify-center py-3 relative transition-all duration-200",
                 isActive(item.value)
