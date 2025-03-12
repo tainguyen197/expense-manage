@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Category } from "@/types/category";
-import { Expense, ExpenseWithoutCategory, Income } from "@/types/expense";
+import { Expense, Income } from "@/types/expense";
 import { formatCurrency } from "@/utils/curency";
 import { Pencil, Trash2 } from "lucide-react";
 import moment from "moment";
@@ -8,63 +8,82 @@ import { ConfirmDeleteModal } from "./ConfirmDelete";
 import { EditFormDialog } from "./EditForm";
 import { SkeletonItem } from "../Skeleton";
 
-type ItemData = ExpenseWithoutCategory & { category: Category };
-
-export type ItemProps = {
-  item: ItemData;
-  onDelete?: (item: ItemData) => void;
-  onEdit?: (item: Expense | Income) => void;
+type TransactionWithCategory = (Expense | Income) & {
+  category: Category;
 };
 
-const Item = (props: ItemProps) => {
-  const { item } = props;
+export type ItemProps = {
+  item: TransactionWithCategory;
+  onDelete?: (item: TransactionWithCategory) => void;
+  onEdit?: (item: Income | Expense) => void;
+};
 
+const Item = ({ item, onDelete, onEdit }: ItemProps) => {
   const handleDelete = () => {
-    props.onDelete && props.onDelete(item);
+    onDelete?.(item);
   };
 
   const handleEdit = (values: any) => {
-    props.onEdit && props.onEdit({ ...item, ...values });
+    onEdit?.({ ...item, ...values });
   };
 
   return (
-    <div
-      className="flex items-center justify-between p-2 group transition rounded cursor-pointer"
-      tabIndex={0}
-    >
-      <div className="flex items-center">
-        <Button
-          size="icon"
-          className="bg-gray-800 dark:bg-gray-700 shadow-none text-lg"
+    <div className="flex items-center justify-between gap-4 p-4 bg-gray-800/50 hover:bg-gray-800/70 transition-colors rounded-lg">
+      <div className="flex items-center gap-3">
+        <div
+          className={`p-1.5 rounded-lg ${
+            "type" in item && item.type === "income"
+              ? "bg-emerald-500/10"
+              : "bg-rose-500/10"
+          }`}
         >
-          {item.category?.icon ?? ""}
-        </Button>
-        <div className="ml-4">
-          <p className="font-semibold text-sm text-gray-100">{item.item}</p>
-          <p className="text-gray-400 text-xs">
-            {moment(item.timestamp).format("LL, LT")}
+          {item.category.icon}
+        </div>
+        <div className="space-y-0.5">
+          <h3 className="font-medium text-gray-200">{item.item}</h3>
+          <p className="text-sm text-gray-400">
+            {moment(item.timestamp).format("MMM D, YYYY")}
           </p>
         </div>
       </div>
-      <div className="text-right group-hover:hidden group-focus-within:hidden">
-        <p className="font-semibold text-sm text-gray-100">
+      <div className="flex items-center gap-4">
+        <span
+          className={`font-medium ${
+            "type" in item && item.type === "income"
+              ? "text-emerald-400"
+              : "text-rose-400"
+          }`}
+        >
           {formatCurrency(item.amount)}
-        </p>
-        <p className="text-gray-400 text-xs">{item.category?.name}</p>
-      </div>
-      <div className="hidden group-hover:flex group-focus-within:flex gap-4 transition">
-        <EditFormDialog
-          onSave={handleEdit}
-          defaultValue={{ ...item, category: item.category?.id ?? "" }}
-          trigger={
-            <Pencil size={16} className="cursor-pointer text-gray-100" />
-          }
-        />
-        <ConfirmDeleteModal
-          onConfirm={handleDelete}
-          onCancel={() => {}}
-          trigger={<Trash2 color="red" size={16} className="cursor-pointer" />}
-        />
+        </span>
+        <div className="flex items-center gap-1">
+          <EditFormDialog
+            trigger={
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-8 w-8 text-gray-400 hover:text-gray-300"
+              >
+                <Pencil className="h-4 w-4" />
+              </Button>
+            }
+            defaultValue={item}
+            onSave={handleEdit}
+          />
+          <ConfirmDeleteModal
+            trigger={
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-8 w-8 text-gray-400 hover:text-gray-300"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            }
+            onConfirm={handleDelete}
+            onCancel={() => {}}
+          />
+        </div>
       </div>
     </div>
   );
