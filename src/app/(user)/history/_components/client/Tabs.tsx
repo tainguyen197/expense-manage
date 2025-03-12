@@ -15,6 +15,7 @@ import {
 import TransactionList from "./TransactionList";
 import { Expense, Income } from "@/types/expense";
 import { useTransactionCache } from "@/contexts/TransactionCacheContext";
+import CategoryProvider from "@/contexts/CategoryProvider";
 
 export function StaticsTab() {
   const searchParams = useSearchParams();
@@ -200,26 +201,27 @@ export function StaticsTab() {
             <div className="h-5 w-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
           </div>
         )}
+        <CategoryProvider>
+          <TabsContent value="outcome" className="mt-4 relative">
+            <div className={isPending ? "opacity-50" : ""}>
+              <TransactionList
+                data={expenseData}
+                onDelete={handleDelete}
+                onEdit={handleEdit}
+              />
+            </div>
+          </TabsContent>
 
-        <TabsContent value="outcome" className="mt-4 relative">
-          <div className={isPending ? "opacity-50" : ""}>
-            <TransactionList
-              data={expenseData}
-              onDelete={handleDelete}
-              onEdit={handleEdit}
-            />
-          </div>
-        </TabsContent>
-
-        <TabsContent value="income" className="mt-4 relative">
-          <div className={isPending ? "opacity-50" : ""}>
-            <TransactionList
-              data={incomeData}
-              onDelete={handleDelete}
-              onEdit={handleEdit}
-            />
-          </div>
-        </TabsContent>
+          <TabsContent value="income" className="mt-4 relative">
+            <div className={isPending ? "opacity-50" : ""}>
+              <TransactionList
+                data={incomeData}
+                onDelete={handleDelete}
+                onEdit={handleEdit}
+              />
+            </div>
+          </TabsContent>
+        </CategoryProvider>
       </div>
     </Tabs>
   );

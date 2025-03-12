@@ -9,7 +9,7 @@ async function HistoryPage() {
     <>
       <Suspense
         fallback={
-          <div className="sticky top-0 z-10 px-4 py-2 bg-gray-900/50 backdrop-blur-md border-b border-gray-800">
+          <div className="max-w-7xl mx-auto sticky top-0 z-10 px-4 py-2 bg-gray-900/50 backdrop-blur-md border-b border-gray-800">
             <div className="flex items-center gap-3">
               <div className="p-1.5 rounded-lg bg-gray-700/50">
                 <div className="h-5 w-5 animate-pulse bg-gray-600 rounded" />

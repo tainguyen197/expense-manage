@@ -37,7 +37,7 @@ const Item = ({ transaction, onDelete, onEdit }: ItemProps) => {
               : "bg-rose-500/10"
           }`}
         >
-          {transaction.category.icon}
+          {transaction?.category?.icon}
         </div>
         <div>
           <h3 className="font-medium text-gray-200">{transaction.item}</h3>
@@ -50,7 +50,7 @@ const Item = ({ transaction, onDelete, onEdit }: ItemProps) => {
         <span className={`text-md font-medium text-white`}>
           {formatCurrency(transaction.amount)}
         </span>
-        <p className="text-gray-400 text-xs">{transaction.category.name}</p>
+        <p className="text-gray-400 text-xs">{transaction?.category?.name}</p>
       </div>
       <div className="hidden group-hover:flex group-focus-within:flex gap-1">
         <EditFormDialog
@@ -59,7 +59,10 @@ const Item = ({ transaction, onDelete, onEdit }: ItemProps) => {
               <Pencil className="h-4 w-4" />
             </Button>
           }
-          defaultValue={{ ...transaction, category: transaction.category.id }}
+          defaultValue={{
+            ...transaction,
+            category: transaction?.category?.id,
+          }}
           onSave={handleEdit}
         />
         <ConfirmDeleteModal

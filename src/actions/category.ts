@@ -6,4 +6,8 @@ async function getCategories() {
   return getCategoryList();
 }
 
-export { getCategories };
+async function getCategoryById(id: number) {
+  return getCategoryById(id);
+}
+
+export { getCategories, getCategoryById };

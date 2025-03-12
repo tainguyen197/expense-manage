@@ -4,7 +4,7 @@ import { Progress } from "@/components/ui/progress";
 import { formatCurrency } from "@/utils/curency";
 import { cn } from "@/lib/utils";
 
-async function MonthTotal({
+export default async function MonthTotal({
   searchParams,
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -26,108 +26,78 @@ async function MonthTotal({
     getIncomeByDate(from.toISOString(), to.toISOString()),
   ]);
 
-  const totalIncomeAmount = incomeData.reduce((acc, income) => {
-    return acc + income.amount;
-  }, 0);
-
-  const totalOutcomeAmount = outcomeData.reduce((acc, expense) => {
+  const totalOutcome = outcomeData.reduce((acc, expense) => {
     return acc + expense.amount;
   }, 0);
 
+  const totalIncome = incomeData.reduce((acc, income) => {
+    return acc + income.amount;
+  }, 0);
+
+  const remainingBalance = totalIncome - totalOutcome;
   const progressValue =
-    totalOutcomeAmount > totalIncomeAmount
-      ? 100
-      : (totalOutcomeAmount / totalIncomeAmount) * 100;
+    totalOutcome > totalIncome ? 100 : (totalOutcome / totalIncome) * 100;
 
   return (
-    <div className="space-y-4">
-      <div className="bg-gray-800/30 rounded-lg p-4 border border-gray-700/30">
-        <div className="flex items-center justify-between">
-          <div className="flex flex-col">
-            <span className="text-sm font-medium text-gray-400 mb-1">
-              Total Outcome
-            </span>
-            <span className="text-2xl font-bold text-rose-400 transition-all animate-fadeIn">
-              {formatCurrency(totalOutcomeAmount)}
-            </span>
-          </div>
-          <div className="h-8 w-[1px] bg-gray-700/50" />
-          <div className="flex flex-col">
-            <span className="text-sm font-medium text-gray-400 mb-1">
-              Total Income
-            </span>
-            <span className="text-2xl font-bold text-emerald-400 transition-all animate-fadeIn">
-              {formatCurrency(totalIncomeAmount)}
-            </span>
-          </div>
-        </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="bg-gray-800/30 backdrop-blur-sm rounded-xl border border-gray-700/50 p-6">
+        <h3 className="text-gray-400 text-sm font-medium mb-2">
+          Total Outcome
+        </h3>
+        <p className="text-2xl font-semibold text-rose-400">
+          {formatCurrency(totalOutcome)}
+        </p>
       </div>
 
-      <div className="bg-gray-900/50 rounded-lg p-4 border border-gray-700/50">
-        <div className="flex items-center justify-between">
+      <div className="bg-gray-800/30 backdrop-blur-sm rounded-xl border border-gray-700/50 p-6">
+        <h3 className="text-gray-400 text-sm font-medium mb-2">Total Income</h3>
+        <p className="text-2xl font-semibold text-emerald-400">
+          {formatCurrency(totalIncome)}
+        </p>
+      </div>
+
+      <div className="md:col-span-2 bg-gray-900/50 rounded-lg p-4 border border-gray-700/50">
+        <div className="flex items-center justify-between mb-4">
           <div>
             <span className="text-sm font-medium text-gray-400">
-              Remaining Balance
+              Budget Usage Remaining
             </span>
             <div className="flex items-center gap-2 mt-1">
               <span
-                className={cn(
-                  "text-2xl font-bold",
-                  totalIncomeAmount - totalOutcomeAmount > 0
-                    ? "text-emerald-400"
-                    : "text-red-500"
-                )}
+                className={`text-2xl font-bold  ${
+                  remainingBalance >= 0 ? "text-emerald-400" : "text-rose-400"
+                }`}
               >
-                {totalIncomeAmount - totalOutcomeAmount < 0 && "- "}
-                {formatCurrency(
-                  Math.abs(totalIncomeAmount - totalOutcomeAmount)
-                )}
-              </span>
-              <span
-                className={cn(
-                  "text-xs",
-                  totalIncomeAmount - totalOutcomeAmount > 0
-                    ? "text-emerald-500/70"
-                    : "text-red-500/70"
-                )}
-              >
-                {totalIncomeAmount - totalOutcomeAmount > 0
-                  ? "saved"
-                  : "over budget"}
+                {remainingBalance >= 0
+                  ? `+${formatCurrency(remainingBalance)}`
+                  : formatCurrency(remainingBalance)}
               </span>
             </div>
-          </div>
-          <div className="flex flex-col items-end">
-            <span className="text-sm text-gray-400">Budget Usage</span>
-            <span
-              className={`text-lg font-semibold ${
-                progressValue > 80 ? "text-rose-400" : "text-emerald-400"
-              }`}
-            >
-              {Math.round(progressValue || 0)}%
-            </span>
           </div>
         </div>
         <div className="mt-3">
           <Progress
             className={`h-2 bg-gray-700 ${
               progressValue > 80
-                ? "[&>div]:bg-rose-500"
+                ? "[&>div]:bg-amber-500"
                 : "[&>div]:bg-emerald-500"
             }`}
             value={progressValue}
           />
-          <div className="text-xs text-gray-500 mt-2">
-            {progressValue > 100
-              ? "⚠️ You've exceeded your income"
-              : progressValue > 80
-              ? "⚠️ Approaching income limit"
-              : "✨ Within budget"}
+          <div className="flex items-center justify-between mt-2">
+            <div className="text-xs text-gray-500">
+              {progressValue > 100
+                ? "⚠️ You've exceeded your income"
+                : progressValue > 80
+                ? "⚠️ Approaching income limit"
+                : "✨ Within budget"}
+            </div>
+            <div className="text-xs font-medium text-gray-400">
+              {Math.round(progressValue || 0)}%
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
 }
-
-export default MonthTotal;

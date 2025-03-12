@@ -132,7 +132,7 @@ const MonthTransactions = ({
                   style={{
                     width: `${Math.round((item.total / totalOutcome) * 100)}%`,
                     background: "hsl(var(--primary))",
-                    opacity: "1",
+                    opacity: "0.6",
                   }}
                 />
               </div>

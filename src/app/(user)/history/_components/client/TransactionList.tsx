@@ -2,11 +2,10 @@
 
 import { Expense, Income } from "@/types/expense";
 import Item from "./Item";
-import { getIconCategoryByName } from "@/utils/getIconCategoryByName";
 import Empty from "../Empty";
 import React from "react";
 import { Category } from "@/types/category";
-
+import { useCategories } from "@/contexts/CategoryProvider";
 type TransactionWithCategory = (Expense | Income) & {
   category: Category;
 };
@@ -18,9 +17,10 @@ type TransactionListProps = {
 };
 
 const TransactionList = ({ data, onDelete, onEdit }: TransactionListProps) => {
+  const { categories } = useCategories();
   const transactionsWithCategory = data
     ? data.map((item) => {
-        const category = getIconCategoryByName(item.category);
+        const category = categories.find((c) => c.id === item.category);
         return {
           ...item,
           category: category,
@@ -36,6 +36,8 @@ const TransactionList = ({ data, onDelete, onEdit }: TransactionListProps) => {
         ))}
       </div>
     );
+
+  console.log(transactionsWithCategory);
 
   return data.length === 0 ? (
     <Empty />
