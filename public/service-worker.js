@@ -1,16 +1,22 @@
-const CACHE_NAME = "todo-app-v1";
+const CACHE_NAME = "ai-chat-v1";
 const urlsToCache = [
   "/",
-  "/index.html",
   "/manifest.json",
   "/icons/icon-192x192.png",
   "/icons/icon-512x512.png",
+  // Add static assets
+  "/static/css/",
+  "/static/js/",
+  // Add other important routes
+  "/chat",
+  "/settings",
 ];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache))
   );
+  self.skipWaiting();
 });
 
 self.addEventListener("activate", (event) => {
@@ -23,9 +29,31 @@ self.addEventListener("activate", (event) => {
       );
     })
   );
+  self.clients.claim();
 });
 
 self.addEventListener("fetch", (event) => {
+  if (!event.request.url.startsWith(self.location.origin)) {
+    return;
+  }
+
+  if (event.request.url.includes("/api/")) {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          const responseToCache = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache);
+          });
+          return response;
+        })
+        .catch(() => {
+          return caches.match(event.request);
+        })
+    );
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then((response) => {
       if (response) {
