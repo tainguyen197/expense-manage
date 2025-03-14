@@ -2,7 +2,6 @@ import { getExpenseByDate } from "@/actions/expense";
 import { getIncomeByDate } from "@/actions/income";
 import { Progress } from "@/components/ui/progress";
 import { formatCurrency } from "@/utils/curency";
-import { cn } from "@/lib/utils";
 
 export default async function MonthTotal({
   searchParams,
@@ -39,24 +38,27 @@ export default async function MonthTotal({
     totalOutcome > totalIncome ? 100 : (totalOutcome / totalIncome) * 100;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div className="bg-gray-800/30 backdrop-blur-sm rounded-xl border border-gray-700/50 p-6">
-        <h3 className="text-gray-400 text-sm font-medium mb-2">
-          Total Outcome
-        </h3>
-        <p className="text-2xl font-semibold text-rose-400">
-          {formatCurrency(totalOutcome)}
-        </p>
-      </div>
+    <>
+      <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
+        <div className="bg-gray-800/30 backdrop-blur-sm rounded-xl border border-gray-700/50 p-6">
+          <h3 className="text-gray-400 text-sm font-medium mb-2">
+            Total Outcome
+          </h3>
+          <p className="text-2xl font-semibold text-rose-400">
+            {formatCurrency(totalOutcome)}
+          </p>
+        </div>
 
-      <div className="bg-gray-800/30 backdrop-blur-sm rounded-xl border border-gray-700/50 p-6">
-        <h3 className="text-gray-400 text-sm font-medium mb-2">Total Income</h3>
-        <p className="text-2xl font-semibold text-emerald-400">
-          {formatCurrency(totalIncome)}
-        </p>
+        <div className="bg-gray-800/30 backdrop-blur-sm rounded-xl border border-gray-700/50 p-6">
+          <h3 className="text-gray-400 text-sm font-medium mb-2">
+            Total Income
+          </h3>
+          <p className="text-2xl font-semibold text-emerald-400">
+            {formatCurrency(totalIncome)}
+          </p>
+        </div>
       </div>
-
-      <div className="md:col-span-2 bg-gray-900/50 rounded-lg p-4 border border-gray-700/50">
+      <div className="col-span-full bg-gray-900/50 rounded-lg p-4 border border-gray-700/50">
         <div className="flex items-center justify-between mb-4">
           <div>
             <span className="text-sm font-medium text-gray-400">
@@ -98,6 +100,6 @@ export default async function MonthTotal({
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
