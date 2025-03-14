@@ -1,6 +1,10 @@
 import { db } from "@/db";
 import { expenseHistory } from "@/db/schema";
-import { Expense, ExpenseHistory, ExpenseResponse } from "@/types/expense";
+import {
+  Transaction,
+  ExpenseHistory,
+  TransactionResponse,
+} from "@/types/expense";
 import { and, asc, desc, eq } from "drizzle-orm";
 
 const getExpenseHistory = async (
@@ -43,9 +47,9 @@ function getExpenseHistoryByDateInternal(
 }
 
 const createExpenseHistory = async (
-  expense: Expense,
+  expense: Transaction,
   user_id: string
-): Promise<ExpenseResponse> => {
+): Promise<TransactionResponse> => {
   try {
     await createExpenseHistoryInternal(expense, user_id);
 
@@ -62,7 +66,10 @@ const createExpenseHistory = async (
   }
 };
 
-async function createExpenseHistoryInternal(expense: Expense, user_id: string) {
+async function createExpenseHistoryInternal(
+  expense: Transaction,
+  user_id: string
+) {
   // only save to db when no duplicated
   const duplicate = await db.query.expenseHistory.findFirst({
     where: ({ userId, item, amount, timestamp }, { and, eq }) =>

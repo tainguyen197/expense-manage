@@ -1,7 +1,7 @@
-import { Expense } from "@/types/expense";
+import { Transaction } from "@/types/expense";
 
 function calculateSpentByDays(
-  expenses: Expense[],
+  expenses: Transaction[],
   days: number,
   startDate: Date
 ) {

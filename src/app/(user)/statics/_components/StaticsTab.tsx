@@ -6,12 +6,12 @@ import MonthOutCome from "./MonthTransactions";
 import { useSearchParams } from "next/navigation";
 import { CircleArrowDown, CircleArrowUp } from "lucide-react";
 import { useUpdateSearchParams } from "@/hooks/useUpdateSearchParams";
-import { Expense, Income } from "@/types/expense";
+import { Transaction, Transaction } from "@/types/expense";
 import { Category } from "@/types/category";
 
 type StaticsTabProps = {
-  incomeData: Income[];
-  outcomeData: Expense[];
+  incomeData: Transaction[];
+  outcomeData: Transaction[];
   categories: Category[];
 };
 
@@ -48,7 +48,7 @@ export function StaticsTab({
         >
           <div className="flex items-center gap-2">
             <CircleArrowDown className="h-4 w-4" />
-            <span className="font-medium">Income</span>
+            <span className="font-medium">Transaction</span>
           </div>
         </TabsTrigger>
       </TabsList>

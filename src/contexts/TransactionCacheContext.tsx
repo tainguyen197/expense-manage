@@ -1,12 +1,12 @@
 "use client";
 
-import { Expense, Income } from "@/types/expense";
+import { Transaction, Transaction } from "@/types/expense";
 import React, { createContext, useContext, useCallback } from "react";
 
 type CacheKey = string;
 type CacheData = {
-  income: Income[] | null;
-  expense: Expense[] | null;
+  income: Transaction[] | null;
+  expense: Transaction[] | null;
   timestamp: number;
 };
 
@@ -18,7 +18,7 @@ type TransactionCacheContextType = {
   getCache: (date: string) => CacheData | null;
   setCache: (
     date: string,
-    data: { income: Income[] | null; expense: Expense[] | null }
+    data: { income: Transaction[] | null; expense: Transaction[] | null }
   ) => void;
   invalidateCache: (date: string) => void;
   subscribeToInvalidation: (date: string, callback: () => void) => () => void;
@@ -72,7 +72,7 @@ export const TransactionCacheProvider = ({
   const setCacheData = useCallback(
     (
       date: string,
-      data: { income: Income[] | null; expense: Expense[] | null }
+      data: { income: Transaction[] | null; expense: Transaction[] | null }
     ) => {
       setCache((prev) => ({
         ...prev,

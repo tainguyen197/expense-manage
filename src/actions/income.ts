@@ -6,10 +6,10 @@ import {
   deleteIncomeHistory,
   updateIncomeHistory,
 } from "@/db/income-history";
-import { Income, IncomeResponse } from "@/types/expense";
+import { Transaction, TransactionResponse } from "@/types/expense";
 import { auth } from "@clerk/nextjs/server";
 
-async function createIncome(data: Income): Promise<IncomeResponse> {
+async function createIncome(data: Transaction): Promise<TransactionResponse> {
   const { userId } = await auth();
 
   return createIncomeHistory(data, userId!);
@@ -21,7 +21,7 @@ async function getIncomeByDate(from: string, to: string) {
   return getIncomeHistoryByDate(userId!, from, to);
 }
 
-async function deleteIncome(income: Income) {
+async function deleteIncome(income: Transaction) {
   const { userId } = await auth();
   const result = await deleteIncomeHistory(income, userId!);
 
@@ -31,7 +31,7 @@ async function deleteIncome(income: Income) {
   };
 }
 
-async function updateIncome(income: Income) {
+async function updateIncome(income: Transaction) {
   const { userId } = await auth();
   const result = await updateIncomeHistory(income, userId!);
 

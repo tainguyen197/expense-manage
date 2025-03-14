@@ -1,11 +1,11 @@
-import { Expense } from "@/types/expense";
+import { Transaction } from "@/types/expense";
 
 export type GroupedData = {
   timestamp: string; // formatted date string
   amount: number;
 };
 
-export function groupTransactionsByDate(data: Expense[]): GroupedData[] {
+export function groupTransactionsByDate(data: Transaction[]): GroupedData[] {
   const groups = new Map<string, number>();
 
   data.forEach((transaction) => {

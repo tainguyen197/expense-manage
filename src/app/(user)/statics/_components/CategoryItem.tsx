@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Expense } from "@/types/expense";
+import { Transaction } from "@/types/expense";
 import { formatCurrency } from "@/utils/curency";
 import moment from "moment";
 

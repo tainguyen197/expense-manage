@@ -1,9 +1,9 @@
 import { Category } from "@/types/category";
-import { Expense, Income } from "@/types/expense";
+import { Transaction, Transaction } from "@/types/expense";
 
 // function list expenseMonth by category
 export const transactionMonthByCategory = (
-  transactionList: Expense[] | Income[]
+  transactionList: Transaction[] | Transaction[]
 ) => {
   const transactionByCategory = new Map<number, number>();
   transactionList.forEach((trans) => {

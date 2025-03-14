@@ -13,7 +13,7 @@ import {
   updateExpense,
 } from "@/actions/expense";
 import TransactionList from "./TransactionList";
-import { Expense, Income } from "@/types/expense";
+import { Transaction, Transaction } from "@/types/expense";
 import { useTransactionCache } from "@/contexts/TransactionCacheContext";
 import CategoryProvider from "@/contexts/CategoryProvider";
 
@@ -27,8 +27,8 @@ export function StaticsTab() {
   const { getCache, setCache, invalidateCache, subscribeToInvalidation } =
     useTransactionCache();
 
-  const [incomeData, setIncomeData] = useState<Income[] | null>(null);
-  const [expenseData, setExpenseData] = useState<Expense[] | null>(null);
+  const [incomeData, setIncomeData] = useState<Transaction[] | null>(null);
+  const [expenseData, setExpenseData] = useState<Transaction[] | null>(null);
 
   const fetchData = useCallback(async () => {
     if (!dateParams) return;
@@ -94,7 +94,7 @@ export function StaticsTab() {
         duration: 1000,
         variant: result.success ? "success" : "error",
         description: result.success
-          ? "Income deleted"
+          ? "Transaction deleted"
           : "Failed to delete income",
       });
       if (result.success) {
@@ -113,7 +113,7 @@ export function StaticsTab() {
         duration: 1000,
         variant: result.success ? "success" : "error",
         description: result.success
-          ? "Expense deleted"
+          ? "Transaction deleted"
           : "Failed to delete expense",
       });
       if (result.success) {
@@ -126,14 +126,14 @@ export function StaticsTab() {
     }
   };
 
-  const handleEdit = async (item: Income | Expense) => {
+  const handleEdit = async (item: Transaction | Transaction) => {
     if (tabUrl === "income") {
       const result = await updateIncome(item);
       toast({
         duration: 1000,
         variant: result.success ? "success" : "error",
         description: result.success
-          ? "Income updated"
+          ? "Transaction updated"
           : "Failed to update income",
       });
       if (result.success) {
@@ -151,7 +151,7 @@ export function StaticsTab() {
         duration: 1000,
         variant: result.success ? "success" : "error",
         description: result.success
-          ? "Expense updated"
+          ? "Transaction updated"
           : "Failed to update expense",
       });
       if (result.success) {
@@ -190,7 +190,7 @@ export function StaticsTab() {
         >
           <div className="flex items-center gap-2">
             <ArrowDownCircle className="h-4 w-4 text-emerald-400" />
-            <span>Income</span>
+            <span>Transaction</span>
           </div>
         </TabsTrigger>
       </TabsList>

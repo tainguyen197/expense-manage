@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Category } from "@/types/category";
-import { Expense, Income } from "@/types/expense";
+import { Transaction, Transaction } from "@/types/expense";
 import { formatCurrency } from "@/utils/curency";
 import { Pencil, Trash2 } from "lucide-react";
 import moment from "moment";
@@ -8,14 +8,14 @@ import { ConfirmDeleteModal } from "./ConfirmDelete";
 import { EditFormDialog } from "./EditForm";
 import { SkeletonItem } from "../Skeleton";
 
-type TransactionWithCategory = (Expense | Income) & {
+type TransactionWithCategory = (Transaction | Transaction) & {
   category: Category;
 };
 
 export type ItemProps = {
   transaction: TransactionWithCategory;
   onDelete?: (item: TransactionWithCategory) => void;
-  onEdit?: (item: Income | Expense) => void;
+  onEdit?: (item: Transaction | Transaction) => void;
 };
 
 const Item = ({ transaction, onDelete, onEdit }: ItemProps) => {

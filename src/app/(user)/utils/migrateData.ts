@@ -3,7 +3,7 @@
 import { createExpense } from "@/actions/expense";
 import { createIncome } from "@/actions/income";
 import { addMessage } from "@/actions/message";
-import { Expense } from "@/types/expense";
+import { Transaction } from "@/types/expense";
 import { Message } from "@/types/message";
 
 const migrateChatHistory = () => {
@@ -43,7 +43,7 @@ const migrateExpenseHistory = () => {
   if (expenseArray.length) {
     // create promise all to save to db
     const promises = expenseArray.map(
-      (expense: Expense & { timestamp: number }) => {
+      (expense: Transaction & { timestamp: number }) => {
         return createExpense({
           ...expense,
           timestamp: new Date(expense.timestamp).toISOString(),
@@ -70,7 +70,7 @@ const migrateIncomeHistory = () => {
   if (incomeArray.length) {
     // create promise all to save to db
     const promises = incomeArray.map(
-      (income: Expense & { timestamp: number }) => {
+      (income: Transaction & { timestamp: number }) => {
         return createIncome({
           ...income,
           timestamp: new Date(income.timestamp).toISOString(),

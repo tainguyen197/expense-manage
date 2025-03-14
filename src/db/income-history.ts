@@ -1,5 +1,9 @@
 import { db } from "@/db";
-import { Income, IncomeHistory, IncomeResponse } from "@/types/expense";
+import {
+  Transaction,
+  TransactionHistory,
+  TransactionResponse,
+} from "@/types/expense";
 import { incomeHistory } from "./schema";
 import { and, desc, eq } from "drizzle-orm";
 
@@ -25,7 +29,7 @@ const getIncomeHistoryByDate = async (
   user_id: string,
   from: string,
   to: string
-): Promise<IncomeHistory[]> => {
+): Promise<TransactionHistory[]> => {
   return getIncomeHistoryByDateInternal(user_id, from, to);
 };
 
@@ -42,9 +46,9 @@ function getIncomeHistoryByDateInternal(
 }
 
 const createIncomeHistory = async (
-  income: Income,
+  income: Transaction,
   user_id: string
-): Promise<IncomeResponse> => {
+): Promise<TransactionResponse> => {
   try {
     await createIncomeHistoryInternal(income, user_id);
     console.log("created income history");
@@ -62,7 +66,10 @@ const createIncomeHistory = async (
   }
 };
 
-async function createIncomeHistoryInternal(income: Income, user_id: string) {
+async function createIncomeHistoryInternal(
+  income: Transaction,
+  user_id: string
+) {
   // only save to db when no duplicated
   const duplicate = await db.query.expenseHistory.findFirst({
     where: ({ userId, item, amount, timestamp }, { and, eq }) =>
@@ -84,7 +91,7 @@ async function createIncomeHistoryInternal(income: Income, user_id: string) {
   });
 }
 
-async function deleteIncomeHistory(income: Income, user_id: string) {
+async function deleteIncomeHistory(income: Transaction, user_id: string) {
   try {
     await deleteIncomeHistoryInternal(income, user_id);
 
@@ -101,7 +108,10 @@ async function deleteIncomeHistory(income: Income, user_id: string) {
   }
 }
 
-const deleteIncomeHistoryInternal = async (income: Income, user_id: string) => {
+const deleteIncomeHistoryInternal = async (
+  income: Transaction,
+  user_id: string
+) => {
   return db
     .delete(incomeHistory)
     .where(
@@ -115,9 +125,9 @@ const deleteIncomeHistoryInternal = async (income: Income, user_id: string) => {
 };
 
 const updateIncomeHistory = async (
-  income: Income,
+  income: Transaction,
   user_id: string
-): Promise<IncomeResponse> => {
+): Promise<TransactionResponse> => {
   try {
     await updateIncomeHistoryInternal(income, user_id);
 
@@ -135,7 +145,7 @@ const updateIncomeHistory = async (
 };
 
 export const updateIncomeHistoryInternal = async (
-  income: Income,
+  income: Transaction,
   user_id: string
 ) => {
   return db

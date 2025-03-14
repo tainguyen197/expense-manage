@@ -1,19 +1,19 @@
 "use client";
 
-import { Expense, Income } from "@/types/expense";
+import { Transaction, Transaction } from "@/types/expense";
 import Item from "./Item";
 import Empty from "../Empty";
 import React from "react";
 import { Category } from "@/types/category";
 import { useCategories } from "@/contexts/CategoryProvider";
-type TransactionWithCategory = (Expense | Income) & {
+type TransactionWithCategory = (Transaction | Transaction) & {
   category: Category;
 };
 
 type TransactionListProps = {
-  data: (Income | Expense)[] | null;
+  data: (Transaction | Transaction)[] | null;
   onDelete: (item: TransactionWithCategory) => void;
-  onEdit: (item: Income | Expense) => void;
+  onEdit: (item: Transaction | Transaction) => void;
 };
 
 const TransactionList = ({ data, onDelete, onEdit }: TransactionListProps) => {

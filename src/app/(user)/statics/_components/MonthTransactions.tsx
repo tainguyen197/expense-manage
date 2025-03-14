@@ -9,7 +9,7 @@ import { Category } from "@/types/category";
 import { DailyTransactionsChart } from "./DailyTransactionsChart";
 import { ChartConfig } from "@/components/ui/chart";
 import { mappingCategory, transactionMonthByCategory } from "../_utils";
-import { Expense } from "@/types/expense";
+import { Transaction } from "@/types/expense";
 import { groupTransactionsByDate } from "../../chat/_utils/groupTransactionsByDate";
 import { formatCurrency } from "@/utils/curency";
 import { useState } from "react";
@@ -19,7 +19,7 @@ import { format } from "date-fns";
 import { ChevronDown } from "lucide-react";
 
 type MonthTransactionsProps = {
-  data: Expense[];
+  data: Transaction[];
   categories: Category[];
 };
 

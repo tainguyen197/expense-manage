@@ -6,10 +6,10 @@ import {
   getExpenseHistoryByDate,
   updateExpenseHistory,
 } from "@/db/expense-history";
-import { Expense, ExpenseResponse } from "@/types/expense";
+import { Transaction, TransactionResponse } from "@/types/expense";
 import { auth } from "@clerk/nextjs/server";
 
-async function createExpense(data: Expense): Promise<ExpenseResponse> {
+async function createExpense(data: Transaction): Promise<TransactionResponse> {
   const { userId } = await auth();
 
   return createExpenseHistory(data, userId!);
@@ -21,7 +21,7 @@ async function getExpenseByDate(from: string, to: string) {
   return getExpenseHistoryByDate(userId!, from, to);
 }
 
-async function deleteExpense(expense: Expense) {
+async function deleteExpense(expense: Transaction) {
   const { userId } = await auth();
 
   const result = await deleteExpenseHistory(
@@ -31,11 +31,13 @@ async function deleteExpense(expense: Expense) {
 
   return {
     success: Boolean(result),
-    message: Boolean(result) ? "Expense deleted" : "Failed to delete expense",
+    message: Boolean(result)
+      ? "Transaction deleted"
+      : "Failed to delete expense",
   };
 }
 
-async function updateExpense(expense: Expense) {
+async function updateExpense(expense: Transaction) {
   const { userId } = await auth();
 
   // Ensure category is handled as an ID and exclude id from update
@@ -56,7 +58,9 @@ async function updateExpense(expense: Expense) {
   );
   return {
     success: Boolean(result),
-    message: Boolean(result) ? "Expense updated" : "Failed to update expense",
+    message: Boolean(result)
+      ? "Transaction updated"
+      : "Failed to update expense",
   };
 }
 

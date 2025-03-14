@@ -1,4 +1,4 @@
-export type Expense = {
+export type Transaction = {
   id: number;
   item: string;
   amount: number;
@@ -6,21 +6,13 @@ export type Expense = {
   category: number;
 };
 
-export type Income = Expense;
+export type ExpenseWithoutCategory = Omit<Transaction, "category">;
 
-export type ExpenseWithoutCategory =
-  | Omit<Expense, "category">
-  | Omit<Income, "category">;
-
-export type ExpenseResponse =
-  | { success: true; data: Expense }
+export type TransactionResponse =
+  | { success: true; data: Transaction }
   | { success: false; message: unknown };
 
-export type IncomeResponse = ExpenseResponse;
-
-export type ExpenseHistory = Expense & { userId: string };
-
-export type IncomeHistory = Income & { userId: string };
+export type TransactionHistory = Transaction & { userId: string };
 
 export type GroupedData = {
   timestamp: string; // formatted date string

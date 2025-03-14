@@ -40,7 +40,7 @@ export const expenseHistory = pgTable("expense_history", {
     .notNull(),
 });
 
-// Income history
+// Transaction history
 export const incomeHistory = pgTable("income_history", {
   id: serial("id").primaryKey(),
   userId: text("user_id")
