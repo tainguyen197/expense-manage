@@ -19,7 +19,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Transaction, Income } from "@/types/expense";
+import { Transaction } from "@/types/expense";
 import { Formik, Form, Field } from "formik";
 import React from "react";
 import CategorySelect from "./CategorySelect";
@@ -28,7 +28,7 @@ const EditForm = ({
   defaultValue,
   onSave,
 }: {
-  defaultValue?: Transaction | Income;
+  defaultValue?: Transaction;
   onSave?: (values: any) => void;
 }) => {
   const initialValues = {
@@ -92,7 +92,7 @@ export const EditFormDialog = ({
   onSave,
 }: {
   trigger: React.ReactNode;
-  defaultValue: Transaction | Income;
+  defaultValue: Transaction;
   onSave: (values: any) => void;
 }) => {
   const [open, setOpen] = React.useState(false);
