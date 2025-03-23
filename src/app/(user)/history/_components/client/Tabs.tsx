@@ -13,22 +13,24 @@ import {
   updateExpense,
 } from "@/actions/expense";
 import TransactionList from "./TransactionList";
-import { Transaction, Transaction } from "@/types/expense";
+import { Transaction } from "@/types/expense";
 import { useTransactionCache } from "@/contexts/TransactionCacheContext";
-import CategoryProvider from "@/contexts/CategoryProvider";
+import useFetchCategories from "@/hooks/useFetchCategories";
 
 export function StaticsTab() {
+  const { toast } = useToast();
   const searchParams = useSearchParams();
   const updateSearchParams = useUpdateSearchParams();
-  const tabUrl = searchParams.get("tab") ?? "outcome";
   const [isPending, startTransition] = useTransition();
-  const { toast } = useToast();
-  const dateParams = searchParams.get("date");
   const { getCache, setCache, invalidateCache, subscribeToInvalidation } =
     useTransactionCache();
+  useFetchCategories();
 
   const [incomeData, setIncomeData] = useState<Transaction[] | null>(null);
   const [expenseData, setExpenseData] = useState<Transaction[] | null>(null);
+
+  const dateParams = searchParams.get("date");
+  const tabUrl = searchParams.get("tab") ?? "outcome";
 
   const fetchData = useCallback(async () => {
     if (!dateParams) return;
@@ -201,27 +203,25 @@ export function StaticsTab() {
             <div className="h-5 w-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
           </div>
         )}
-        <CategoryProvider>
-          <TabsContent value="outcome" className="mt-4 relative">
-            <div className={isPending ? "opacity-50" : ""}>
-              <TransactionList
-                data={expenseData}
-                onDelete={handleDelete}
-                onEdit={handleEdit}
-              />
-            </div>
-          </TabsContent>
+        <TabsContent value="outcome" className="mt-4 relative">
+          <div className={isPending ? "opacity-50" : ""}>
+            <TransactionList
+              data={expenseData}
+              onDelete={handleDelete}
+              onEdit={handleEdit}
+            />
+          </div>
+        </TabsContent>
 
-          <TabsContent value="income" className="mt-4 relative">
-            <div className={isPending ? "opacity-50" : ""}>
-              <TransactionList
-                data={incomeData}
-                onDelete={handleDelete}
-                onEdit={handleEdit}
-              />
-            </div>
-          </TabsContent>
-        </CategoryProvider>
+        <TabsContent value="income" className="mt-4 relative">
+          <div className={isPending ? "opacity-50" : ""}>
+            <TransactionList
+              data={incomeData}
+              onDelete={handleDelete}
+              onEdit={handleEdit}
+            />
+          </div>
+        </TabsContent>
       </div>
     </Tabs>
   );

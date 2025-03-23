@@ -1,11 +1,11 @@
 "use client";
 
-import { Transaction, Transaction } from "@/types/expense";
+import { Transaction } from "@/types/expense";
 import Item from "./Item";
 import Empty from "../Empty";
 import React from "react";
 import { Category } from "@/types/category";
-import { useCategories } from "@/contexts/CategoryProvider";
+import useCategoryStore from "@/store/slices/categoryStore";
 type TransactionWithCategory = (Transaction | Transaction) & {
   category: Category;
 };
@@ -17,7 +17,7 @@ type TransactionListProps = {
 };
 
 const TransactionList = ({ data, onDelete, onEdit }: TransactionListProps) => {
-  const { categories } = useCategories();
+  const { categories } = useCategoryStore();
   const transactionsWithCategory = data
     ? data.map((item) => {
         const category = categories.find((c) => c.id === item.category);
@@ -36,8 +36,6 @@ const TransactionList = ({ data, onDelete, onEdit }: TransactionListProps) => {
         ))}
       </div>
     );
-
-  console.log(transactionsWithCategory);
 
   return data.length === 0 ? (
     <Empty />

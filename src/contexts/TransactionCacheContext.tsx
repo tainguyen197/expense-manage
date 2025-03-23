@@ -1,6 +1,6 @@
 "use client";
 
-import { Transaction, Transaction } from "@/types/expense";
+import { Transaction } from "@/types/expense";
 import React, { createContext, useContext, useCallback } from "react";
 
 type CacheKey = string;

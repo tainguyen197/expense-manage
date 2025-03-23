@@ -1,3 +1,5 @@
+"use client";
+
 import { getCategories } from "@/actions/category";
 import { Category } from "@/types/category";
 import React, { createContext, useState, useContext, useEffect } from "react";
@@ -19,11 +21,22 @@ export const CategoryProvider = ({
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const categories = await getCategories();
-      setCategories(categories);
+      console.log("start fetching categories", categories);
+      try {
+        const categories = await getCategories();
+        console.log("categories", categories);
+        setCategories(categories);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
     };
 
+    console.log("Effect running - Component mounted");
     fetchCategories();
+
+    return () => {
+      console.log("Effect cleanup - Component unmounting");
+    };
   }, []);
 
   return (

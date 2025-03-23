@@ -71,23 +71,23 @@ const StaticsDataWrapper = async ({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) => {
-  let { month, year } = await searchParams;
+  // let { month, year } = await searchParams;
 
-  if (!month || !year) {
-    month = (new Date().getMonth() + 1).toString();
-    year = new Date().getFullYear().toString();
-  }
+  // if (!month || !year) {
+  //   month = (new Date().getMonth() + 1).toString();
+  //   year = new Date().getFullYear().toString();
+  // }
 
-  // create a new date object with beginning of the month
-  const from = new Date(Number(year), Number(month) - 1, 1);
-  // create a new date object with end of the month
-  const to = new Date(Number(year), Number(month), 0);
+  // // create a new date object with beginning of the month
+  // const from = new Date(Number(year), Number(month) - 1, 1);
+  // // create a new date object with end of the month
+  // const to = new Date(Number(year), Number(month), 0);
 
-  const [outcomeData, incomeData, categories] = await Promise.all([
-    getExpenseByDate(from.toISOString(), to.toISOString()),
-    getIncomeByDate(from.toISOString(), to.toISOString()),
-    getCategories(),
-  ]);
+  // const [outcomeData, incomeData, categories] = await Promise.all([
+  //   getExpenseByDate(from.toISOString(), to.toISOString()),
+  //   getIncomeByDate(from.toISOString(), to.toISOString()),
+  //   getCategories(),
+  // ]);
 
   return <StaticsTabWrapper searchParams={searchParams} />;
 };

@@ -6,7 +6,12 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Send, X } from "lucide-react";
 import { interactWithAIAction } from "@/actions/ai";
-import { cn } from "@/lib/utils";
+import {
+  cn,
+  handleBodyScroll,
+  focusInput,
+  getModalStyles,
+} from "@/lib/utils/modal";
 import { useTransactionCache } from "@/contexts/TransactionCacheContext";
 
 const AddNew = ({
@@ -22,6 +27,7 @@ const AddNew = ({
   const [result, setResult] = React.useState<string>("");
   const [isPending, startTransition] = React.useTransition();
   const { invalidateCache } = useTransactionCache();
+  const styles = getModalStyles(type);
 
   const handleSubmit = (formDate: FormData) => {
     const value = formDate.get("value") as string;
@@ -63,17 +69,12 @@ const AddNew = ({
   }, [result]);
 
   React.useEffect(() => {
-    if (isAddNew) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    handleBodyScroll(isAddNew);
   }, [isAddNew]);
 
   React.useEffect(() => {
-    const input = document.getElementById("input");
-    if (input) {
-      input.focus();
+    if (isAddNew) {
+      focusInput("input");
     }
   }, [isAddNew]);
 
@@ -111,9 +112,7 @@ const AddNew = ({
                   <div
                     className={cn(
                       "p-4 rounded-xl text-sm font-medium transition-all duration-300",
-                      isPending
-                        ? "bg-blue-500/10 text-blue-400 border border-blue-500/20"
-                        : "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                      isPending ? styles.status.pending : styles.status.success
                     )}
                   >
                     {isPending ? "✨ Đang suy nghĩ ..." : result}
@@ -135,12 +134,7 @@ const AddNew = ({
                     disabled={isPending}
                     type="submit"
                     formAction={handleSubmit}
-                    className={cn(
-                      "h-12 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50",
-                      type === "add_income"
-                        ? "bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 border border-emerald-500/30"
-                        : "bg-rose-500/20 text-rose-400 hover:bg-rose-500/30 border border-rose-500/30"
-                    )}
+                    className={styles.button}
                   >
                     <Send
                       size={18}
