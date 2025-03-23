@@ -70,32 +70,37 @@ const AddNew = ({
     }
   }, [isAddNew]);
 
+  React.useEffect(() => {
+    const input = document.getElementById("input");
+    if (input) {
+      input.focus();
+    }
+  }, [isAddNew]);
+
   return (
     <>
       <div onClick={() => setIsAddNew(true)}>{trigger}</div>
       {isAddNew && (
-        <div className="fixed inset-0 z-50">
-          {/* Backdrop */}
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          {/* Backdrop with blur effect */}
           <div
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-300"
             onClick={() => setIsAddNew(false)}
           />
 
-          {/* Modal - adjusted positioning to be above navbar */}
-          <div className="absolute inset-x-0 bottom-[64px] transform transition-transform">
-            {" "}
-            {/* 64px is typical navbar height */}
-            <div className="relative mx-4 bg-gray-900 rounded-2xl p-4 shadow-xl border border-gray-800">
+          {/* Modal */}
+          <div className="relative w-full max-w-md transform transition-all duration-300 scale-100">
+            <div className="relative bg-gray-900/95 rounded-2xl p-6 shadow-2xl border border-gray-800/50 backdrop-blur-xl">
               {/* Close button */}
               <button
                 onClick={() => setIsAddNew(false)}
-                className="absolute right-4 top-4 text-gray-400 hover:text-gray-300"
+                className="absolute right-4 top-4 p-2 rounded-full text-gray-400 hover:text-gray-300 hover:bg-gray-800/50 transition-colors"
               >
                 <X size={20} />
               </button>
 
               {/* Title */}
-              <h2 className="text-lg font-medium text-gray-100 mb-6">
+              <h2 className="text-xl font-semibold text-gray-100 mb-6">
                 Add New {type === "add_income" ? "Income" : "Expense"}
               </h2>
 
@@ -105,10 +110,10 @@ const AddNew = ({
                 {(result || isPending) && (
                   <div
                     className={cn(
-                      "p-3 rounded-lg text-sm font-medium transition-all",
+                      "p-4 rounded-xl text-sm font-medium transition-all duration-300",
                       isPending
-                        ? "bg-blue-500/10 text-blue-400"
-                        : "bg-emerald-500/10 text-emerald-400"
+                        ? "bg-blue-500/10 text-blue-400 border border-blue-500/20"
+                        : "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
                     )}
                   >
                     {isPending ? "✨ Đang suy nghĩ ..." : result}
@@ -116,38 +121,31 @@ const AddNew = ({
                 )}
 
                 {/* Input group */}
-                <div className="flex gap-2">
+                <div className="flex gap-3">
                   <div className="relative flex-1">
                     <Input
+                      id="input"
                       name="value"
-                      className={cn(
-                        "w-full bg-gray-800 border-0 focus-visible:ring-1 focus-visible:ring-gray-700 text-gray-100 placeholder-gray-500",
-                        isPending && "opacity-50"
-                      )}
                       placeholder="Input amount and description..."
                       disabled={isPending}
+                      className="bg-gray-800/50 border-gray-700 focus:border-gray-600 h-12 px-4 rounded-xl"
                     />
-                    {/* {!isPending && !result && (
-                      <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500 text-sm">
-                        <Typewriter
-                          texts={messagePlaceholder}
-                          className="text-gray-500/70"
-                        />
-                      </div>
-                    )} */}
                   </div>
                   <Button
                     disabled={isPending}
                     type="submit"
                     formAction={handleSubmit}
                     className={cn(
-                      "px-6 transition-all shadow-lg hover:shadow-xl",
+                      "h-12 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50",
                       type === "add_income"
-                        ? "bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20"
-                        : "bg-rose-500/10 text-rose-400 hover:bg-rose-500/20"
+                        ? "bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 border border-emerald-500/30"
+                        : "bg-rose-500/20 text-rose-400 hover:bg-rose-500/30 border border-rose-500/30"
                     )}
                   >
-                    <Send size={18} />
+                    <Send
+                      size={18}
+                      className="transition-transform group-hover:translate-x-0.5"
+                    />
                   </Button>
                 </div>
               </form>
