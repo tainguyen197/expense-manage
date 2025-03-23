@@ -2,7 +2,7 @@ import { db } from "@/db";
 import { expenseHistory } from "@/db/schema";
 import {
   Transaction,
-  ExpenseHistory,
+  TransactionHistory,
   TransactionResponse,
 } from "@/types/expense";
 import { and, asc, desc, eq } from "drizzle-orm";
@@ -30,7 +30,7 @@ const getExpenseHistoryByDate = async (
   user_id: string,
   from: string,
   to: string
-): Promise<ExpenseHistory[]> => {
+): Promise<TransactionHistory[]> => {
   return getExpenseHistoryByDateInternal(user_id, from, to);
 };
 
@@ -92,7 +92,7 @@ async function createExpenseHistoryInternal(
 }
 
 const deleteExpenseHistory = async (
-  expense: ExpenseHistory,
+  expense: TransactionHistory,
   user_id: string
 ) => {
   try {
@@ -112,7 +112,7 @@ const deleteExpenseHistory = async (
 };
 
 async function deleteExpenseHistoryInternal(
-  expense: ExpenseHistory,
+  expense: TransactionHistory,
   user_id: string
 ) {
   return db
@@ -128,14 +128,14 @@ async function deleteExpenseHistoryInternal(
 }
 
 const updateExpenseHistory = async (
-  expense: ExpenseHistory,
+  expense: TransactionHistory,
   user_id: string
 ) => {
   return updateExpenseHistoryInternal(expense, user_id);
 };
 
 async function updateExpenseHistoryInternal(
-  expense: ExpenseHistory,
+  expense: TransactionHistory,
   user_id: string
 ) {
   return db

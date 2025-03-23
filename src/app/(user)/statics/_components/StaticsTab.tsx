@@ -6,7 +6,7 @@ import MonthOutCome from "./MonthTransactions";
 import { useSearchParams } from "next/navigation";
 import { CircleArrowDown, CircleArrowUp } from "lucide-react";
 import { useUpdateSearchParams } from "@/hooks/useUpdateSearchParams";
-import { Transaction, Transaction } from "@/types/expense";
+import { Transaction } from "@/types/expense";
 import { Category } from "@/types/category";
 
 type StaticsTabProps = {

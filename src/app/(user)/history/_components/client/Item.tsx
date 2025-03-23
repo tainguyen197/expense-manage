@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Category } from "@/types/category";
-import { Transaction, Transaction } from "@/types/expense";
+import { Transaction } from "@/types/expense";
 import { formatCurrency } from "@/utils/curency";
 import { Pencil, Trash2 } from "lucide-react";
 import moment from "moment";

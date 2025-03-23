@@ -1,10 +1,8 @@
 import { Category } from "@/types/category";
-import { Transaction, Transaction } from "@/types/expense";
+import { Transaction } from "@/types/expense";
 
 // function list expenseMonth by category
-export const transactionMonthByCategory = (
-  transactionList: Transaction[] | Transaction[]
-) => {
+export const transactionMonthByCategory = (transactionList: Transaction[]) => {
   const transactionByCategory = new Map<number, number>();
   transactionList.forEach((trans) => {
     const currentAmount = transactionByCategory.get(trans.category) ?? 0;
