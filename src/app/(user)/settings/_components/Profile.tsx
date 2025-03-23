@@ -8,7 +8,6 @@ const Profile = async () => {
   const user = await currentUser();
 
   if (!user) return <RedirectToSignIn />;
-  console.log("user", user);
 
   return (
     <div className="flex flex-col gap-4 items-center justify-center">
