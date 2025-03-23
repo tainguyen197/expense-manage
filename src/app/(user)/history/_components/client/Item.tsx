@@ -3,7 +3,7 @@ import { Category } from "@/types/category";
 import { Transaction } from "@/types/expense";
 import { formatCurrency } from "@/utils/curency";
 import { Pencil, Trash2 } from "lucide-react";
-import moment from "moment";
+import dayjs from "dayjs";
 import { ConfirmDeleteModal } from "./ConfirmDelete";
 import { EditFormDialog } from "./EditForm";
 import { SkeletonItem } from "../Skeleton";
@@ -42,7 +42,7 @@ const Item = ({ transaction, onDelete, onEdit }: ItemProps) => {
         <div>
           <h3 className="font-medium text-gray-200">{transaction.item}</h3>
           <p className="text-xs text-gray-400">
-            {moment(transaction.timestamp).format("MMMM D, YYYY, h:mm A")}
+            {dayjs(transaction.timestamp).format("MMMM D, YYYY, h:mm A")}
           </p>
         </div>
       </div>

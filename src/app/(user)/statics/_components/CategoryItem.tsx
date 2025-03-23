@@ -1,7 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Transaction } from "@/types/expense";
 import { formatCurrency } from "@/utils/curency";
-import moment from "moment";
 
 type CategoryItemProps = {
   icon: string;

@@ -26,7 +26,7 @@ A modern AI chat application built with Next.js 15, featuring real-time conversa
 - **Charts:** Recharts
 - **Form Handling:** Formik
 - **Validation:** Zod
-- **Date Handling:** date-fns, moment
+- **Date Handling:** date-fns, dayjs
 - **Icons:** Lucide React
 
 ## Getting Started

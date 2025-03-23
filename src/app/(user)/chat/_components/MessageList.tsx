@@ -1,8 +1,12 @@
-import moment from "moment";
+import dayjs from "dayjs";
+import calendar from "dayjs/plugin/calendar";
 import Empty from "./Empty";
 import { Message as MessageType } from "@/types/message";
 import Message from "./Message";
 import { groupMessagesByDate } from "@/utils/groupMessagesByDate";
+
+// Initialize dayjs plugins
+dayjs.extend(calendar);
 
 type Props = {
   messages: MessageType[];
@@ -19,7 +23,7 @@ const MessageList = ({ messages }: Props) => {
             <div key={index}>
               <div className="text-center text-sm py-2 text-primary/90 font-semibold">
                 <span suppressHydrationWarning>
-                  {moment(Number(date)).calendar(null, {
+                  {dayjs(Number(date)).calendar(null, {
                     sameDay: "[Today]", // Removes the time part
                     lastDay: "[Yesterday]",
                     lastWeek: "dddd",

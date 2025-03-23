@@ -3,13 +3,13 @@
 import { cn } from "@/lib/utils";
 import { ArrowDownCircle, ArrowUpCircle, Calendar } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import moment from "moment";
+import dayjs from "dayjs";
 
 const Header = () => {
   const searchParams = useSearchParams();
   const tabUrl = searchParams.get("tab") ?? "outcome";
   const dateParams = searchParams.get("date") || undefined;
-  const currentDate = moment(dateParams ? Number(dateParams) : undefined);
+  const currentDate = dayjs(dateParams ? Number(dateParams) : undefined);
 
   return (
     <div className="max-w-7xl mx-auto sticky top-0 z-10 px-4 py-2 bg-gray-900/50 backdrop-blur-md border-b border-gray-800">
