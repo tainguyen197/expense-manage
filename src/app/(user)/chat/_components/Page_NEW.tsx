@@ -18,10 +18,6 @@ import NavigationBar from "../../_components/Navbar";
 import useMessageStore from "@/store/slices/messageStore";
 import { getMessagesAction } from "@/actions/message";
 
-type MessageProps = {
-  initialMessages: Message[];
-};
-
 const ChatPage = () => {
   const { messages, addMessage, hasInitialized, setInitialized } =
     useMessageStore();
@@ -34,12 +30,17 @@ const ChatPage = () => {
         addMessage(data);
       });
 
-      setTimeout(() =>
-        interactWithAIAction(data).then((result) => {
+      // Using Promise without unnecessary setTimeout
+      interactWithAIAction(data)
+        .then((result) => {
           addMessage(result);
         })
-      );
-    } catch (error) {}
+        .catch((error) => {
+          console.error("AI interaction failed:", error);
+        });
+    } catch (error) {
+      console.error("Message submission error:", error);
+    }
   };
 
   const scrollToBottom = () => {
@@ -64,9 +65,7 @@ const ChatPage = () => {
             useMessageStore.setState({ messages: [] });
 
             // Add all initial messages
-            initialMessages.forEach((message) => {
-              addMessage(message);
-            });
+            initialMessages.forEach(addMessage);
 
             setInitialized(true);
           } catch (error) {
@@ -77,7 +76,7 @@ const ChatPage = () => {
     };
 
     fetchMessages();
-  }, [hasInitialized]);
+  }, [hasInitialized, addMessage]);
 
   if (isTransitioning) {
     return (

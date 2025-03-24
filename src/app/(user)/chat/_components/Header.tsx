@@ -1,8 +1,5 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { MessageSquare } from "lucide-react";
-
 const Header = () => {
   return (
     <div className="flex items-center gap-3">
