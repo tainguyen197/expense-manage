@@ -1,7 +1,7 @@
 import { getExpenseByDate } from "@/actions/expense";
-import { StaticsTab } from "./StaticsTab";
 import { getIncomeByDate } from "@/actions/income";
 import { getCategories } from "@/actions/category";
+import DetailedStatistics from "./DetailedStatistics";
 
 export default async function StaticsTabWrapper({
   searchParams,
@@ -27,10 +27,12 @@ export default async function StaticsTabWrapper({
   ]);
 
   return (
-    <StaticsTab
-      outcomeData={outcomeData}
-      incomeData={incomeData}
-      categories={categories}
-    />
+    <div className="space-y-4">
+      <DetailedStatistics
+        outcomeData={outcomeData}
+        incomeData={incomeData}
+        categories={categories}
+      />
+    </div>
   );
 }

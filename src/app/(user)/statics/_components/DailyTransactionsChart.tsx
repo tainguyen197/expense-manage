@@ -20,11 +20,12 @@ import { useSearchParams } from "next/navigation";
 
 export function DailyTransactionsChart({
   chartData,
+  type = "outcome",
 }: {
   chartData: GroupedData[];
+  type?: "income" | "outcome";
 }) {
-  const params = useSearchParams();
-  const isIncome = params.get("tab") === "income";
+  const isIncome = type === "income";
 
   const chartConfig = {
     amount: {

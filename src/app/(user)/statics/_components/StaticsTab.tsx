@@ -1,8 +1,7 @@
 "use client";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import React from "react";
-import MonthOutCome from "./MonthTransactions";
 import { useSearchParams } from "next/navigation";
 import { CircleArrowDown, CircleArrowUp } from "lucide-react";
 import { useUpdateSearchParams } from "@/hooks/useUpdateSearchParams";
@@ -48,16 +47,10 @@ export function StaticsTab({
         >
           <div className="flex items-center gap-2">
             <CircleArrowDown className="h-4 w-4" />
-            <span className="font-medium">Transaction</span>
+            <span className="font-medium">Income</span>
           </div>
         </TabsTrigger>
       </TabsList>
-      <TabsContent value="outcome" className="mt-0 focus-visible:outline-none">
-        <MonthOutCome data={outcomeData} categories={categories} />
-      </TabsContent>
-      <TabsContent value="income" className="mt-0 focus-visible:outline-none">
-        <MonthOutCome data={incomeData} categories={categories} />
-      </TabsContent>
     </Tabs>
   );
 }
