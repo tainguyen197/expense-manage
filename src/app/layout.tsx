@@ -7,6 +7,7 @@ import { TransactionCacheProvider } from "@/contexts/TransactionCacheContext";
 import { ClerkProvider } from "@clerk/nextjs";
 import React from "react";
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
+import { Analytics } from "@vercel/analytics/next";
 
 const nunito = Nunito({ subsets: ["latin"] });
 
@@ -52,6 +53,7 @@ export default function RootLayout({
             <ServiceWorkerRegistration />
             <ConditionalLayout>{children}</ConditionalLayout>
             <Toaster />
+            <Analytics />
           </TransactionCacheProvider>
         </ClerkProvider>
       </body>
