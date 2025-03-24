@@ -92,16 +92,16 @@ const transactionsToAdd: Omit<Transaction, "id">[] = [
   // },
 ];
 
-export async function addBulkTransactions() {
-  try {
-    // Add transactions one by one
-    for (const transaction of transactionsToAdd) {
-      await createIncome(transaction);
-    }
+// export async function addBulkTransactions() {
+//   try {
+//     // Add transactions one by one
+//     for (const transaction of transactionsToAdd) {
+//       await createIncome(transaction);
+//     }
 
-    return { success: true, message: "Transactions added successfully" };
-  } catch (error) {
-    console.error("Error adding transactions:", error);
-    return { success: false, message: "Failed to add transactions" };
-  }
-}
+//     return { success: true, message: "Transactions added successfully" };
+//   } catch (error) {
+//     console.error("Error adding transactions:", error);
+//     return { success: false, message: "Failed to add transactions" };
+//   }
+// }
