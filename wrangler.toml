@@ -1,0 +1,6 @@
+name = "expense-manage"
+main = "src/index.ts"
+compatibility_date = "2024-04-11"
+
+[build]
+command = "npm run build" 

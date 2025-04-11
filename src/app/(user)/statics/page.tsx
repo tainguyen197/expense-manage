@@ -1,5 +1,3 @@
-"use server";
-
 import { Suspense } from "react";
 import MonthStatic from "./_components/MonthStatic";
 import StaticsTabWrapper from "./_components/StaticsTabWrapper";
@@ -7,6 +5,8 @@ import { getExpenseByDate } from "@/actions/expense";
 import { getIncomeByDate } from "@/actions/income";
 import { getCategories } from "@/actions/category";
 import Header from "./_components/Header";
+
+export const runtime = "edge";
 
 const StaticPage = async ({
   searchParams,

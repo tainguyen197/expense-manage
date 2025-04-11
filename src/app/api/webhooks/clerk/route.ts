@@ -3,6 +3,8 @@ import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
 import { createUser, deleteUser } from "@/db/user";
 
+export const runtime = "edge";
+
 export async function POST(req: Request) {
   // Get headers
   const headerPayload = await headers();

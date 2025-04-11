@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 
+export const runtime = "edge";
 const SettingPage = async () => {
   const user = await currentUser();
 
