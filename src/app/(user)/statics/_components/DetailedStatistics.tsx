@@ -119,9 +119,8 @@ export default function DetailedStatistics({
   );
 
   // Item-based statistics
-  const mostExpensiveItem = [...outcomeData].sort(
-    (a, b) => b.amount - a.amount
-  )[0];
+  const mostExpensiveItem =
+    [...outcomeData].sort((a, b) => b.amount - a.amount)[0] || {};
 
   const itemFrequency = outcomeData.reduce((acc, expense) => {
     acc[expense.item] = (acc[expense.item] || 0) + 1;
@@ -276,9 +275,11 @@ export default function DetailedStatistics({
                         <p className="text-xs font-medium text-gray-400">
                           Highest Day
                         </p>
-                        <p className="text-base font-medium text-rose-400">
-                          {format(new Date(highestSpendingDay), "MMM dd")}
-                        </p>
+                        {highestSpendingDay && (
+                          <p className="text-base font-medium text-rose-400">
+                            {format(new Date(highestSpendingDay), "MMM dd")}
+                          </p>
+                        )}
                         <p className="text-xs text-gray-500">
                           {formatCurrency(highestAmount)}
                         </p>
@@ -304,9 +305,11 @@ export default function DetailedStatistics({
                         <p className="text-xs font-medium text-gray-400">
                           Lowest Day
                         </p>
-                        <p className="text-base font-medium text-blue-400">
-                          {format(new Date(lowestSpendingDay), "MMM dd")}
-                        </p>
+                        {lowestSpendingDay && (
+                          <p className="text-base font-medium text-blue-400">
+                            {format(new Date(lowestSpendingDay), "MMM dd")}
+                          </p>
+                        )}
                         <p className="text-xs text-gray-500">
                           {formatCurrency(lowestAmount)}
                         </p>
